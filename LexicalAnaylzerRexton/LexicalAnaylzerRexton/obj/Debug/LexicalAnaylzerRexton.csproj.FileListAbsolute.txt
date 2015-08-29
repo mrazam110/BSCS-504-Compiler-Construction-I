@@ -1,0 +1,1 @@
+c:\users\muhammadraza\documents\visual studio 2013\Projects\LexicalAnaylzerRexton\LexicalAnaylzerRexton\bin\Debug\LexicalAnaylzerRexton.exe.config
