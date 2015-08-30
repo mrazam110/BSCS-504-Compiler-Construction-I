@@ -1,1 +1,10 @@
 c:\users\muhammadraza\documents\visual studio 2013\Projects\LexicalAnaylzerRexton\LexicalAnaylzerRexton\bin\Debug\LexicalAnaylzerRexton.exe.config
+C:\Users\MuhammadRaza\Documents\GitHub\Compiler-Construction\LexicalAnaylzerRexton\LexicalAnaylzerRexton\bin\Debug\LexicalAnaylzerRexton.exe.config
+C:\Users\MuhammadRaza\Documents\GitHub\Compiler-Construction\LexicalAnaylzerRexton\LexicalAnaylzerRexton\bin\Debug\LexicalAnaylzerRexton.exe
+C:\Users\MuhammadRaza\Documents\GitHub\Compiler-Construction\LexicalAnaylzerRexton\LexicalAnaylzerRexton\bin\Debug\LexicalAnaylzerRexton.pdb
+C:\Users\MuhammadRaza\Documents\GitHub\Compiler-Construction\LexicalAnaylzerRexton\LexicalAnaylzerRexton\obj\Debug\LexicalAnaylzerRexton.csprojResolveAssemblyReference.cache
+C:\Users\MuhammadRaza\Documents\GitHub\Compiler-Construction\LexicalAnaylzerRexton\LexicalAnaylzerRexton\obj\Debug\LexicalAnaylzerRexton.Form1.resources
+C:\Users\MuhammadRaza\Documents\GitHub\Compiler-Construction\LexicalAnaylzerRexton\LexicalAnaylzerRexton\obj\Debug\LexicalAnaylzerRexton.Properties.Resources.resources
+C:\Users\MuhammadRaza\Documents\GitHub\Compiler-Construction\LexicalAnaylzerRexton\LexicalAnaylzerRexton\obj\Debug\LexicalAnaylzerRexton.csproj.GenerateResource.Cache
+C:\Users\MuhammadRaza\Documents\GitHub\Compiler-Construction\LexicalAnaylzerRexton\LexicalAnaylzerRexton\obj\Debug\LexicalAnaylzerRexton.exe
+C:\Users\MuhammadRaza\Documents\GitHub\Compiler-Construction\LexicalAnaylzerRexton\LexicalAnaylzerRexton\obj\Debug\LexicalAnaylzerRexton.pdb
