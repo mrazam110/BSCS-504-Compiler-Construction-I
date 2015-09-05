@@ -43,7 +43,7 @@
             this.codebox1.Location = new System.Drawing.Point(403, 27);
             this.codebox1.Name = "codebox1";
             this.codebox1.ReadOnly = true;
-            this.codebox1.Size = new System.Drawing.Size(396, 268);
+            this.codebox1.Size = new System.Drawing.Size(396, 279);
             this.codebox1.TabIndex = 1;
             this.codebox1.Text = "";
             // 
@@ -79,7 +79,7 @@
             this.richTextBox1.Location = new System.Drawing.Point(93, 25);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(304, 268);
+            this.richTextBox1.Size = new System.Drawing.Size(304, 281);
             this.richTextBox1.TabIndex = 4;
             this.richTextBox1.Text = "";
             // 

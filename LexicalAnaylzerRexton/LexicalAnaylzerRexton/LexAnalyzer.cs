@@ -9,8 +9,36 @@ namespace LexicalAnaylzerRexton
     class LexAnalyzer
     {
 
-        public List<token> TokensList(List<token> words) { 
-            
+        public List<token> getTokensList(List<token> words) {
+        
+            for (int i = 0; i < words.Count; i++) {
+                if (checkKeyword(words[i].wordStr) != "")
+                {
+                    words[i].classStr = checkKeyword(words[i].wordStr);
+                }
+                else if (checkOperator(words[i].wordStr) != "")
+                {
+                    words[i].classStr = checkOperator(words[i].wordStr);
+                }
+                else if (checkPunctuators(words[i].wordStr) != "")
+                {
+                    words[i].classStr = checkPunctuators(words[i].wordStr);
+                }
+            }
+
+            return words;
+        }
+
+        public string checkOperator(string word)
+        {
+            for (int i = 0; i < SingletonClass.Operators.Length / 2; i++)
+            {
+                if (word == SingletonClass.Operators[i, 0])
+                {
+                    return SingletonClass.Operators[i, 1];
+                }
+            }
+            return "";
         }
 
         public string checkKeyword(string word)

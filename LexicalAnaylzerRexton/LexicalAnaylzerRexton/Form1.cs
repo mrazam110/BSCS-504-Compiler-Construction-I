@@ -54,18 +54,12 @@ namespace LexicalAnaylzerRexton
 
                 wordBreakerOutput = wordBreaker.breakString(codebox1.Text);
 
-                foreach (token s in wordBreakerOutput)
-                {
-                    if (lex.checkKeyword(s.wordStr) != "") {
-                        codebox1.Text += lex.checkKeyword(s.wordStr) + "\n";
-                    }
+                List<token> tokensList = lex.getTokensList(wordBreakerOutput);
 
-                    if (lex.checkPunctuators(s.wordStr) != "")
-                    {
-                        codebox1.Text += lex.checkPunctuators(s.wordStr) + "\n";
-                    }
-                    
-                    richTextBox1.Text += "(" + s.lineNumber + ") " + s.wordStr + "\n";
+                foreach (token s in tokensList)
+                { 
+                    //richTextBox1.Text += "(" + s.lineNumber + ") " + s.wordStr + "\n";
+                    richTextBox1.Text += "(" + s.wordStr + ", " + s.classStr + ", " + s.lineNumber + ")\n";
                 }
             }
         }
