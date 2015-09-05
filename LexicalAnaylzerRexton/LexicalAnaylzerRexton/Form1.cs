@@ -22,7 +22,6 @@ namespace LexicalAnaylzerRexton
         {
             InitializeComponent();
 
-
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -41,10 +40,12 @@ namespace LexicalAnaylzerRexton
                     MessageBox.Show("Can not read from file");
                 }
             }
+            //codebox1.Text = "25.1aa.24";
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
+            LexAnalyzer lex = new LexAnalyzer();
             if (codebox1.Text.Length > 0) {
                 wordBreaker = new breakWork();
 
@@ -55,7 +56,16 @@ namespace LexicalAnaylzerRexton
 
                 foreach (token s in wordBreakerOutput)
                 {
-                    richTextBox1.Text += "(" + s.lineNumber + "→) >" + s.wordStr + "<\n";
+                    if (lex.checkKeyword(s.wordStr) != "") {
+                        codebox1.Text += lex.checkKeyword(s.wordStr) + "\n";
+                    }
+
+                    if (lex.checkPunctuators(s.wordStr) != "")
+                    {
+                        codebox1.Text += lex.checkPunctuators(s.wordStr) + "\n";
+                    }
+                    
+                    richTextBox1.Text += "(" + s.lineNumber + ") " + s.wordStr + "\n";
                 }
             }
         }
