@@ -11,9 +11,6 @@ namespace LexicalAnaylzerRexton
         public List<string> distinctBreaker = new List<string>();
         public List<string> totalBreaker = new List<string>();
 
-        public static char[] breakers = { ' ','\t', '\n', '<', '>' , '+', '-', '*', '/', '=', '&', '|', '!', '#', '$', ',', ';', ':', '(', ')',
-        '{', '}', '[', ']', '.', '\'', '@' };
-
         public List<token> breakString(string myString)
         {
             List<token> output = new List<token>();
@@ -43,7 +40,7 @@ namespace LexicalAnaylzerRexton
                 }
 
                 //--START char ch in breakers
-                foreach (char ch in breakers)
+                foreach (char ch in SingletonClass.breakers)
                 {
                     //--START myString[i] == ch
                     if (myString[i] == ch)

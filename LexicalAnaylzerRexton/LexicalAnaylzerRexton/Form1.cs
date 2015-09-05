@@ -26,7 +26,7 @@ namespace LexicalAnaylzerRexton
 
         private void button1_Click(object sender, EventArgs e)
         {
-            DialogResult result = openFileDialog1.ShowDialog(); // Show the dialog.
+            /*DialogResult result = openFileDialog1.ShowDialog(); // Show the dialog.
             if (result == DialogResult.OK) // Test result.
             {
                 string file = openFileDialog1.FileName;
@@ -39,8 +39,8 @@ namespace LexicalAnaylzerRexton
                 {
                     MessageBox.Show("Can not read from file");
                 }
-            }
-            //codebox1.Text = "25.1aa.24";
+            }*/
+            codebox1.Text = "aur_int a = 10;";
         }
 
         private void button2_Click(object sender, EventArgs e)

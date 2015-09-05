@@ -9,7 +9,7 @@ namespace LexicalAnaylzerRexton
     static class SingletonClass
     {
         public static string[,] keywords = {
-                               {"aur_int","class_dt"},
+                               {"aur_int","DataType"},
                                {"aur_float","DataType"},
                                {"aur_double","DataType"},
                                {"aur_char", "DataType"},
@@ -81,7 +81,7 @@ namespace LexicalAnaylzerRexton
 
         public enum nonKeywords
         {
-            _identifier, _int_constant, _float_constant, _string_constant, _char_constant, _bool_constant, _invalid
+            IDENTIFIER, INT_CONSTANT, FLOAT_CONSTANT, STRING_CONSTANT, CHAR_CONSTANT, BOOL_CONSTANT, _INVALID
         };
 
         public static string[] others =  {"IDENTIFIER", 
@@ -95,5 +95,11 @@ namespace LexicalAnaylzerRexton
 
         public static char[] breakers = { ' ','\t', '\n', '<', '>' , '+', '-', '*', '/', '=', '&', '|', '!', '#', '$', ',', ';', ':', '(', ')',
         '{', '}', '[', ']', '.', '\'', '\"' };
+    }
+
+    public static class RegularExpression {
+        public static string digits = @"^[0-9]+$";
+        public static string alphabet = @"^[a-zA-Z]+$";
+        public static string signs = @"[+-]";
     }
 }
