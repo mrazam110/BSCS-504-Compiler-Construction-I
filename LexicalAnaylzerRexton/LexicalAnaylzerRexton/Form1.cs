@@ -60,11 +60,32 @@ namespace LexicalAnaylzerRexton
 
                 foreach (token s in tokensList)
                 {
-                    if (s.wordStr != " " && s.wordStr != "\n" & s.wordStr != "\t" & s.wordStr != "\r")
+                    if (s.wordStr != " " && s.wordStr != "\n" && s.wordStr != "\t" && s.wordStr != "\r")
                     {
                         //richTextBox1.Text += "(" + s.lineNumber + ") " + s.wordStr + "\n";
                         richTextBox1.Text += "(" + s.wordStr + ", " + s.classStr + ", " + s.lineNumber + ")\n";
                     }
+                }
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            DialogResult result = saveFileDialog1.ShowDialog(); // Show the dialog.
+            if (result == DialogResult.OK) // Test result.
+            {
+                string file = saveFileDialog1.FileName;
+                try
+                {
+                    System.IO.StreamWriter writer = new System.IO.StreamWriter(file + ".txt", false); //open the file for writing.
+                    writer.Write(richTextBox1.Text); //write the current date to the file. change this with your date or something.
+                    writer.Close(); //remember to close the file again.
+                    writer.Dispose();
+
+                }
+                catch (IOException)
+                {
+                    MessageBox.Show("Can not read from file");
                 }
             }
         }

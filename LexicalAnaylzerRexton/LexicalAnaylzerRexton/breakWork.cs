@@ -23,7 +23,6 @@ namespace LexicalAnaylzerRexton
             bool isString = false;
             bool newLine = false;
             bool exit = false;
-            bool multiLineComments = false;
             bool isMultiComment = false;
 
             int dump = 0;
@@ -263,7 +262,7 @@ namespace LexicalAnaylzerRexton
                                     }
                                     else if (int.TryParse(myString[i + 1].ToString(), out dump))
                                     {
-                                        isFloat = true;//12.a45.abc//a4c.12
+                                        isFloat = true;
                                     }
                                     break;
                                 case '@':
@@ -336,7 +335,6 @@ namespace LexicalAnaylzerRexton
                                             isString = true;
                                             if (myString[i] == '\n')
                                             {
-                                                //totalBreaker.Add("New Line");
                                                 newLine = true;
                                                 temp = temp.Remove(temp.Length - 1);
                                             }

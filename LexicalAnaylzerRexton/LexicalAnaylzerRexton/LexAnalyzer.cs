@@ -42,13 +42,13 @@ namespace LexicalAnaylzerRexton
                 {
                     words[i].classStr = checkPunctuators(words[i].wordStr);
                 }
-                else if (isIdentifier(words[i].wordStr))
-                {
-                        words[i].classStr = SingletonClass.nonKeywords.IDENTIFIER.ToString();
-                }
                 else if (checkKeyword(words[i].wordStr) != "")
                 {
                     words[i].classStr = checkKeyword(words[i].wordStr);
+                }
+                else if (isIdentifier(words[i].wordStr))
+                {
+                        words[i].classStr = SingletonClass.nonKeywords.IDENTIFIER.ToString();
                 }
                 else
                 {
@@ -105,11 +105,11 @@ namespace LexicalAnaylzerRexton
                             Regex.IsMatch(word[i].ToString(), RegularExpression.digits) ||
                             word[i] == '$')
                         {
-                            currentState = 3;
+                            currentState = 2;
                         }
                         else 
                         {
-                            currentState = 3;
+                            currentState = 2;
                         }
                         break;
 
