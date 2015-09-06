@@ -60,7 +60,7 @@ namespace LexicalAnaylzerRexton
 
                 foreach (token s in tokensList)
                 {
-                    if (s.wordStr != " ")
+                    if (s.wordStr != " " && s.wordStr != "\n" & s.wordStr != "\t" & s.wordStr != "\r")
                     {
                         //richTextBox1.Text += "(" + s.lineNumber + ") " + s.wordStr + "\n";
                         richTextBox1.Text += "(" + s.wordStr + ", " + s.classStr + ", " + s.lineNumber + ")\n";

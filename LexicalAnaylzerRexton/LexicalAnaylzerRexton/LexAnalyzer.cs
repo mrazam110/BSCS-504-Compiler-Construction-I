@@ -30,6 +30,8 @@ namespace LexicalAnaylzerRexton
                 }
                 else if (isString(words[i].wordStr))
                 {
+                    words[i].wordStr = words[i].wordStr.Remove(0, 1);
+                    words[i].wordStr = words[i].wordStr.Remove(words[i].wordStr.Length - 1, 1);
                     words[i].classStr = SingletonClass.nonKeywords.STRING_CONSTANT.ToString();
                 }
                 else if (checkOperator(words[i].wordStr) != "")
@@ -40,26 +42,102 @@ namespace LexicalAnaylzerRexton
                 {
                     words[i].classStr = checkPunctuators(words[i].wordStr);
                 }
+                else if (isIdentifier(words[i].wordStr))
+                {
+                        words[i].classStr = SingletonClass.nonKeywords.IDENTIFIER.ToString();
+                }
                 else if (checkKeyword(words[i].wordStr) != "")
                 {
                     words[i].classStr = checkKeyword(words[i].wordStr);
+                }
+                else
+                {
+                    words[i].classStr = SingletonClass.nonKeywords._INVALID.ToString();
                 }
             }
 
             return words;
         }
 
+        private bool isIdentifier(string word)
+        {
+            int currentState = 0;
+            int finalState = 2;
+
+            /*STATE A   D   $
+             * 1    3   4   2
+             * 2    3   3   4
+             * 3    3   3   3
+             * 4    4   4   4
+             */
+            for (int i = 0; i < word.Length; i++)
+            {
+                switch (currentState)
+                {
+                    case 0:
+                        if(Regex.IsMatch(word[i].ToString(), RegularExpression.alphabet))
+                        {
+                            currentState = 2;
+                        }
+                        else if (Regex.IsMatch(word[i].ToString(), RegularExpression.digits))
+                        {
+                            currentState = 3;
+                        }
+                        else if (word[i] == '$')
+                        {
+                            currentState = 1;
+                        }
+                        break;
+
+                    case 1:
+                        if (Regex.IsMatch(word[i].ToString(), RegularExpression.alphabet) ||
+                            Regex.IsMatch(word[i].ToString(), RegularExpression.digits))
+                        {
+                            currentState = 2;
+                        }
+                        else {
+                            currentState = 3;
+                        }
+                        break;
+
+                    case 2:
+                        if (Regex.IsMatch(word[i].ToString(), RegularExpression.alphabet) ||
+                            Regex.IsMatch(word[i].ToString(), RegularExpression.digits) ||
+                            word[i] == '$')
+                        {
+                            currentState = 3;
+                        }
+                        else 
+                        {
+                            currentState = 3;
+                        }
+                        break;
+
+                    case 3:
+                        if (Regex.IsMatch(word[i].ToString(), RegularExpression.alphabet) ||
+                            Regex.IsMatch(word[i].ToString(), RegularExpression.digits) ||
+                            word[i] == '$')
+                        {
+                            currentState = 3;
+                        }
+                        else
+                        {
+                            currentState = 3;
+                        }
+                        break;
+                }
+            }
+
+            if (currentState == finalState)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         private bool isString(string word)
         {
-            /*STATE @   \   ec  sc  ch
-             * 1    2   6   6   6   6
-             * 2    6   3   6   6   4
-             * 3    4   4   4   4   6
-             * 4    5   6   6   6   4
-             * 5    6   6   6   6   6
-             * 6    6   6   6   6   6
-             */
-
             int currentState = 0;
             int finalState = 3;
 
