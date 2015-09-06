@@ -263,7 +263,7 @@ namespace LexicalAnaylzerRexton
                                     }
                                     else if (int.TryParse(myString[i + 1].ToString(), out dump))
                                     {
-                                        isFloat = true;
+                                        isFloat = true;//12.a45.abc//a4c.12
                                     }
                                     break;
                                 case '@':
@@ -274,7 +274,7 @@ namespace LexicalAnaylzerRexton
                                     }
                                     temp += myString[i];
                                     i++;
-                                    while (i < myString.Length && myString[i] != '\n')
+                                    while (i < myString.Length)// && myString[i] != '\n'
                                     {
                                         if (myString[i] == '\\')
                                         {
@@ -420,5 +420,7 @@ namespace LexicalAnaylzerRexton
 
             return output;
         }
+
+
     }
 }

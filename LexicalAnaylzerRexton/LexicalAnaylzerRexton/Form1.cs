@@ -26,7 +26,8 @@ namespace LexicalAnaylzerRexton
 
         private void button1_Click(object sender, EventArgs e)
         {
-            /*DialogResult result = openFileDialog1.ShowDialog(); // Show the dialog.
+            codebox1.Text = "";
+            DialogResult result = openFileDialog1.ShowDialog(); // Show the dialog.
             if (result == DialogResult.OK) // Test result.
             {
                 string file = openFileDialog1.FileName;
@@ -39,12 +40,13 @@ namespace LexicalAnaylzerRexton
                 {
                     MessageBox.Show("Can not read from file");
                 }
-            }*/
-            codebox1.Text = "aur_int a = 10;";
+            }
+            //codebox1.Text = "@abc 'a' \t \n@";
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
+            richTextBox1.Text = "";
             LexAnalyzer lex = new LexAnalyzer();
             if (codebox1.Text.Length > 0) {
                 wordBreaker = new breakWork();
@@ -57,9 +59,12 @@ namespace LexicalAnaylzerRexton
                 List<token> tokensList = lex.getTokensList(wordBreakerOutput);
 
                 foreach (token s in tokensList)
-                { 
-                    //richTextBox1.Text += "(" + s.lineNumber + ") " + s.wordStr + "\n";
-                    richTextBox1.Text += "(" + s.wordStr + ", " + s.classStr + ", " + s.lineNumber + ")\n";
+                {
+                    if (s.wordStr != " ")
+                    {
+                        //richTextBox1.Text += "(" + s.lineNumber + ") " + s.wordStr + "\n";
+                        richTextBox1.Text += "(" + s.wordStr + ", " + s.classStr + ", " + s.lineNumber + ")\n";
+                    }
                 }
             }
         }

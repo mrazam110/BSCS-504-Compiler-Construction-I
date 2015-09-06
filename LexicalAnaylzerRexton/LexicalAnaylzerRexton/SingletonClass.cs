@@ -94,12 +94,14 @@ namespace LexicalAnaylzerRexton
                                         };
 
         public static char[] breakers = { ' ','\t', '\n', '<', '>' , '+', '-', '*', '/', '=', '&', '|', '!', '#', '$', ',', ';', ':', '(', ')',
-        '{', '}', '[', ']', '.', '\'', '\"' };
+        '{', '}', '[', ']', '.', '\'', '@' };
     }
 
     public static class RegularExpression {
         public static string digits = @"^[0-9]+$";
         public static string alphabet = @"^[a-zA-Z]+$";
         public static string signs = @"[+-]";
+        public static string escapeCharacters = @"[nrtfbv]";
+        public static string sc = "[\\\\\"\']";
     }
 }
