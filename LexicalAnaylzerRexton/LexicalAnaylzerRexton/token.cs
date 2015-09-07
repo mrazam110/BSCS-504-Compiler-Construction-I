@@ -8,8 +8,6 @@ namespace LexicalAnaylzerRexton
 {
     class token
     {
-        //static int i = 32;
-
         public int lineNumber = 1;
         public string wordStr;
         public string classStr;
