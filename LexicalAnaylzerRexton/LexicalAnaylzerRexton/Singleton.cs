@@ -67,7 +67,7 @@ namespace LexicalAnaylzerRexton
         public static string[,] punctuators = {
                                               { ",","Comma" },
                                               { ";","Terminator" },
-                                              { ":","_Colon" },                                           
+                                              { ":","Colon" },                                           
                                               { "[","SquareBraces" },
                                               { "]","SquareBraces" },
                                               { "{","CurlyBraces" },
