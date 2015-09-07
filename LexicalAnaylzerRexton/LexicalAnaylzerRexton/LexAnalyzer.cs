@@ -18,21 +18,21 @@ namespace LexicalAnaylzerRexton
                 }
                 else if (isInt(words[i].wordStr))
                 {
-                    words[i].classStr = SingletonClass.nonKeywords.INT_CONSTANT.ToString();
+                    words[i].classStr = Singleton.nonKeywords.INT_CONSTANT.ToString();
                 }
                 else if (isChar(words[i].wordStr))
                 {
-                    words[i].classStr = SingletonClass.nonKeywords.CHAR_CONSTANT.ToString();
+                    words[i].classStr = Singleton.nonKeywords.CHAR_CONSTANT.ToString();
                 }
                 else if (isFloat(words[i].wordStr))
                 {
-                    words[i].classStr = SingletonClass.nonKeywords.FLOAT_CONSTANT.ToString();
+                    words[i].classStr = Singleton.nonKeywords.FLOAT_CONSTANT.ToString();
                 }
                 else if (isString(words[i].wordStr))
                 {
                     words[i].wordStr = words[i].wordStr.Remove(0, 1);
                     words[i].wordStr = words[i].wordStr.Remove(words[i].wordStr.Length - 1, 1);
-                    words[i].classStr = SingletonClass.nonKeywords.STRING_CONSTANT.ToString();
+                    words[i].classStr = Singleton.nonKeywords.STRING_CONSTANT.ToString();
                 }
                 else if (checkOperator(words[i].wordStr) != "")
                 {
@@ -48,11 +48,11 @@ namespace LexicalAnaylzerRexton
                 }
                 else if (isIdentifier(words[i].wordStr))
                 {
-                        words[i].classStr = SingletonClass.nonKeywords.IDENTIFIER.ToString();
+                        words[i].classStr = Singleton.nonKeywords.IDENTIFIER.ToString();
                 }
                 else
                 {
-                    words[i].classStr = SingletonClass.nonKeywords._INVALID.ToString();
+                    words[i].classStr = Singleton.nonKeywords._INVALID.ToString();
                 }
             }
 
@@ -86,6 +86,10 @@ namespace LexicalAnaylzerRexton
                         else if (word[i] == '$')
                         {
                             currentState = 1;
+                        }
+                        else
+                        {
+                            currentState = 3;
                         }
                         break;
 
@@ -166,7 +170,7 @@ namespace LexicalAnaylzerRexton
                         }
                         else
                         {
-                            currentState = 1;                     // all other characters 
+                            currentState = 1;
                         }
                         break;
                     case 2:
@@ -411,11 +415,11 @@ namespace LexicalAnaylzerRexton
 
         private string checkOperator(string word)
         {
-            for (int i = 0; i < SingletonClass.Operators.Length / 2; i++)
+            for (int i = 0; i < Singleton.Operators.Length / 2; i++)
             {
-                if (word == SingletonClass.Operators[i, 0])
+                if (word == Singleton.Operators[i, 0])
                 {
-                    return SingletonClass.Operators[i, 1];
+                    return Singleton.Operators[i, 1];
                 }
             }
             return "";
@@ -423,11 +427,11 @@ namespace LexicalAnaylzerRexton
 
         private string checkKeyword(string word)
         {
-            for (int i = 0; i < SingletonClass.keywords.Length / 2; i++)
+            for (int i = 0; i < Singleton.keywords.Length / 2; i++)
             {
-                if (word == SingletonClass.keywords[i, 0])
+                if (word == Singleton.keywords[i, 0])
                 {
-                    return SingletonClass.keywords[i, 1];
+                    return Singleton.keywords[i, 1];
                 }
             }
             return "";
@@ -436,11 +440,11 @@ namespace LexicalAnaylzerRexton
         private string checkPunctuators(string word)
         {
             Console.WriteLine(word);
-            for (int i = 0; i < SingletonClass.punctuators.Length / 2; i++)
+            for (int i = 0; i < Singleton.punctuators.Length / 2; i++)
             {
-                if (word == SingletonClass.punctuators[i, 0])
+                if (word == Singleton.punctuators[i, 0])
                 {
-                    return SingletonClass.punctuators[i, 1];
+                    return Singleton.punctuators[i, 1];
                 }
             }
             return "";

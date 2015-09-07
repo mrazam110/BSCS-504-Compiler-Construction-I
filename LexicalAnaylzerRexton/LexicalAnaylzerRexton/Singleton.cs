@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LexicalAnaylzerRexton
 {
-    static class SingletonClass
+    static class Singleton
     {
         public static string[,] keywords = {
                                {"aur_int","DataType"},
@@ -29,8 +29,6 @@ namespace LexicalAnaylzerRexton
                                {"abstract","abstract"},
                                {"return","class_returning"},
                                {"void","void"},
-                               {"override","VirtualOverride"},
-                               {"virtual","VirtualOverride"},
                                {"super","super"},
                                {"public","accessModifier"},
                                {"private","accessModifier"},

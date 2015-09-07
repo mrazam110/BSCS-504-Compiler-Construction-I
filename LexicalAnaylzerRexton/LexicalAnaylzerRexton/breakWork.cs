@@ -11,7 +11,7 @@ namespace LexicalAnaylzerRexton
         public List<string> distinctBreaker = new List<string>();
         public List<string> totalBreaker = new List<string>();
 
-        public List<token> breakString(string myString)
+        public List<token> breakString(string inputList)
         {
             List<token> output = new List<token>();
 
@@ -28,7 +28,7 @@ namespace LexicalAnaylzerRexton
             int dump = 0;
             int line = 1;
 
-            for (int i = 0; i < myString.Length; i++)
+            for (int i = 0; i < inputList.Length; i++)
             {
 
                 //check new line
@@ -39,17 +39,17 @@ namespace LexicalAnaylzerRexton
                 }
 
                 //--START char ch in breakers
-                foreach (char ch in SingletonClass.breakers)
+                foreach (char ch in Singleton.breakers)
                 {
-                    //--START myString[i] == ch
-                    if (myString[i] == ch)
+                    //--START inputList[i] == ch
+                    if (inputList[i] == ch)
                     {
                         breaker = true;
-                        //START i != myString.Length - 1
-                        if (i != myString.Length - 1)
+                        //START i != inputList.Length - 1
+                        if (i != inputList.Length - 1)
                         {
                             //--START SWITCH--
-                            switch (myString[i])
+                            switch (inputList[i])
                             {
                                 case ' ':
                                     break;
@@ -63,7 +63,7 @@ namespace LexicalAnaylzerRexton
                                 //IF OPERATORS
                                 case '+':
                                     //if not plus minus operator
-                                    if (myString[i + 1] == '+' || myString[i + 1] == '=')
+                                    if (inputList[i + 1] == '+' || inputList[i + 1] == '=')
                                     {
                                         addNext = true;
                                     }
@@ -75,7 +75,7 @@ namespace LexicalAnaylzerRexton
                                     break;
                                 case '-':
                                     //if not plus minus operator
-                                    if (myString[i + 1] == '-' || myString[i + 1] == '=')
+                                    if (inputList[i + 1] == '-' || inputList[i + 1] == '=')
                                     {
                                         addNext = true;
                                     }
@@ -87,7 +87,7 @@ namespace LexicalAnaylzerRexton
                                     break;
                                 case '*':
                                     //if not multiply operator
-                                    if (myString[i + 1] == '=')
+                                    if (inputList[i + 1] == '=')
                                     {
                                         addNext = true;
                                     }
@@ -99,7 +99,7 @@ namespace LexicalAnaylzerRexton
                                     break;
                                 case '/':
                                     //if not divide operator
-                                    if (myString[i + 1] == '=')
+                                    if (inputList[i + 1] == '=')
                                     {
                                         addNext = true;
                                     }
@@ -111,7 +111,7 @@ namespace LexicalAnaylzerRexton
                                     break;
                                 case '%':
                                     //if not mode operator
-                                    if (myString[i + 1] == '=')
+                                    if (inputList[i + 1] == '=')
                                     {
                                         addNext = true;
                                     }
@@ -124,7 +124,7 @@ namespace LexicalAnaylzerRexton
                                 //END OPERATOR
                                 case '>':
                                     //if >= sign
-                                    if (myString[i + 1] == '=')
+                                    if (inputList[i + 1] == '=')
                                     {
                                         addNext = true;
                                     }
@@ -135,7 +135,7 @@ namespace LexicalAnaylzerRexton
                                     }
                                     break;
                                 case '<':
-                                    if (myString[i + 1] == '=')
+                                    if (inputList[i + 1] == '=')
                                     {
                                         //if <= sign
                                         addNext = true;
@@ -147,7 +147,7 @@ namespace LexicalAnaylzerRexton
                                     }
                                     break;
                                 case '=':
-                                    if (myString[i + 1] == '=')
+                                    if (inputList[i + 1] == '=')
                                     {
                                         //if == sign
                                         addNext = true;
@@ -159,7 +159,7 @@ namespace LexicalAnaylzerRexton
                                     }
                                     break;
                                 case '&':
-                                    if (myString[i + 1] == '&')
+                                    if (inputList[i + 1] == '&')
                                     {
                                         //if && sign
                                         addNext = true;
@@ -171,27 +171,27 @@ namespace LexicalAnaylzerRexton
                                     }
                                     break;
                                 case '|':
-                                    if (myString[i + 1] == '|')
+                                    if (inputList[i + 1] == '|')
                                     {
                                         //if || sign
                                         addNext = true;
                                     }
-                                    else if (myString[i + 1] == '-')
+                                    else if (inputList[i + 1] == '-')
                                     {
                                         //Multi line comments
                                         string tempComment = "|-";
                                         bool commentNOtComplete = true;
                                         isMultiComment = true;
                                         i += 2;
-                                        while (i < myString.Length)
+                                        while (i < inputList.Length)
                                         {
-                                            tempComment += myString[i];
-                                            if (myString[i] == '\n')
+                                            tempComment += inputList[i];
+                                            if (inputList[i] == '\n')
                                             {
                                                 line++;
                                             }
 
-                                            if (i + 1 < myString.Length && myString[i] == '-' && myString[i + 1] == '|')
+                                            if (i + 1 < inputList.Length && inputList[i] == '-' && inputList[i + 1] == '|')
                                             {
                                                 commentNOtComplete = false;
                                                 i += 1;
@@ -202,7 +202,7 @@ namespace LexicalAnaylzerRexton
                                                 i++;
                                             }
                                         }
-                                        if (i < myString.Length && myString[i] == '\n')
+                                        if (i < inputList.Length && inputList[i] == '\n')
                                         {
                                             line++;
                                         }
@@ -219,7 +219,7 @@ namespace LexicalAnaylzerRexton
                                     }
                                     break;
                                 case '!':
-                                    if (myString[i + 1] == '=')
+                                    if (inputList[i + 1] == '=')
                                     {
                                         //if != sign
                                         addNext = true;
@@ -231,16 +231,16 @@ namespace LexicalAnaylzerRexton
                                     }
                                     break;
                                 case '#':
-                                    if (myString[i + 1] == '#')
+                                    if (inputList[i + 1] == '#')
                                     {
                                         while (true)
                                         {
-                                            if (i >= myString.Length)
+                                            if (i >= inputList.Length)
                                             {
                                                 exit = true;
                                                 break;
                                             }
-                                            if (myString[i] == '\n')
+                                            if (inputList[i] == '\n')
                                             {
                                                 addNext = false;
                                                 newLine = true;
@@ -256,11 +256,11 @@ namespace LexicalAnaylzerRexton
                                     }
                                     break;
                                 case '.':
-                                    if (int.TryParse(temp, out dump) && int.TryParse(myString[i + 1].ToString(), out dump))
+                                    if (int.TryParse(temp, out dump) && int.TryParse(inputList[i + 1].ToString(), out dump))
                                     {
                                         breaker = false;
                                     }
-                                    else if (int.TryParse(myString[i + 1].ToString(), out dump))
+                                    else if (int.TryParse(inputList[i + 1].ToString(), out dump))
                                     {
                                         isFloat = true;
                                     }
@@ -271,39 +271,40 @@ namespace LexicalAnaylzerRexton
                                         output.Add(new token(line, temp));
                                         temp = "";
                                     }
-                                    temp += myString[i];
+                                    temp += inputList[i];
                                     i++;
-                                    while (i < myString.Length)// && myString[i] != '\n'
+                                    while (i < inputList.Length)// && inputList[i] != '\n'
                                     {
-                                        if (myString[i] == '\\')
+                                        if (inputList[i] == '\\')
                                         {
-                                            temp += myString[i];
-                                            if (i + 1 < myString.Length - 1)
+                                            temp += inputList[i];
+                                            if (i + 1 < inputList.Length - 1)
                                             {
-                                                temp += myString[i + 1];
+                                                temp += inputList[i + 1];
                                             }
                                             i++;
 
                                         }
-                                        else if (myString[i] == '@')
+                                        else if (inputList[i] == '@')
                                         {
-                                            temp += myString[i];
+                                            temp += inputList[i];
 
                                             break;
                                         }
                                         else
                                         {
-                                            temp += myString[i];
+                                            temp += inputList[i];
                                         }
                                         i++;
                                     }
-                                    if (i < myString.Length && myString[i] == '\n')
+                                    if (i < inputList.Length && inputList[i] == '\n')
                                     {
                                         newLine = true;
                                     }
                                     isString = true;
                                     break;
                                 case '\'':
+                                    //Can be Character
                                     if (temp != "")
                                     {
                                         isString = true;
@@ -315,25 +316,25 @@ namespace LexicalAnaylzerRexton
                                     while (true)
                                     {
 
-                                        temp += myString[i];
+                                        temp += inputList[i];
                                         i++;
-                                        if (length >= 2 && myString[i - 2] != '\\')
+                                        if (length >= 2 && inputList[i - 2] != '\\')
                                         {
                                             i--;
                                             isString = true;
                                             break;
                                         }
-                                        if (length >= 3 && myString[i - 2] == '\\' && myString[i - 3] == '\\')
+                                        if (length >= 3 && inputList[i - 2] == '\\' && inputList[i - 3] == '\\')
                                         {
                                             i--;
                                             isString = true;
                                             break;
                                         }
-                                        if ((myString[i] == '\'' && myString[i - 1] != '\\') || (myString[i] == '\n') || (i == myString.Length - 1))
+                                        if ((inputList[i] == '\'' && inputList[i - 1] != '\\') || (inputList[i] == '\n') || (i == inputList.Length - 1))
                                         {
-                                            temp += myString[i];
+                                            temp += inputList[i];
                                             isString = true;
-                                            if (myString[i] == '\n')
+                                            if (inputList[i] == '\n')
                                             {
                                                 newLine = true;
                                                 temp = temp.Remove(temp.Length - 1);
@@ -348,9 +349,9 @@ namespace LexicalAnaylzerRexton
                             }
                             //--END SWITCH--
                         }
-                        //--END i != myString.Length - 1
+                        //--END i != inputList.Length - 1
                     }
-                    //--END myString[i] == ch
+                    //--END inputList[i] == ch
 
                     if (breaker)
                     {
@@ -366,7 +367,7 @@ namespace LexicalAnaylzerRexton
                 }
                 if (!breaker)
                 {
-                    temp += myString[i];
+                    temp += inputList[i];
                 }
                 else if (breaker && !isString && !isMultiComment)
                 {
@@ -374,7 +375,7 @@ namespace LexicalAnaylzerRexton
                     {
                         output.Add(new token(line, temp));
                     }
-                    temp = myString[i].ToString();
+                    temp = inputList[i].ToString();
                     if (isFloat)
                     {
                         breaker = false;
@@ -384,7 +385,7 @@ namespace LexicalAnaylzerRexton
                     else if (addNext)
                     {
                         i++;
-                        temp += myString[i];
+                        temp += inputList[i];
                         addNext = false;
                     }
                     output.Add(new token(line, temp));
@@ -393,6 +394,7 @@ namespace LexicalAnaylzerRexton
                 }
                 else if (isString)
                 {
+                    //Breaking String
                     output.Add(new token(line, temp));
                     temp = "";
                     isString = false;
@@ -401,7 +403,8 @@ namespace LexicalAnaylzerRexton
                     {
                         output.Add(new token(line, "\n"));
                     }
-                    //close multi line comment
+
+                    //Breaking Multicomment
                     if (isMultiComment)
                     {
                         breaker = false;
