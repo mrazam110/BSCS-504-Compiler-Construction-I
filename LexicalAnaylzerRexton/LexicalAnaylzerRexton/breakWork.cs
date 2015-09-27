@@ -178,7 +178,6 @@ namespace LexicalAnaylzerRexton
                                     }
                                     else if (inputList[i + 1] == '-')
                                     {
-                                        //Multi line comments
                                         string tempComment = "|-";
                                         bool commentNOtComplete = true;
                                         isMultiComment = true;
@@ -405,11 +404,12 @@ namespace LexicalAnaylzerRexton
                     }
 
                     //Breaking Multicomment
-                    if (isMultiComment)
-                    {
-                        breaker = false;
-                        isMultiComment = false;
-                    }
+                    
+                }
+                if (isMultiComment)
+                {
+                    breaker = false;
+                    isMultiComment = false;
                 }
             }
 
