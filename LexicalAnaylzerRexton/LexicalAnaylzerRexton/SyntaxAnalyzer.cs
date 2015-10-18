@@ -14,7 +14,6 @@ namespace LexicalAnaylzerRexton
         {
             this.tokenList = tokenList;
             addDollarToken();
-            
         }
 
         private void addDollarToken(){
@@ -22,7 +21,7 @@ namespace LexicalAnaylzerRexton
             tokenList.Add(temp);
         }
 
-        private bool validateCfg()
+        public bool validateCfg()
         {
             CFG cfg = new CFG(tokenList);
             return cfg.validate();
@@ -46,7 +45,6 @@ namespace LexicalAnaylzerRexton
             {
                 if (tokenList[index].classStr == "$")
                 {
-
                     return true;
                 }
             }
@@ -55,7 +53,7 @@ namespace LexicalAnaylzerRexton
 
         private bool S()
         {
-            return false;
+            return true;
         }
     }
 }
