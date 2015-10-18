@@ -85,7 +85,7 @@ namespace LexicalAnaylzerRexton
             }
 
             //FOLLOW(<Access_Modifier>) = { class , static , DT ,void ,ID  }
-            if (tokenList[index].classStr == Singleton.SingletonEnums._class.ToString() ||
+            else if (tokenList[index].classStr == Singleton.SingletonEnums._class.ToString() ||
                 tokenList[index].classStr == Singleton.SingletonEnums._static.ToString() ||
                 tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString() ||
                 tokenList[index].classStr == Singleton.SingletonEnums._void.ToString() ||
@@ -143,7 +143,7 @@ namespace LexicalAnaylzerRexton
             }
 
             //FOLLOW(<Class_Base>) = { { }
-            if (tokenList[index].classStr == "{")
+            else if (tokenList[index].classStr == "{")
             {
                 return true;
             }
@@ -172,7 +172,7 @@ namespace LexicalAnaylzerRexton
             }
 
             //FOLLOW(<Class_Body>) = { } }
-            if (tokenList[index].classStr == "}")
+            else if (tokenList[index].classStr == "}")
             {
                 return true;
             }
@@ -525,7 +525,7 @@ namespace LexicalAnaylzerRexton
             }
 
             //FOLLOW(<OR_Exp2>) = { , ,  ; , )}
-            if(tokenList[index].classStr == "," ||
+            else if(tokenList[index].classStr == "," ||
                 tokenList[index].classStr == ";" ||
                 tokenList[index].classStr == ")")
             {
@@ -536,6 +536,257 @@ namespace LexicalAnaylzerRexton
 
         private bool AND_Exp()
         {
+            //FIRST(<AND_Exp>) = { ID, INT_CONST , FLOAT_CONST , STRING_CONST , CHAR_CONST , BOOL_CONST  }
+            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
+            {
+                //<AND_Exp>  <ROP> <AND_Exp2>
+                if (ROP())
+                {
+                    if (AND_Exp2())
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool AND_Exp2()
+        {
+            //FIRST(<AND_Exp2>) = {&& , Null}
+            if (tokenList[index].classStr == Singleton.SingletonEnums.AndOp.ToString())
+            {
+                //<AND_Exp2>  && <ROP> <AND_Exp2> | Null
+                if (tokenList[index].classStr == Singleton.SingletonEnums.AndOp.ToString())
+                {
+                    index++;
+                    if (ROP())
+                    {
+                        if (AND_Exp2())
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+                ////FOLLOW(<AND_Exp2>) = {||, , ,  ; , )}
+            else if (tokenList[index].classStr == Singleton.SingletonEnums.OrOp.ToString() || 
+                tokenList[index].classStr == "," ||
+                tokenList[index].classStr == ";" ||
+                tokenList[index].classStr == ")")
+            {
+                return true;
+            }
+            return false;
+        }
+
+
+        private bool ROP()
+        {
+            //FIRST(<ROP>) = { ID, INT_CONST , FLOAT_CONST , STRING_CONST , CHAR_CONST , BOOL_CONST  }
+            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
+            {
+                //<ROP>  <E> <ROP2>
+                if (E())
+                {
+                    if (ROP2())
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool ROP2()
+        {
+            //FIRST(<ROP2>) = {ROP , Null}
+            if (tokenList[index].classStr == Singleton.SingletonEnums.RelationalOp.ToString()) //can be '=' TEMP
+            {
+                //<ROP2>  ROP <E> <ROP2> | Null
+                if (tokenList[index].classStr == Singleton.SingletonEnums.RelationalOp.ToString())
+                {
+                    index++;
+                    if (E())
+                    {
+                        if (ROP2())
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            ////FOLLOW(<ROP2>) = {&& ,||, , ,  ; , )}
+            else if (tokenList[index].classStr == Singleton.SingletonEnums.AndOp.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums.OrOp.ToString() ||
+                tokenList[index].classStr == "," ||
+                tokenList[index].classStr == ";" ||
+                tokenList[index].classStr == ")")
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool E()
+        {
+            //FIRST(<E>) = { ID, INT_CONST , FLOAT_CONST , STRING_CONST , CHAR_CONST , BOOL_CONST  }
+            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
+            {
+                //<E>  <T> <E2>
+                if (T())
+                {
+                    if (E2())
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool E2()
+        {
+            //FIRST(<E2 >) = {Plus_Minus , Null}
+            if (tokenList[index].classStr == Singleton.SingletonEnums.PlusMinus.ToString())
+            {
+                //<E2 >  Plus_Minus <T > <E2> | Null
+                if (tokenList[index].classStr == Singleton.SingletonEnums.PlusMinus.ToString())
+                {
+                    index++;
+                    if (T())
+                    {
+                        if (E2())
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            ////FOLLOW(<E2>) = {ROP , && ,||, , ,  ; , )}
+            else if (tokenList[index].classStr == Singleton.SingletonEnums.RelationalOp.ToString() || // maybe '=' TEMP
+                tokenList[index].classStr == Singleton.SingletonEnums.OrOp.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums.AndOp.ToString() ||
+                tokenList[index].classStr == "," ||
+                tokenList[index].classStr == ";" ||
+                tokenList[index].classStr == ")")
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool T()
+        {
+            //FIRST(<T>) = { ID, INT_CONST , FLOAT_CONST , STRING_CONST , CHAR_CONST , BOOL_CONST  }
+            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
+            {
+                //<T>  <F> <T2>
+                if (F())
+                {
+                    if (T2())
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool T2()
+        {
+            //FIRST(<T2>) = { M_D_M , Null}
+            if (tokenList[index].classStr == Singleton.SingletonEnums.MultiDivideMode.ToString())
+            {
+                //<T2>  M_D_M <F> <T2> | Nulll
+                if (tokenList[index].classStr == Singleton.SingletonEnums.MultiDivideMode.ToString())
+                {
+                    if (F())
+                    {
+                        if (T2())
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            ////FOLLOW(<T2>) = { Plus_Minus , ROP , && ,||, , ,  ; , )}
+            else if (tokenList[index].classStr == Singleton.SingletonEnums.RelationalOp.ToString() || // maybe '=' TEMP
+                tokenList[index].classStr == Singleton.SingletonEnums.OrOp.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums.AndOp.ToString() ||
+                tokenList[index].classStr == "," ||
+                tokenList[index].classStr == ";" ||
+                tokenList[index].classStr == ")")
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool F()
+        {
+            //FIRST(<F>) = { ID, INT_CONST , FLOAT_CONST , STRING_CONST , CHAR_CONST , BOOL_CONST  }
+            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
+            {
+                //<F>  ID | <CONST>
+                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                {
+                    index++;
+                    return true;
+                }
+                else if (CONST())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool CONST()
+        {
+            //FIRST(<CONST>) = { INT_CONST, FLOAT_CONST , STRING_CONST , CHAR_CONST ,BOOL_CONST }
+            if (tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
+            {
+                //<CONST>   INT_CONST| FLOAT_CONST | STRING_CONST | CHAR_CONST | BOOL_CONST
+                if (tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
+                {
+                    index++;
+                }
+            }
             return false;
         }
 
