@@ -940,7 +940,7 @@ namespace LexicalAnaylzerRexton
                 tokenList[index].classStr == Singleton.SingletonEnums._continue.ToString() ||
                 tokenList[index].classStr == Singleton.SingletonEnums._this.ToString())
             {
-                //<S_ST>  <Jab_Tak> | DT <S_St_DT> | <Bar_Bar> | <agar_warna> | <Return> | inc_dec  ID|ID 
+                
                 if (Jab_Tak())
                 {
                     return true;
@@ -977,11 +977,197 @@ namespace LexicalAnaylzerRexton
                 else if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                 {
                     index++;
+                    if (S_St_ID())
+                    {
+                        return true;
+                    }
+                }
+                else if (BREAK())
+                {
+                    return true;
+                }
+                else if (CONTINUE())
+                {
+                    return true;
+                }
+                /*else if (THIS())
+                {
+                    return true;
+                }*/
+            }
+            return false;
+            //<S_ST>  <Jab_Tak> | DT <S_St_DT> | <Bar_Bar> | <agar_warna> | <Return> | inc_dec  ID|ID <S_St_ID>
+            //| <break> | <continue> |<this>
+        }
+
+        private bool S_St_ID()
+        {
+            //FIRST(<S_St_ID>) = {inc_dec , = , ID ,  .  , (  }
+            if (tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString() ||
+                tokenList[index].classStr == "=" ||
+                tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == "." ||
+                tokenList[index].classStr == "(" )
+            {
+                //<S_St_ID>  inc_dec | <Assign_Op> | <Object_link> | <Object_Call> | <Method_Call_1>
+                if (tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString())
+                {
+                    index++;
+                    return true;
+                }
+                else if (Assign_Op())
+                {
+                    return true;
+                }
+                else if (Object_link())
+                {
+                    return true;
+                }
+                else if (Object_Call())
+                {
+                    return true;
+                }
+                else if (Method_Call_1())
+                {
                     return true;
                 }
             }
             return false;
         }
+
+        private bool Object_link()
+        {
+            //FIRST(<Object_Link>) = {ID}
+            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+            {
+                //<Object_Link> ID <Object_Creation_Exp>
+                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                {
+                    index++;
+                    if (Object_Creation_Exp())
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool BREAK()
+        {
+            //FIRST(<Break>) = {break}
+            if (tokenList[index].classStr == Singleton.SingletonEnums._break.ToString())
+            {
+                //<Break>  break ;
+                if (tokenList[index].classStr == Singleton.SingletonEnums._break.ToString())
+                {
+                    index++;
+                    if (tokenList[index].classStr == ";")
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool CONTINUE()
+        {
+            //FIRST(<Break>) = {break}
+            if (tokenList[index].classStr == Singleton.SingletonEnums._continue.ToString())
+            {
+                //<Break>  break ;
+                if (tokenList[index].classStr == Singleton.SingletonEnums._continue.ToString())
+                {
+                    index++;
+                    if (tokenList[index].classStr == ";")
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        /*private bool THIS()
+        {
+            //FIRST(<This>)  = {this}
+            if (tokenList[index].classStr == Singleton.SingletonEnums._this.ToString())
+            {
+                //<this>  this.ID < LISTAOP >
+                if (tokenList[index].classStr == Singleton.SingletonEnums._this.ToString())
+                {
+                    index++;
+                    if (tokenList[index].classStr == ".")
+                    {
+                        index++;
+                        if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                        {
+                            index++;
+                            if (LISTAOP())
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            return false;
+        }
+
+        private bool LISTAOP()
+        {
+            //FIRST(<LISTAOP >) = {; , AOP}
+
+            if (tokenList[index].classStr == Singleton.SingletonEnums.AssignmentOp.ToString() ||
+                tokenList[index].classStr == ";")
+            {
+                //<LISTAOP>  ; | AOP < LIST2AOP>
+                if (tokenList[index].classStr == ";")
+                {
+                    index++;
+                    return true;
+                }
+                else if (tokenList[index].classStr == Singleton.SingletonEnums.AssignmentOp.ToString())
+                {
+                    index++;
+                    if (LIST2AOP())
+                    {
+                        return true;
+                    }
+                }
+            }
+            
+            return false;
+        }
+
+        private bool LIST2AOP()
+        {
+            //FIRST(<LIST2AOP >) = { ID, INT_CONST , FLOAT_CONST , STRING_CONST , CHAR_CONST , BOOL_CONST }
+            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
+            {
+                //< LIST2AOP >  ID <INIT> ; | <CONST> ;
+                if (CONST())
+                {
+                    return true;
+                }
+                else if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                {
+                    index++;
+                   // if(INIT_Array)
+                }
+            }
+            
+
+            return false;
+        }*/
 
         private bool Return()
         {
@@ -1334,9 +1520,6 @@ namespace LexicalAnaylzerRexton
                         index++;
                         if (F1())
                         {
-                            if (tokenList[index].classStr == ";")
-                            {
-                                index++;
                                 if (F2())
                                 {
                                     if (tokenList[index].classStr == ";")
@@ -1354,7 +1537,7 @@ namespace LexicalAnaylzerRexton
                                             }
                                         }
                                     }
-                                }
+                                
                             }
                         }
                     }
@@ -1412,8 +1595,9 @@ namespace LexicalAnaylzerRexton
                 }
             }
             //FOLLOW(<F1>) = { ; }
-            if (tokenList[index].classStr == ";")
+            else if (tokenList[index].classStr == ";")
             {
+                index++;
                 return true;
             }
             return false;
