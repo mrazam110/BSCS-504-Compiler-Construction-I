@@ -53,7 +53,40 @@ namespace LexicalAnaylzerRexton
 
         private bool S()
         {
-            return true;
+            if (tokenList[index].classStr == Singleton.SingletonEnums._Access_Modifier.ToString() || 
+                tokenList[index].classStr == Singleton.SingletonEnums._class.ToString())
+            {
+                if (Access_Modifier())
+                {
+                    if (Class_Link())
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
+
+        private bool Access_Modifier()
+        {
+            if (tokenList[index].classStr == Singleton.SingletonEnums._Access_Modifier.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._static.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._void.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+            {
+                if (tokenList[index].classStr == Singleton.SingletonEnums._Access_Modifier.ToString())
+                {
+                    index++;
+                }
+            }
+            return false;
+        }
+
+        private bool Class_Link()
+        {
+            return false;
+        }
+
     }
 }
