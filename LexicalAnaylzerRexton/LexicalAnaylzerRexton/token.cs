@@ -17,7 +17,7 @@ namespace LexicalAnaylzerRexton
             lineNumber = lineNum;
             wordStr  = word;
         }
-        public token(ushort line, string word, string classs)
+        public token(int line, string word, string classs)
         {
             lineNumber = line;
             wordStr = word;

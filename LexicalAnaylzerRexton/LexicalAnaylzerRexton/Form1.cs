@@ -17,6 +17,8 @@ namespace LexicalAnaylzerRexton
         breakWork wordBreaker;
         List<token> wordBreakerOutput;
         List<token> TokenOutput;
+
+        private List<token> tokenSet;
         
         public Form1()
         {
@@ -58,12 +60,17 @@ namespace LexicalAnaylzerRexton
 
                 List<token> tokensList = lex.getTokensList(wordBreakerOutput);
 
+                tokenSet = new List<token>();
+
                 foreach (token s in tokensList)
                 {
                     if (s.wordStr != " " && s.wordStr != "\n" && s.wordStr != "\t" && s.wordStr != "\r")
                     {
                         //richTextBox1.Text += "(" + s.lineNumber + ") " + s.wordStr + "\n";
                         richTextBox1.Text += "(" + s.wordStr + ", " + s.classStr + ", " + s.lineNumber + ")\n";
+
+                        token temp = new token(s.lineNumber, s.wordStr, s.classStr);
+                        tokenSet.Add(temp);
                     }
                 }
             }
@@ -88,6 +95,11 @@ namespace LexicalAnaylzerRexton
                     MessageBox.Show("Can not read from file");
                 }
             }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            SyntaxAnalyzer syntaxAnalysis = new SyntaxAnalyzer(tokenSet);
         }
     }
 }
