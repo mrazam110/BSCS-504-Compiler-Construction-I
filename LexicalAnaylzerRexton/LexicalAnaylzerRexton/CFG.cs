@@ -6,29 +6,6 @@ using System.Threading.Tasks;
 
 namespace LexicalAnaylzerRexton
 {
-    class SyntaxAnalyzer
-    {
-        private List<token> tokenList;
-
-        public SyntaxAnalyzer(List<token> tokenList)
-        {
-            this.tokenList = tokenList;
-            addDollarToken();
-        }
-
-        private void addDollarToken(){
-            token temp = new token(-1, "$", "$");
-            tokenList.Add(temp);
-        }
-
-        public bool validateCfg()
-        {
-            CFG cfg = new CFG(tokenList);
-            return cfg.validate();
-        }
-
-    }
-
     class CFG
     {
         private int index = 0;
@@ -54,7 +31,7 @@ namespace LexicalAnaylzerRexton
         private bool S()
         {
             //FIRST(<Class_Dec>) = { access_modifier, class}
-            if (tokenList[index].classStr == Singleton.SingletonEnums._Access_Modifier.ToString() || 
+            if (tokenList[index].classStr == Singleton.SingletonEnums._Access_Modifier.ToString() ||
                 tokenList[index].classStr == Singleton.SingletonEnums._class.ToString())
             {
 
@@ -154,7 +131,7 @@ namespace LexicalAnaylzerRexton
         private bool Class_Body()
         {
             //FIRST(<Class_Body>) = { access_modifier , static , DT ,void ,ID , class  , Null
-            if(tokenList[index].classStr == Singleton.SingletonEnums._Access_Modifier.ToString() ||
+            if (tokenList[index].classStr == Singleton.SingletonEnums._Access_Modifier.ToString() ||
                 tokenList[index].classStr == Singleton.SingletonEnums._static.ToString() ||
                 tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString() ||
                 tokenList[index].classStr == Singleton.SingletonEnums._void.ToString() ||
@@ -301,7 +278,7 @@ namespace LexicalAnaylzerRexton
                     }
                 }
             }
-            
+
             return false;
         }
 
@@ -394,7 +371,7 @@ namespace LexicalAnaylzerRexton
                         }
                     }
                 }
-                
+
             }
             return false;
         }
@@ -525,7 +502,7 @@ namespace LexicalAnaylzerRexton
             }
 
             //FOLLOW(<OR_Exp2>) = { , ,  ; , )}
-            else if(tokenList[index].classStr == "," ||
+            else if (tokenList[index].classStr == "," ||
                 tokenList[index].classStr == ";" ||
                 tokenList[index].classStr == ")")
             {
@@ -574,8 +551,8 @@ namespace LexicalAnaylzerRexton
                     }
                 }
             }
-                ////FOLLOW(<AND_Exp2>) = {||, , ,  ; , )}
-            else if (tokenList[index].classStr == Singleton.SingletonEnums.OrOp.ToString() || 
+            ////FOLLOW(<AND_Exp2>) = {||, , ,  ; , )}
+            else if (tokenList[index].classStr == Singleton.SingletonEnums.OrOp.ToString() ||
                 tokenList[index].classStr == "," ||
                 tokenList[index].classStr == ";" ||
                 tokenList[index].classStr == ")")
@@ -823,7 +800,7 @@ namespace LexicalAnaylzerRexton
                     }
                 }
             }
-                ////FOLLOW(<M_ST>) = { } }
+            ////FOLLOW(<M_ST>) = { } }
             else if (tokenList[index].classStr == "}")
             {
                 return true;
@@ -850,14 +827,16 @@ namespace LexicalAnaylzerRexton
                 {
                     return true;
                 }
-                else if(tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString()){
+                else if (tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString())
+                {
                     index++;
                     if (S_St_DT())
                     {
                         return true;
                     }
                 }
-                else if(Bar_Bar()){
+                else if (Bar_Bar())
+                {
                     return true;
                 }
                 else if (agar_warna())
@@ -965,7 +944,7 @@ namespace LexicalAnaylzerRexton
                 if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                 {
                     index++;
-                    if (S_St_DT2)
+                    if (S_St_DT2())
                     {
                         return true;
                     }
