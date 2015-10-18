@@ -99,7 +99,90 @@ namespace LexicalAnaylzerRexton
 
         private bool Class_Link()
         {
+            //FIRST(<Class_Link>) = {class}
+            if (tokenList[index].classStr == Singleton.SingletonEnums._class.ToString())
+            {
+                //<Class_Link>  class ID <Class_Base> {<Class_Body>}
+                index++;
+                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                {
+                    index++;
+                    if (Class_Base())
+                    {
+                        if (tokenList[index].classStr == "{")
+                        {
+                            index++;
+                            if (Class_Body())
+                            {
+                                if (tokenList[index].classStr == "}")
+                                {
+                                    index++;
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             return false;
+        }
+
+        private bool Class_Base()
+        {
+            //FIRST(<Class_Base>) = {Null , :}
+            if (tokenList[index].classStr == ":")
+            {
+                //<Class_Base>  Null | : ID
+                index++;
+                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                {
+                    index++;
+                    return true;
+                }
+            }
+
+            //FOLLOW(<Class_Base>) = { { }
+            if (tokenList[index].classStr == "{")
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool Class_Body()
+        {
+            //FIRST(<Class_Body>) = { access_modifier , static , DT ,void ,ID , class  , Null
+            if(tokenList[index].classStr == Singleton.SingletonEnums._Access_Modifier.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._static.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._void.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._class.ToString())
+            {
+                //<Class_Body>  <Class_Member> <Class_Body> | Null
+                if (Class_Member())
+                {
+                    if (Class_Body())
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            //FOLLOW(<Class_Body>) = { } }
+            if (tokenList[index].classStr == "}")
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool Class_Member()
+        {
+            return true;
         }
 
     }
