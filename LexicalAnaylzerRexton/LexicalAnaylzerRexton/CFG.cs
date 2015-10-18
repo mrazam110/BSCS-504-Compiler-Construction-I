@@ -62,7 +62,8 @@ namespace LexicalAnaylzerRexton
             }
 
             //FOLLOW(<Access_Modifier>) = { class , static , DT ,void ,ID  }
-            else if (tokenList[index].classStr == Singleton.SingletonEnums._class.ToString() ||
+            
+            if (tokenList[index].classStr == Singleton.SingletonEnums._class.ToString() ||
                 tokenList[index].classStr == Singleton.SingletonEnums._static.ToString() ||
                 tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString() ||
                 tokenList[index].classStr == Singleton.SingletonEnums._void.ToString() ||
@@ -120,7 +121,7 @@ namespace LexicalAnaylzerRexton
             }
 
             //FOLLOW(<Class_Base>) = { { }
-            else if (tokenList[index].classStr == "{")
+            if (tokenList[index].classStr == "{")
             {
                 return true;
             }
@@ -149,7 +150,7 @@ namespace LexicalAnaylzerRexton
             }
 
             //FOLLOW(<Class_Body>) = { } }
-            else if (tokenList[index].classStr == "}")
+            if (tokenList[index].classStr == "}")
             {
                 return true;
             }
@@ -302,6 +303,7 @@ namespace LexicalAnaylzerRexton
                                 if (M_ST())
                                 {
                                     if (tokenList[index].classStr == "}")
+                                        index++;
                                     {
                                         return true;
                                     }
@@ -385,10 +387,11 @@ namespace LexicalAnaylzerRexton
                 //<ID_1><Varaiable_Link2> | <Method_Link 3>
                 if (Variable_Link2())
                 {
-                    if (Method_Link3())
-                    {
-                        return true;
-                    }
+                    return true;
+                }
+                else if (Method_Link3())
+                {
+                    return true;
                 }
             }
             return false;
@@ -502,7 +505,7 @@ namespace LexicalAnaylzerRexton
             }
 
             //FOLLOW(<OR_Exp2>) = { , ,  ; , )}
-            else if (tokenList[index].classStr == "," ||
+            if (tokenList[index].classStr == "," ||
                 tokenList[index].classStr == ";" ||
                 tokenList[index].classStr == ")")
             {
@@ -552,7 +555,8 @@ namespace LexicalAnaylzerRexton
                 }
             }
             ////FOLLOW(<AND_Exp2>) = {||, , ,  ; , )}
-            else if (tokenList[index].classStr == Singleton.SingletonEnums.OrOp.ToString() ||
+            
+            if (tokenList[index].classStr == Singleton.SingletonEnums.OrOp.ToString() ||
                 tokenList[index].classStr == "," ||
                 tokenList[index].classStr == ";" ||
                 tokenList[index].classStr == ")")
@@ -605,7 +609,7 @@ namespace LexicalAnaylzerRexton
             }
 
             ////FOLLOW(<ROP2>) = {&& ,||, , ,  ; , )}
-            else if (tokenList[index].classStr == Singleton.SingletonEnums.AndOp.ToString() ||
+            if (tokenList[index].classStr == Singleton.SingletonEnums.AndOp.ToString() ||
                 tokenList[index].classStr == Singleton.SingletonEnums.OrOp.ToString() ||
                 tokenList[index].classStr == "," ||
                 tokenList[index].classStr == ";" ||
@@ -657,7 +661,7 @@ namespace LexicalAnaylzerRexton
                 }
             }
             ////FOLLOW(<E2>) = {ROP , && ,||, , ,  ; , )}
-            else if (tokenList[index].classStr == Singleton.SingletonEnums.RelationalOp.ToString() || // maybe '=' TEMP
+            if (tokenList[index].classStr == Singleton.SingletonEnums.RelationalOp.ToString() || // maybe '=' TEMP
                 tokenList[index].classStr == Singleton.SingletonEnums.OrOp.ToString() ||
                 tokenList[index].classStr == Singleton.SingletonEnums.AndOp.ToString() ||
                 tokenList[index].classStr == "," ||
@@ -709,7 +713,8 @@ namespace LexicalAnaylzerRexton
                 }
             }
             ////FOLLOW(<T2>) = { Plus_Minus , ROP , && ,||, , ,  ; , )}
-            else if (tokenList[index].classStr == Singleton.SingletonEnums.RelationalOp.ToString() || // maybe '=' TEMP
+            
+            if (tokenList[index].classStr == Singleton.SingletonEnums.RelationalOp.ToString() || // maybe '=' TEMP
                 tokenList[index].classStr == Singleton.SingletonEnums.OrOp.ToString() ||
                 tokenList[index].classStr == Singleton.SingletonEnums.AndOp.ToString() ||
                 tokenList[index].classStr == "," ||
@@ -762,6 +767,7 @@ namespace LexicalAnaylzerRexton
                 tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
                 {
                     index++;
+                    return true;
                 }
             }
             return false;
@@ -808,7 +814,7 @@ namespace LexicalAnaylzerRexton
             }
 
             ////FOLLOW(<Param>) = { ) }
-            else if (tokenList[index].classStr == ")")
+            if (tokenList[index].classStr == ")")
             {
                 return true;
             }
@@ -831,7 +837,7 @@ namespace LexicalAnaylzerRexton
                 }
             }
             //FOLLOW(<Param1>) = { ) }
-            else if (tokenList[index].classStr == ")")
+            if (tokenList[index].classStr == ")")
             {
                 return true;
             }
@@ -858,7 +864,7 @@ namespace LexicalAnaylzerRexton
                 }
             }
             //FOLLOW(<List_Param>) = { ) }
-            else if (tokenList[index].classStr == ")")
+            if (tokenList[index].classStr == ")")
             {
                 return true;
             }
@@ -873,9 +879,13 @@ namespace LexicalAnaylzerRexton
                 tokenList[index].classStr == ";")
             {
                 //<Variable_Link2>   =  <Variable_Value>| <LIST>
-                if (Variable_Value())
+                if (tokenList[index].classStr == "=")
                 {
-                    return true;
+                    index++;
+                    if (Variable_Value())
+                    {
+                        return true;
+                    }
                 }
                 else if (LIST())
                 {
@@ -909,7 +919,7 @@ namespace LexicalAnaylzerRexton
                 }
             }
             ////FOLLOW(<M_ST>) = { } }
-            else if (tokenList[index].classStr == "}")
+            if (tokenList[index].classStr == "}")
             {
                 return true;
             }
@@ -1059,7 +1069,7 @@ namespace LexicalAnaylzerRexton
                 }
             }
             //FOLLOW(<O_Else>) = { jabtak , DT , Barbar , agar , return ,  inc_dec , ID , break , continue, this , }}
-            else if (tokenList[index].classStr == Singleton.SingletonEnums._jabtak.ToString() ||
+            if (tokenList[index].classStr == Singleton.SingletonEnums._jabtak.ToString() ||
                 tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString() ||
                 tokenList[index].classStr == Singleton.SingletonEnums._barbar.ToString() ||
                 tokenList[index].classStr == Singleton.SingletonEnums._agar.ToString() ||
@@ -1402,7 +1412,7 @@ namespace LexicalAnaylzerRexton
                 }
             }
             //FOLLOW(<F1>) = { ; }
-            else if (tokenList[index].classStr == ";")
+            if (tokenList[index].classStr == ";")
             {
                 return true;
             }
@@ -1429,7 +1439,8 @@ namespace LexicalAnaylzerRexton
                 }
             }
                 ////FOLLOW(<F2>) = { ; }
-            else if (tokenList[index].classStr == ";")
+            
+            if (tokenList[index].classStr == ";")
             {
                 return true;
             }
@@ -1462,7 +1473,8 @@ namespace LexicalAnaylzerRexton
                 }
             }
             ////FOLLOW(<F3>) = { ) }
-            else if (tokenList[index].classStr == ")")
+            
+            if (tokenList[index].classStr == ")")
             {
                 return true;
             }
@@ -1508,7 +1520,8 @@ namespace LexicalAnaylzerRexton
             }
 
             ////FOLLOW(<X>) = { ; }
-            else if (tokenList[index].classStr == ";")
+            
+            if (tokenList[index].classStr == ";")
             {
                 return true;
             }

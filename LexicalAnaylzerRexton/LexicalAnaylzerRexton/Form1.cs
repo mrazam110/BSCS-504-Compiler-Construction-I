@@ -73,6 +73,16 @@ namespace LexicalAnaylzerRexton
                         tokenSet.Add(temp);
                     }
                 }
+
+                SyntaxAnalyzer syntaxAnalysis = new SyntaxAnalyzer(tokenSet);
+                if (syntaxAnalysis.validateCfg())
+                {
+                    button4.Text = "true";
+                }
+                else
+                {
+                    button4.Text = "false";
+                }
             }
         }
 
@@ -99,15 +109,7 @@ namespace LexicalAnaylzerRexton
 
         private void button4_Click(object sender, EventArgs e)
         {
-            SyntaxAnalyzer syntaxAnalysis = new SyntaxAnalyzer(tokenSet);
-            if (syntaxAnalysis.validateCfg())
-            {
-                button4.Text = "true";
-            }
-            else
-            {
-                button4.Text = "false";
-            }
+            
         }
     }
 }
