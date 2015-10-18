@@ -53,9 +53,12 @@ namespace LexicalAnaylzerRexton
 
         private bool S()
         {
+            //FIRST(<Class_Dec>) = { access_modifier, class}
             if (tokenList[index].classStr == Singleton.SingletonEnums._Access_Modifier.ToString() || 
                 tokenList[index].classStr == Singleton.SingletonEnums._class.ToString())
             {
+
+                //<Class_Dec>   <Access_Modifier><Class_Link>
                 if (Access_Modifier())
                 {
                     if (Class_Link())
@@ -69,17 +72,28 @@ namespace LexicalAnaylzerRexton
 
         private bool Access_Modifier()
         {
-            if (tokenList[index].classStr == Singleton.SingletonEnums._Access_Modifier.ToString() ||
+            //FIRST(<Access_Modifier>) = { access_modifier, Null}
+            if (tokenList[index].classStr == Singleton.SingletonEnums._Access_Modifier.ToString())
+            {
+
+                //<Access_Modifier>  access_modifier | Null
+                if (tokenList[index].classStr == Singleton.SingletonEnums._Access_Modifier.ToString())
+                {
+                    index++;
+                    return true;
+                }
+            }
+
+            //FOLLOW(<Access_Modifier>) = { class , static , DT ,void ,ID  }
+            if (tokenList[index].classStr == Singleton.SingletonEnums._class.ToString() ||
                 tokenList[index].classStr == Singleton.SingletonEnums._static.ToString() ||
                 tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString() ||
                 tokenList[index].classStr == Singleton.SingletonEnums._void.ToString() ||
                 tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
             {
-                if (tokenList[index].classStr == Singleton.SingletonEnums._Access_Modifier.ToString())
-                {
-                    index++;
-                }
+                return true;
             }
+
             return false;
         }
 
