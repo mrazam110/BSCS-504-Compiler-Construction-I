@@ -1093,6 +1093,7 @@ namespace LexicalAnaylzerRexton
                 if (tokenList[index].classStr == ";")
                 {
                     index++;
+                    return true;
                 }
                 else if (tokenList[index].classStr == "=")
                 {
@@ -1127,6 +1128,66 @@ namespace LexicalAnaylzerRexton
 
         private bool Array_const()
         {
+            //FIRST(<Array_const>) = {{ , ;}
+            if (tokenList[index].classStr == "{" ||
+                tokenList[index].classStr == ";")
+            {
+                //<Array_const>  <Array_C> | ;
+                if (tokenList[index].classStr == ";")
+                {
+                    index++;
+                    return true;
+                }
+                else if (Array_C())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool Array_C()
+        {
+           // FIRST(<Array_C>) = { { }
+            if (tokenList[index].classStr == "{")
+            {
+                //<Array_C>  { <Const> <Array_C2>
+                if (tokenList[index].classStr == "{")
+                {
+                    index++;
+                    if (CONST())
+                    {
+                        if (Array_C2())
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool Array_C2()
+        {
+            //FIRST(<Array_C2>) = {, , } }
+            if (tokenList[index].classStr == "{" ||
+                tokenList[index].classStr == ",")
+            {
+                //<Array_C2>  , <Const> | } ;
+                if (tokenList[index].classStr == "}")
+                {
+                    index++;
+                    if (tokenList[index].classStr == ";")
+                    {
+                        index++;
+                        return true;
+                    }
+                }
+                else if (CONST())
+                {
+                    return true;
+                }
+            }
             return false;
         }
 
