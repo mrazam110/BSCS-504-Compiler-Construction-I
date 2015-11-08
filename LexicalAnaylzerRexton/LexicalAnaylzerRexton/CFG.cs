@@ -11,6 +11,13 @@ namespace LexicalAnaylzerRexton
         private int index = 0;
         private List<token> tokenList;
 
+        private string errors = "";
+
+        public string getErrors()
+        {
+            return errors;
+        }
+
         public CFG(List<token> tokenList)
         {
             this.tokenList = tokenList;
@@ -23,6 +30,810 @@ namespace LexicalAnaylzerRexton
                 if (tokenList[index].classStr == "$")
                 {
                     return true;
+                }
+            }   
+
+            errors += "" + tokenList[index].lineNumber;
+            return false;
+        }
+
+        private bool CONST()
+        {
+            //FIRST(<CONST>) = { INT_CONST, FLOAT_CONST , STRING_CONST , CHAR_CONST ,BOOL_CONST }
+            if (tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
+            {
+                //<CONST>   INT_CONST| FLOAT_CONST | STRING_CONST | CHAR_CONST | BOOL_CONST
+                if (tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
+                {
+                    index++;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool Static()
+        {
+            //FIRST(<Static>) = {Static}
+            if (tokenList[index].classStr == Singleton.SingletonEnums._static.ToString())
+            {
+                //<Static>   Static
+                index++;
+            }
+            return false;
+        }
+
+        private bool ID_CONST()
+        {
+            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
+            {
+                //<ID_CONST> ID|<CONST>
+                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                {
+                    index++;
+                    return true;
+                }
+                else if (CONST())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool Access_Modifier()
+        {
+            //FIRST(<Access_Modifier>) = { access_modifier, Null}
+            if (tokenList[index].classStr == Singleton.SingletonEnums._Access_Modifier.ToString())
+            {
+
+                //<Access_Modifier>  access_modifier | Null
+                if (tokenList[index].classStr == Singleton.SingletonEnums._Access_Modifier.ToString())
+                {
+                    index++;
+                    return true;
+                }
+            }
+
+            //FOLLOW(<Access_Modifier>) = { class , static , DT ,void ,ID  }
+
+            if (tokenList[index].classStr == Singleton.SingletonEnums._class.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._static.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._void.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool Return_Type()
+        {
+            //FIRST(<Return_Type>) = { void, DT }
+            if (tokenList[index].classStr == Singleton.SingletonEnums._void.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString())
+            {
+                //<Return_Type>  void | DT
+                index++;
+                return true;
+            }
+            return false;
+        }
+
+        private bool M_ST()
+        {
+            //FIRST(<M_ST>) = { jabtak , DT , Barbar , agar , return ,  inc_dec , ID , break , continue, this , Null}
+            if (tokenList[index].classStr == Singleton.SingletonEnums._jabtak.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._barbar.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._agar.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._return.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._break.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._continue.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._this.ToString())
+            {
+                //<M_ST>   <S_ST><M_ST> | Null
+                if (S_ST())
+                {
+                    if (M_ST())
+                    {
+                        return true;
+                    }
+                }
+            }
+            ////FOLLOW(<M_ST>) = { } }
+            if (tokenList[index].classStr == "}")
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool Body()
+        {
+            //FIRST(<Body>) = {; , { , jabtak , DT , Barbar , agar , return ,  inc_dec , ID , break , continue , this }
+            if (tokenList[index].classStr == Singleton.SingletonEnums._jabtak.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._barbar.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._agar.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._return.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._break.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._continue.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._this.ToString() ||
+                tokenList[index].classStr == "," ||
+                tokenList[index].classStr == ";" ||
+                tokenList[index].classStr == "{")
+            {
+                //<Body>  ; | <S_ST> | {<M_ST>}
+                if (tokenList[index].classStr == ";")
+                {
+                    index++;
+                }
+
+                else if (S_ST())
+                {
+                    return true;
+                }
+                else if (tokenList[index].classStr == "{")
+                {
+                    index++;
+                    if (M_ST())
+                    {
+                        if (tokenList[index].classStr == "}")
+                        {
+                            index++;
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private bool List_Param()
+        {
+            //FIRST(<List_Param>) = {DT , Null}
+            if (tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString())
+            {
+                //<List_Param>  DT ID <List_Param1> | Null
+                if (tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString())
+                {
+                    index++;
+                    if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                    {
+                        index++;
+                        if (List_Param())
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            //FOLLOW(<List_Param>) = { ) }
+            if (tokenList[index].classStr == ")")
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool List_Param1()
+        {
+            //FIRST(<List_Param>) = {DT , Null}
+            if (tokenList[index].classStr == ",")
+            {
+                //<List_Param> , DT ID <List_Param1> | Null
+                if (tokenList[index].classStr == ",")
+                {
+                    index++;
+                    if (tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString())
+                    {
+                        index++;
+                        if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                        {
+                            index++;
+                            if (List_Param1())
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            //FOLLOW(<List_Param>) = { ) }
+            if (tokenList[index].classStr == ")")
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool Param()
+        {
+            //FIRST(<Param>) = {ID , Null}
+            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
+            {
+                //<Param>  ID <Param1> | Null
+                if (ID_CONST())
+                {
+                    if (Param1())
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            ////FOLLOW(<Param>) = { ) }
+            if (tokenList[index].classStr == ")")
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool Param1()
+        {
+            //FIRST(<Param1>) = {, , Null}
+            if (tokenList[index].classStr == ",")
+            {
+                //<Param1>  ,  ID <Param1> | Null
+                index++;
+                if (ID_CONST())
+                {
+                    if (Param1())
+                    {
+                        return true;
+                    }
+                }
+            }
+            //FOLLOW(<Param1>) = { ) }
+            if (tokenList[index].classStr == ")")
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool Method_Call_1()
+        {
+            //FIRST(<Method_Call_1>) = { ( }
+            if (tokenList[index].classStr == "(")
+            {
+                //<Method_Call_1>  (<Param>) 
+                if (tokenList[index].classStr == "(")
+                {
+                    index++;
+                    if (Param())
+                    {
+                        if (tokenList[index].classStr == ")")
+                        {
+                            index++;
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool S_ST()
+        {
+            
+            //FIRST(S_ST) = {jabtak , DT , Barbar , agar , return ,  inc_dec , ID , break , continue , this}
+            if (tokenList[index].classStr == Singleton.SingletonEnums._jabtak.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._barbar.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._agar.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._return.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._break.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._continue.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._this.ToString())
+            {
+                //<S_ST><Jab_Tak> | DT <S_St_DT> | <Bar_Bar> | <agar_warna> | <Return> | inc_dec  ID<inc_dec_list>;|ID <S_St_ID>| <break> | <continue> |<this>
+                if (Jab_Tak())
+                {
+                    return true;
+                }
+                else if (tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString())
+                {
+                    index++;
+                    if (S_St_DT())
+                    {
+                        return true;
+                    }
+                }
+                else if (Bar_Bar())
+                {
+                    return true;
+                }
+                else if (agar_warna())
+                {
+                    return true;
+                }
+                else if (Return())
+                {
+                    return true;
+                }
+                else if (tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString())
+                {
+                    index++;
+                    if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                    {
+                        index++;
+                        if (inc_dec_list())
+                        {
+                            if (tokenList[index].classStr == ";")
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+                else if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                {
+                    index++;
+                    if (S_St_ID())
+                    {
+                        return true;
+                    }
+                }
+                else if (BREAK())
+                {
+                    return true;
+                }
+                else if (CONTINUE())
+                {
+                    return true;
+                }
+                /*else if (THIS())
+                {
+                    return true;
+                }*/
+            }
+            return false;
+        }
+
+        private bool S_St_ID()
+        {
+            //FIRST(<S_St_ID>) = {inc_dec , = , ID ,  .  , (  }
+            ////FIRST(<S_St_ID>) = {inc_dec , AOP , ID , [ ,  .  , (  }
+            if (tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums.AssignmentOp.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == "." ||
+                tokenList[index].classStr == "(" ||
+                tokenList[index].classStr == "[" )
+            {
+                //<S_St_ID>  inc_dec | <Assign_Op> | <Object_link> | <Object_Call> | <Method_Call_1>7
+                //inc_dec; | <Assign_Op>| <Object_link> | <Object_Call>; | <Method_Call_1>; | [<Exp>] <Assign_Op>	
+                if (tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString())
+                {
+                    index++;
+                    if (tokenList[index].classStr == ";")
+                    {
+                        index++;
+                        return true;
+                    }
+                }
+                else if (Assign_Op())
+                {
+                    return true;
+                }
+                else if (Object_link())
+                {
+                    return true;
+                }
+                else if (Object_Call())
+                {
+                    return true;
+                }
+                else if (Method_Call_1())
+                {
+                    if (tokenList[index].classStr == ";")
+                    {
+                        index++;
+                        return true;
+                    }
+                }
+                else if (tokenList[index].classStr == "[")
+                {
+                    index++;
+                    if (Exp())
+                    {
+                        if (tokenList[index].classStr == "]")
+                        {
+                            index++;
+                            if (Assign_Op())
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool S_St_DT()
+        {
+            //FIRST(<S_St_DT>) = {ID , void , DT , [}
+            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._void.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString() ||
+                tokenList[index].classStr == "[")
+            {
+                //<S_St_DT>  ID <S_St_DT2> | <Method_DEC> | <Array_DEC>
+                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                {
+                    index++;
+                    if (S_St_DT2())
+                    {
+                        return true;
+                    }
+                }
+                else if (Method_DEC())
+                {
+                    return true;
+                }
+                else if (Array_DEC())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool S_St_DT2()
+        {
+            //FIRST(<S_St_DT2>) = { = }
+            ////FIRST(<S_St_DT2>) = { AOP , , , ; }
+            if (tokenList[index].classStr == "=")
+            {
+                //<S_St_DT2>  <Variable_Link2> 
+                //<S_St_DT2><Variable_Link2>
+                if (Variable_Link2())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool DEC()
+        {
+            //FIRST(<DEC>) = { DT}
+            if (tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString())
+            {
+                //<DEC>  DT <Variable_Link>
+                if (tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString())
+                {
+                    index++;
+                    if (Variable_Link())
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool Variable_Link()
+        {
+            //FIRST(<Variable_Link>) = {ID} 
+            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+            {
+                //<Variable_Link>  ID <Varaiable_Link2>
+                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                {
+                    index++;
+                    if (Variable_Link2())
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool Variable_Link2()
+        {
+            //FIRST(<Variable_Link2>  ) = {=, , , ;}
+            if (tokenList[index].classStr == "=" ||
+                tokenList[index].classStr == "," ||
+                tokenList[index].classStr == ";")
+            {
+                //<Variable_Link2>   =  <Variable_Value>| <LIST>
+                if (tokenList[index].classStr == "=")
+                {
+                    index++;
+                    if (Variable_Value())
+                    {
+                        return true;
+                    }
+                }
+                else if (LIST())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool Variable_Value()
+        {
+            //FIRST(<Variable_Value>) = { ID, INT_CONST , FLOAT_CONST , STRING_CONST , CHAR_CONST , BOOL_CONST }
+            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
+            {
+                //<Variable_Value>   <Exp><LIST>  	
+                if (Exp())
+                {
+                    if (LIST())
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool LIST()
+        {
+            //FIRST(<LIST >) = {, , ;}
+            if (tokenList[index].classStr == "," ||
+                tokenList[index].classStr == ";")
+            {
+                //<LIST >  , ID <Variable_Link2> | ;
+                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                {
+                    index++;
+                    if (Variable_Link2())
+                    {
+                        return true;
+                    }
+                }
+                else if (tokenList[index].classStr == ";")
+                {
+                    index++;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool Assign_Op()
+        {
+            //FIRST(<Assign_Op>) = { = }
+            if (tokenList[index].classStr == "=")
+            {
+                //<Assign_Op>   = <Assign_Op2>      	
+                if (tokenList[index].classStr == "=")
+                {
+                    index++;
+                    if (Assign_Op2())
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool Assign_Op2()
+        {
+            //FIRST(<Assign_Op2>) = { ID, INT_CONST , FLOAT_CONST , STRING_CONST , CHAR_CONST , BOOL_CONST }
+            if (tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
+            {
+                //<Assign_Op2>  <Exp>;
+                if (Exp())
+                {
+                    if (tokenList[index].classStr == ";")
+                    {
+                        index++;
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool agar_warna()
+        {
+            //FIRST(<agar_warna>) = {agar}
+            if (tokenList[index].classStr == Singleton.SingletonEnums._agar.ToString())
+            {
+                //<agar_warna>  agar (<Exp>) {<M_ST>} <O_Else>
+                if (tokenList[index].classStr == Singleton.SingletonEnums._agar.ToString())
+                {
+                    index++;
+                    if (tokenList[index].classStr == "(")
+                    {
+                        index++;
+                        if (Exp())
+                        {
+                            if (tokenList[index].classStr == ")")
+                            {
+                                index++;
+                                if (tokenList[index].classStr == "{")
+                                {
+                                    index++;
+                                    if (M_ST())
+                                    {
+                                        if (tokenList[index].classStr == "}")
+                                        {
+                                            index++;
+                                            if (O_Else())
+                                            {
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool O_Else()
+        {
+            //FIRST(<O_Else>) = {warna , Null}
+            if (tokenList[index].classStr == Singleton.SingletonEnums._warna.ToString())
+            {
+                //<O_Else>  warna {<M_ST>} | Null
+                if (tokenList[index].classStr == Singleton.SingletonEnums._warna.ToString())
+                {
+                    index++;
+                    if (tokenList[index].classStr == "{")
+                    {
+                        index++;
+                        if (M_ST())
+                        {
+                            if (tokenList[index].classStr == "}")
+                            {
+                                index++;
+                            }
+
+                        }
+                    }
+                }
+            }
+            //FOLLOW(<O_Else>) = { jabtak , DT , Barbar , agar , return ,  inc_dec , ID , break , continue, this , }}
+            if (tokenList[index].classStr == Singleton.SingletonEnums._jabtak.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._barbar.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._agar.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._return.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._break.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._continue.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._this.ToString())
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool Jab_Tak()
+        {
+            //FIRST(<Jab_tak>) = {jabtak}
+            if (tokenList[index].classStr == Singleton.SingletonEnums._jabtak.ToString())
+            {
+                //<Jab_tak>  jabtak (<Exp>) <Body>
+                if (tokenList[index].classStr == Singleton.SingletonEnums._jabtak.ToString())
+                {
+                    index++;
+                    if (tokenList[index].classStr == "(")
+                    {
+                        index++;
+                        if (Exp())
+                        {
+                            if (tokenList[index].classStr == ")")
+                            {
+                                if (Body())
+                                {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool Return()
+        {
+            //FIRST(<Return>) = {return}
+            if (tokenList[index].classStr == Singleton.SingletonEnums._return.ToString())
+            {
+                //<Return>  return <Exp> ;
+                if (tokenList[index].classStr == Singleton.SingletonEnums._return.ToString())
+                {
+                    index++;
+                    if (Exp())
+                    {
+                        if (tokenList[index].classStr == ";")
+                        {
+                            index++;
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool BREAK()
+        {
+            //FIRST(<Break>) = {break}
+            if (tokenList[index].classStr == Singleton.SingletonEnums._break.ToString())
+            {
+                //<Break>  break ;
+                if (tokenList[index].classStr == Singleton.SingletonEnums._break.ToString())
+                {
+                    index++;
+                    if (tokenList[index].classStr == ";")
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool CONTINUE()
+        {
+            //FIRST(<Break>) = {break}
+            if (tokenList[index].classStr == Singleton.SingletonEnums._continue.ToString())
+            {
+                //<Break>  break ;
+                if (tokenList[index].classStr == Singleton.SingletonEnums._continue.ToString())
+                {
+                    index++;
+                    if (tokenList[index].classStr == ";")
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -47,33 +858,7 @@ namespace LexicalAnaylzerRexton
             return false;
         }
 
-        private bool Access_Modifier()
-        {
-            //FIRST(<Access_Modifier>) = { access_modifier, Null}
-            if (tokenList[index].classStr == Singleton.SingletonEnums._Access_Modifier.ToString())
-            {
-
-                //<Access_Modifier>  access_modifier | Null
-                if (tokenList[index].classStr == Singleton.SingletonEnums._Access_Modifier.ToString())
-                {
-                    index++;
-                    return true;
-                }
-            }
-
-            //FOLLOW(<Access_Modifier>) = { class , static , DT ,void ,ID  }
-            
-            if (tokenList[index].classStr == Singleton.SingletonEnums._class.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._static.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._void.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
-            {
-                return true;
-            }
-
-            return false;
-        }
+        
 
         private bool Class_Link()
         {
@@ -233,13 +1018,306 @@ namespace LexicalAnaylzerRexton
             return false;
         }
 
-        private bool Static()
+        private bool DT_2()
         {
-            //FIRST(<Static>) = {Static}
-            if (tokenList[index].classStr == Singleton.SingletonEnums._static.ToString())
+            //FIRST(<DT_2>) = {ID , [}
+            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == "[")
             {
-                //<Static>   Static
-                index++;
+                //<DT_2> ID <ID_1>|< Array_DEC>
+                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                {
+                    index++;
+                    if (ID_1())
+                    {
+                        return true;
+                    }
+                }
+
+                else if (Array_DEC())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool ID_1()
+        {
+            //FIRST(<ID_1>) = {( , =} //TEMP
+            if (tokenList[index].classStr == "(" ||
+                tokenList[index].classStr == "=")
+            {
+                //<ID_1><Varaiable_Link2> | <Method_Link 3>
+                if (Variable_Link2())
+                {
+                    return true;
+                }
+                else if (Method_Link3())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool DT_1()
+        {
+            //FIRST(<DT_1>) = {ID , [}
+            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == "[")
+            {
+                //<DT_1>  ID <ID_2>| <Array_DEC>
+                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                {
+                    index++;
+                    if (ID_2())
+                    {
+                        return true;
+                    }
+                }
+                else if (Array_DEC())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool ID_2()
+        {
+            //FIRST(<ID_2>) = {( , =}
+            if (tokenList[index].classStr == "(" ||
+                tokenList[index].classStr == "=")
+            {
+                //<ID_2>  <Method_Link3> | <Variable_Link2>
+                if (Method_Link3())
+                {
+                    return true;
+                }
+                else if (Variable_Link2())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool Id_OArray()
+        {
+            //FIRST(<Id_OArray>) = {ID , [}
+            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == "[")
+            {
+                //<Id_OArray>  ID <Id_A> | <Array_DEC>
+                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                {
+                    index++;
+                    if (Id_A())
+                    {
+                        return true;
+                    }
+                }
+                else if (Array_DEC())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool Id_A()
+        {
+            //FIRST(<Id_A>) = {= , (}
+            if (tokenList[index].classStr == "=" ||
+                tokenList[index].classStr == "(")
+            {
+                //<Id_A>  <Method_Link3> | <Object_Creation_Exp>
+                if (Method_Link3())
+                {
+                    return true;
+                }
+                else if (Object_Creation_Exp())
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool Constructor_DEC()
+        {
+            //FIRST(<Constructor_DEC>) = {ID}
+            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+            {
+                //<Constructor_DEC>   ID (<List_Param>) {<M-St>}
+                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                {
+                    index++;
+                    if (tokenList[index].classStr == "(")
+                    {
+                        index++;
+                        if (List_Param())
+                        {
+                            if (tokenList[index].classStr == ")")
+                            {
+                                index++;
+                                if (tokenList[index].classStr == "{")
+                                {
+                                    index++;
+                                    if (M_ST())
+                                    {
+                                        if (tokenList[index].classStr == "}")
+                                        {
+                                            index++;
+                                            return true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+            return false;
+        }
+
+        private bool Array_DEC()
+        {
+            //FIRST(<Array_DEC>) = {[}
+            if (tokenList[index].classStr == "[")
+            {
+                //<Array_DEC>   [] ID <INIT_Array>
+                if (tokenList[index].classStr == "[")
+                {
+                    index++;
+                    if (tokenList[index].classStr == "]")
+                    {
+                        index++;
+                        if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                        {
+                            index++;
+                            if (INIT_Array())
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool INIT_Array()
+        {
+            //FIRST(<INIT_Array>) = {; , =}
+            if (tokenList[index].classStr == ";" ||
+                tokenList[index].classStr == "=")
+            {
+                //<INIT_Array>  ; | = new DT [<ID_Const>]<Array_const>
+                if (tokenList[index].classStr == ";")
+                {
+                    index++;
+                    return true;
+                }
+                else if (tokenList[index].classStr == "=")
+                {
+                    index++;
+                    if (tokenList[index].classStr == Singleton.SingletonEnums._new.ToString())
+                    {
+                        index++;
+                        if (tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString())
+                        {
+                            index++;
+                            if (tokenList[index].classStr == "[")
+                            {
+                                index++;
+                                if (ID_Const())
+                                {
+                                    if (tokenList[index].classStr == "]")
+                                    {
+                                        index++;
+                                        if (Array_const())
+                                        {
+                                            return true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool Array_const()
+        {
+            //FIRST(<Array_const>) = {{ , ;}
+            if (tokenList[index].classStr == "{" ||
+                tokenList[index].classStr == ";")
+            {
+                //<Array_const>  <Array_C> | ;
+                if (tokenList[index].classStr == ";")
+                {
+                    index++;
+                    return true;
+                }
+                else if (Array_C())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool Array_C()
+        {
+            // FIRST(<Array_C>) = { { }
+            if (tokenList[index].classStr == "{")
+            {
+                //<Array_C>  { <Const> <Array_C2>
+                if (tokenList[index].classStr == "{")
+                {
+                    index++;
+                    if (CONST())
+                    {
+                        if (Array_C2())
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool Array_C2()
+        {
+            //FIRST(<Array_C2>) = {, , } }
+            if (tokenList[index].classStr == "{" ||
+                tokenList[index].classStr == ",")
+            {
+                //<Array_C2>  , <Const> | } ;
+                if (tokenList[index].classStr == "}")
+                {
+                    index++;
+                    if (tokenList[index].classStr == ";")
+                    {
+                        index++;
+                        return true;
+                    }
+                }
+                else if (tokenList[index].classStr == ",")
+                {
+                    index++;
+                    if (CONST())
+                    {
+                        return true;
+                    }
+                }
             }
             return false;
         }
@@ -316,86 +1394,11 @@ namespace LexicalAnaylzerRexton
             return false;
         }
 
-        private bool DT_2()
-        {
-            //FIRST(<DT_2>) = {ID , [}
-            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
-                tokenList[index].classStr == "[")
-            {
-                //<DT_2> ID <ID_1>|< Array_DEC>
-                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
-                {
-                    index++;
-                    if (ID_1())
-                    {
-                        return true;
-                    }
-                }
+        
 
-                else if (Array_DEC())
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+        
 
-        private bool Constructor_DEC()
-        {
-            //FIRST(<Constructor_DEC>) = {ID}
-            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
-            {
-                //<Constructor_DEC>   ID (<List_Param>) {<M-St>}
-                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
-                {
-                    index++;
-                    if (tokenList[index].classStr == "(")
-                    {
-                        index++;
-                        if (List_Param())
-                        {
-                            if (tokenList[index].classStr == ")")
-                            {
-                                index++;
-                                if (tokenList[index].classStr == "{")
-                                {
-                                    index++;
-                                    if (M_ST())
-                                    {
-                                        if (tokenList[index].classStr == "}")
-                                        {
-                                            index++;
-                                            return true;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-            }
-            return false;
-        }
-
-        private bool ID_1()
-        {
-            //FIRST(<ID_1>) = {( , =} //TEMP
-            if (tokenList[index].classStr == "(" ||
-                tokenList[index].classStr == "=")
-            {
-                //<ID_1><Varaiable_Link2> | <Method_Link 3>
-                if (Variable_Link2())
-                {
-                    return true;
-                }
-                else if (Method_Link3())
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+        
 
         /*private bool Varaiable_Link2()
         {
@@ -422,27 +1425,7 @@ namespace LexicalAnaylzerRexton
             return false;
         }*/
 
-        private bool Variable_Value()
-        {
-            //FIRST(<Variable_Value>) = { ID, INT_CONST , FLOAT_CONST , STRING_CONST , CHAR_CONST , BOOL_CONST }
-            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
-            {
-                //<Variable_Value>   <Exp><LIST>  	
-                if (Exp())
-                {
-                    if (LIST())
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
+        
 
         private bool Exp()
         {
@@ -750,289 +1733,9 @@ namespace LexicalAnaylzerRexton
             return false;
         }
 
-        private bool CONST()
+        private bool inc_dec_list()
         {
-            //FIRST(<CONST>) = { INT_CONST, FLOAT_CONST , STRING_CONST , CHAR_CONST ,BOOL_CONST }
-            if (tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
-            {
-                //<CONST>   INT_CONST| FLOAT_CONST | STRING_CONST | CHAR_CONST | BOOL_CONST
-                if (tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
-                {
-                    index++;
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private bool LIST()
-        {
-            //FIRST(<LIST >) = {, , ;}
-            if (tokenList[index].classStr == "," ||
-                tokenList[index].classStr == ";")
-            {
-                //<LIST >  , ID <Variable_Link2> | ;
-                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
-                {
-                    index++;
-                    if (Variable_Link2())
-                    {
-                        return true;
-                    }
-                }
-                else if (tokenList[index].classStr == ";")
-                {
-                    index++;
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private bool Param()
-        {
-            //FIRST(<Param>) = {ID , Null}
-            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
-            {
-                //<Param>  ID <Param1> | Null
-                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
-                {
-                    index++;
-                    if (Param1())
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            ////FOLLOW(<Param>) = { ) }
-            if (tokenList[index].classStr == ")")
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private bool Param1()
-        {
-            //FIRST(<Param1>) = {, , Null}
-            if (tokenList[index].classStr == ",")
-            {
-                //<Param1>  ,  ID <Param1> | Null
-                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
-                {
-                    index++;
-                    if (Param1())
-                    {
-                        return true;
-                    }
-                }
-            }
-            //FOLLOW(<Param1>) = { ) }
-            if (tokenList[index].classStr == ")")
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private bool List_Param()
-        {
-            //FIRST(<List_Param>) = {DT , Null}
-            if (tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString())
-            {
-                //<List_Param>  DT ID <List_Param1> | Null
-                if (tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString())
-                {
-                    index++;
-                    if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
-                    {
-                        index++;
-                        if (List_Param())
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-            //FOLLOW(<List_Param>) = { ) }
-            if (tokenList[index].classStr == ")")
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private bool Variable_Link2()
-        {
-            //FIRST(<Variable_Link2>  ) = {=, , , ;}
-            if(tokenList[index].classStr == "=" ||
-                tokenList[index].classStr == "," ||
-                tokenList[index].classStr == ";")
-            {
-                //<Variable_Link2>   =  <Variable_Value>| <LIST>
-                if (tokenList[index].classStr == "=")
-                {
-                    index++;
-                    if (Variable_Value())
-                    {
-                        return true;
-                    }
-                }
-                else if (LIST())
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private bool M_ST()
-        {
-            //FIRST(<M_ST>) = { jabtak , DT , Barbar , agar , return ,  inc_dec , ID , break , continue, this , Null}
-            if (tokenList[index].classStr == Singleton.SingletonEnums._jabtak.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._barbar.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._agar.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._return.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._break.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._continue.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._this.ToString())
-            {
-                //<M_ST>   <S_ST><M_ST> | Null
-                if (S_ST())
-                {
-                    if (M_ST())
-                    {
-                        return true;
-                    }
-                }
-            }
-            ////FOLLOW(<M_ST>) = { } }
-            if (tokenList[index].classStr == "}")
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private bool S_ST()
-        {
-            //FIRST(S_ST) = {jabtak , DT , Barbar , agar , return ,  inc_dec , ID , break , continue , this}
-            if (tokenList[index].classStr == Singleton.SingletonEnums._jabtak.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._barbar.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._agar.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._return.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._break.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._continue.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._this.ToString())
-            {
-                
-                if (Jab_Tak())
-                {
-                    return true;
-                }
-                else if (tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString())
-                {
-                    index++;
-                    if (S_St_DT())
-                    {
-                        return true;
-                    }
-                }
-                else if (Bar_Bar())
-                {
-                    return true;
-                }
-                else if (agar_warna())
-                {
-                    return true;
-                }
-                else if (Return())
-                {
-                    return true;
-                }
-                else if (tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString())
-                {
-                    index++;
-                    if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
-                    {
-                        index++;
-                        return true;
-                    }
-                }
-                else if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
-                {
-                    index++;
-                    if (S_St_ID())
-                    {
-                        return true;
-                    }
-                }
-                else if (BREAK())
-                {
-                    return true;
-                }
-                else if (CONTINUE())
-                {
-                    return true;
-                }
-                /*else if (THIS())
-                {
-                    return true;
-                }*/
-            }
-            return false;
-            //<S_ST>  <Jab_Tak> | DT <S_St_DT> | <Bar_Bar> | <agar_warna> | <Return> | inc_dec  ID|ID <S_St_ID>
-            //| <break> | <continue> |<this>
-        }
-
-        private bool S_St_ID()
-        {
-            //FIRST(<S_St_ID>) = {inc_dec , = , ID ,  .  , (  }
-            if (tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString() ||
-                tokenList[index].classStr == "=" ||
-                tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
-                tokenList[index].classStr == "." ||
-                tokenList[index].classStr == "(" )
-            {
-                //<S_St_ID>  inc_dec | <Assign_Op> | <Object_link> | <Object_Call> | <Method_Call_1>
-                if (tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString())
-                {
-                    index++;
-                    return true;
-                }
-                else if (Assign_Op())
-                {
-                    return true;
-                }
-                else if (Object_link())
-                {
-                    return true;
-                }
-                else if (Object_Call())
-                {
-                    return true;
-                }
-                else if (Method_Call_1())
-                {
-                    return true;
-                }
-            }
-            return false;
+            return true;
         }
 
         private bool Object_link()
@@ -1053,41 +1756,9 @@ namespace LexicalAnaylzerRexton
             return false;
         }
 
-        private bool BREAK()
-        {
-            //FIRST(<Break>) = {break}
-            if (tokenList[index].classStr == Singleton.SingletonEnums._break.ToString())
-            {
-                //<Break>  break ;
-                if (tokenList[index].classStr == Singleton.SingletonEnums._break.ToString())
-                {
-                    index++;
-                    if (tokenList[index].classStr == ";")
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
+        
 
-        private bool CONTINUE()
-        {
-            //FIRST(<Break>) = {break}
-            if (tokenList[index].classStr == Singleton.SingletonEnums._continue.ToString())
-            {
-                //<Break>  break ;
-                if (tokenList[index].classStr == Singleton.SingletonEnums._continue.ToString())
-                {
-                    index++;
-                    if (tokenList[index].classStr == ";")
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
+        
 
         /*private bool THIS()
         {
@@ -1169,274 +1840,13 @@ namespace LexicalAnaylzerRexton
             return false;
         }*/
 
-        private bool Return()
-        {
-            //FIRST(<Return>) = {return}
-            if (tokenList[index].classStr == Singleton.SingletonEnums._return.ToString())
-            {
-                //<Return>  return <Exp> ;
-                if (tokenList[index].classStr == Singleton.SingletonEnums._return.ToString())
-                {
-                    index++;
-                    if (Exp())
-                    {
-                        if (tokenList[index].classStr == ";")
-                        {
-                            index++;
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
+        
 
-        private bool agar_warna()
-        {
-            //FIRST(<agar_warna>) = {agar}
-            if (tokenList[index].classStr == Singleton.SingletonEnums._agar.ToString())
-            {
-                //<agar_warna>  agar (<Exp>) {<M_ST>} <O_Else>
-                if (tokenList[index].classStr == Singleton.SingletonEnums._agar.ToString())
-                {
-                    index++;
-                    if (tokenList[index].classStr == "(")
-                    {
-                        index++;
-                        if (Exp())
-                        {
-                            if (tokenList[index].classStr == ")")
-                            {
-                                index++;
-                                if (tokenList[index].classStr == "{")
-                                {
-                                    index++;
-                                    if (M_ST())
-                                    {
-                                        if (tokenList[index].classStr == "}")
-                                        {
-                                            index++;
-                                            if (O_Else())
-                                            {
-                                                return true;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return false;
-        }
+        
 
-        private bool O_Else()
-        {
-            //FIRST(<O_Else>) = {warna , Null}
-            if (tokenList[index].classStr == Singleton.SingletonEnums._warna.ToString())
-            {
-                //<O_Else>  warna {<M_ST>} | Null
-                if (tokenList[index].classStr == Singleton.SingletonEnums._warna.ToString())
-                {
-                    index++;
-                    if (tokenList[index].classStr == "{")
-                    {
-                        index++;
-                        if (M_ST())
-                        {
-                            if (tokenList[index].classStr == "}")
-                            {
-                                index++;
-                            }
+        
 
-                        }
-                    }
-                }
-            }
-            //FOLLOW(<O_Else>) = { jabtak , DT , Barbar , agar , return ,  inc_dec , ID , break , continue, this , }}
-            if (tokenList[index].classStr == Singleton.SingletonEnums._jabtak.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._barbar.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._agar.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._return.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._break.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._continue.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._this.ToString())
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private bool S_St_DT()
-        {
-            //FIRST(<S_St_DT>) = {ID , void , DT , [}
-            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._void.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString() ||
-                tokenList[index].classStr == "[")
-            {
-                //<S_St_DT>  ID <S_St_DT2> | <Method_DEC> | <Array_DEC>
-                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
-                {
-                    index++;
-                    if (S_St_DT2())
-                    {
-                        return true;
-                    }
-                }
-                else if (Method_DEC())
-                {
-                    return true;
-                }
-                else if (Array_DEC())
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private bool Array_DEC()
-        {
-            //FIRST(<Array_DEC>) = {[}
-            if (tokenList[index].classStr == "[")
-            {
-                //<Array_DEC>   [] ID <INIT_Array>
-                if (tokenList[index].classStr == "[")
-                {
-                    index++;
-                    if (tokenList[index].classStr == "]")
-                    {
-                        index++;
-                        if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
-                        {
-                            index++;
-                            if (INIT_Array())
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-
-        private bool INIT_Array()
-        {
-            //FIRST(<INIT_Array>) = {; , =}
-            if (tokenList[index].classStr == ";" ||
-                tokenList[index].classStr == "=")
-            {
-                //<INIT_Array>  ; | = new DT [<ID_Const>]<Array_const>
-                if (tokenList[index].classStr == ";")
-                {
-                    index++;
-                    return true;
-                }
-                else if (tokenList[index].classStr == "=")
-                {
-                    index++;
-                    if (tokenList[index].classStr == Singleton.SingletonEnums._new.ToString())
-                    {
-                        index++;
-                        if (tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString())
-                        {
-                            index++;
-                            if (tokenList[index].classStr == "[")
-                            {
-                                index++;
-                                if (ID_Const())
-                                {
-                                    if (tokenList[index].classStr == "]")
-                                    {
-                                        index++;
-                                        if (Array_const())
-                                        {
-                                            return true;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-
-        private bool Array_const()
-        {
-            //FIRST(<Array_const>) = {{ , ;}
-            if (tokenList[index].classStr == "{" ||
-                tokenList[index].classStr == ";")
-            {
-                //<Array_const>  <Array_C> | ;
-                if (tokenList[index].classStr == ";")
-                {
-                    index++;
-                    return true;
-                }
-                else if (Array_C())
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private bool Array_C()
-        {
-           // FIRST(<Array_C>) = { { }
-            if (tokenList[index].classStr == "{")
-            {
-                //<Array_C>  { <Const> <Array_C2>
-                if (tokenList[index].classStr == "{")
-                {
-                    index++;
-                    if (CONST())
-                    {
-                        if (Array_C2())
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-
-        private bool Array_C2()
-        {
-            //FIRST(<Array_C2>) = {, , } }
-            if (tokenList[index].classStr == "{" ||
-                tokenList[index].classStr == ",")
-            {
-                //<Array_C2>  , <Const> | } ;
-                if (tokenList[index].classStr == "}")
-                {
-                    index++;
-                    if (tokenList[index].classStr == ";")
-                    {
-                        index++;
-                        return true;
-                    }
-                }
-                else if (tokenList[index].classStr == ",")
-                {
-                    index++;
-                    if (CONST())
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
+        
 
         private bool ID_Const()
         {
@@ -1478,32 +1888,9 @@ namespace LexicalAnaylzerRexton
             return false;
         }
 
-        private bool Return_Type()
-        {
-            //FIRST(<Return_Type>) = { void, DT }
-            if (tokenList[index].classStr == Singleton.SingletonEnums._void.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString())
-            {
-                //<Return_Type>  void | DT
-                index++;
-                return true;
-            }
-            return false;
-        }
+        
 
-        private bool S_St_DT2()
-        {
-            //FIRST(<S_St_DT2>) = { = }
-            if (tokenList[index].classStr == "=")
-            {
-                //<S_St_DT2>  <Variable_Link2> 
-                if (Variable_Link2())
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+        
 
 
         private bool Bar_Bar()
@@ -1546,33 +1933,7 @@ namespace LexicalAnaylzerRexton
             return false;
         }
 
-        private bool Jab_Tak()
-        {
-            //FIRST(<Jab_tak>) = {jabtak}
-            if (tokenList[index].classStr == Singleton.SingletonEnums._jabtak.ToString())
-            {
-                //<Jab_tak>  jabtak (<Exp>) <Body>
-                if (tokenList[index].classStr == Singleton.SingletonEnums._jabtak.ToString())
-                {
-                    index++;
-                    if (tokenList[index].classStr == "(")
-                    {
-                        index++;
-                        if (Exp())
-                        {
-                            if (tokenList[index].classStr == ")")
-                            {
-                                if (Body())
-                                {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return false;
-        }
+        
 
         private bool F1()
         {
@@ -1712,211 +2073,11 @@ namespace LexicalAnaylzerRexton
             return false;
         }
 
-        private bool Body()
-        {
-            //FIRST(<Body>) = {; , { , jabtak , DT , Barbar , agar , return ,  inc_dec , ID , break , continue , this }
-            if (tokenList[index].classStr == Singleton.SingletonEnums._jabtak.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._barbar.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._agar.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._return.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._break.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._continue.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._this.ToString() ||
-                tokenList[index].classStr == "," ||
-                tokenList[index].classStr == ";" ||
-                tokenList[index].classStr == "{")
-            {
-                //<Body>  ; | <S_ST> | {<M_ST>}
-                if (tokenList[index].classStr == ";")
-                {
-                    index++;
-                }
+        
 
-                else if (S_ST())
-                {
-                    return true;
-                }
-                else if (tokenList[index].classStr == "{")
-                {
-                    index++;
-                    if (M_ST())
-                    {
-                        if (tokenList[index].classStr == "}")
-                        {
-                            index++;
-                            return true;
-                        }
-                    }
-                }
-            }
+        
 
-            return false;
-        }
-
-        private bool DEC()
-        {
-            //FIRST(<DEC>) = { DT}
-            if (tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString())
-            {
-                //<DEC>  DT <Variable_Link>
-                if (tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString())
-                {
-                    index++;
-                    if (Variable_Link())
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        private bool Variable_Link()
-        {
-            //FIRST(<Variable_Link>) = {ID} 
-            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
-            {
-                //<Variable_Link>  ID <Varaiable_Link2>
-                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
-                {
-                    index++;
-                    if (Variable_Link2())
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        private bool Assign_Op()
-        {
-            //FIRST(<Assign_Op>) = { = }
-            if (tokenList[index].classStr == "=")
-            {
-                //<Assign_Op>   = <Assign_Op2>      	
-                if (tokenList[index].classStr == "=")
-                {
-                    index++;
-                    if (Assign_Op2())
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        private bool Assign_Op2()
-        {
-            //FIRST(<Assign_Op2>) = { ID, INT_CONST , FLOAT_CONST , STRING_CONST , CHAR_CONST , BOOL_CONST }
-            if (tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
-            {
-                //<Assign_Op2>  <Exp>;
-                if (Exp())
-                {
-                    if (tokenList[index].classStr == ";")
-                    {
-                        index++;
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        private bool DT_1()
-        {
-            //FIRST(<DT_1>) = {ID , [}
-            if(tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
-                tokenList[index].classStr == "[")
-            {
-                //<DT_1>  ID <ID_2>| <Array_DEC>
-                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
-                {
-                    index++;
-                    if (ID_2())
-                    {
-                        return true;
-                    }
-                }
-                else if (Array_DEC())
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private bool ID_2()
-        {
-            //FIRST(<ID_2>) = {( , =}
-            if (tokenList[index].classStr == "(" ||
-                tokenList[index].classStr == "=")
-            {
-                //<ID_2>  <Method_Link3> | <Variable_Link2>
-                if (Method_Link3())
-                {
-                    return true;
-                }
-                else if (Variable_Link2())
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private bool Id_OArray()
-        {
-            //FIRST(<Id_OArray>) = {ID , [}
-            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
-                tokenList[index].classStr == "[") 
-            {
-                //<Id_OArray>  ID <Id_A> | <Array_DEC>
-                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
-                {
-                    index++;
-                    if (Id_A())
-                    {
-                        return true;
-                    }
-                }
-                else if (Array_DEC())
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private bool Id_A()
-        {
-            //FIRST(<Id_A>) = {= , (}
-            if (tokenList[index].classStr == "=" ||
-                tokenList[index].classStr == "(")
-            {
-                //<Id_A>  <Method_Link3> | <Object_Creation_Exp>
-                if (Method_Link3())
-                {
-                    return true;
-                }
-                else if (Object_Creation_Exp())
-                {
-                    return true;
-                }
-            }
-           
-            return false;
-        }
+        
 
         private bool Object_Creation_Exp()
         {
@@ -2015,30 +2176,6 @@ namespace LexicalAnaylzerRexton
             return false;
         }
 
-        private bool Method_Call_1()
-        {
-            //FIRST(<Method_Call_1>) = { ( }
-            if (tokenList[index].classStr == "(")
-            {
-                //<Method_Call_1>  (<Param>) ;
-                if (tokenList[index].classStr == "(")
-                {
-                    index++;
-                    if (Param())
-                    {
-                        if (tokenList[index].classStr == ")")
-                        {
-                            index++;
-                            if (tokenList[index].classStr == ";")
-                            {
-                                index++;
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-            return false;
-        }
+        
     }
 }

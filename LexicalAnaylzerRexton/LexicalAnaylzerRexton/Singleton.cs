@@ -64,7 +64,7 @@ namespace LexicalAnaylzerRexton
                                                 {"==",   Singleton.SingletonEnums.RelationalOp.ToString()       },
                                                 {"&&",   Singleton.SingletonEnums.AndOp.ToString()              },
                                                 {"||",   Singleton.SingletonEnums.OrOp.ToString()              },
-                                                {"=",    "="                                                    },
+                                                {"=",    Singleton.SingletonEnums.AssignmentOp.ToString()      },
                                                 {"+=",   Singleton.SingletonEnums.AssignmentOp.ToString()       },
                                                 {"*=",   Singleton.SingletonEnums.AssignmentOp.ToString()       },
                                                 {"/=",   Singleton.SingletonEnums.AssignmentOp.ToString()       },

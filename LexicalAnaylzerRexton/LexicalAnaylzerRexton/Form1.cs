@@ -82,6 +82,7 @@ namespace LexicalAnaylzerRexton
                 else
                 {
                     button4.Text = "false";
+                    MessageBox.Show("Line number " + syntaxAnalysis.getErrors());
                 }
             }
         }
@@ -110,6 +111,11 @@ namespace LexicalAnaylzerRexton
         private void button4_Click(object sender, EventArgs e)
         {
             
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -46,7 +46,7 @@
             this.codebox1.Location = new System.Drawing.Point(403, 27);
             this.codebox1.Name = "codebox1";
             this.codebox1.ReadOnly = true;
-            this.codebox1.Size = new System.Drawing.Size(396, 279);
+            this.codebox1.Size = new System.Drawing.Size(396, 398);
             this.codebox1.TabIndex = 1;
             this.codebox1.Text = "";
             // 
@@ -82,7 +82,7 @@
             this.richTextBox1.Location = new System.Drawing.Point(93, 25);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(304, 281);
+            this.richTextBox1.Size = new System.Drawing.Size(304, 400);
             this.richTextBox1.TabIndex = 4;
             this.richTextBox1.Text = "";
             // 
@@ -98,6 +98,7 @@
             // 
             // button4
             // 
+            this.button4.Enabled = false;
             this.button4.Location = new System.Drawing.Point(12, 164);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 61);
@@ -110,7 +111,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(811, 381);
+            this.ClientSize = new System.Drawing.Size(811, 437);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.richTextBox1);
@@ -119,6 +120,7 @@
             this.Controls.Add(this.codebox1);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 
         }
