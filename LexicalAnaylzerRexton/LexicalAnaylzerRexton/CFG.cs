@@ -452,7 +452,11 @@ namespace LexicalAnaylzerRexton
                 }
                 else if (Object_Call())
                 {
-                    return true;
+                    if (tokenList[index].classStr == ";")
+                    {
+                        index++;
+                        return true;
+                    }
                 }
                 else if (Method_Call_1())
                 {
@@ -565,12 +569,12 @@ namespace LexicalAnaylzerRexton
         private bool Variable_Link2()
         {
             //FIRST(<Variable_Link2>  ) = {=, , , ;}
-            if (tokenList[index].classStr == "=" ||
+            if (tokenList[index].classStr == Singleton.SingletonEnums.RelationalOp.ToString() ||
                 tokenList[index].classStr == "," ||
                 tokenList[index].classStr == ";")
             {
                 //<Variable_Link2>   =  <Variable_Value>| <LIST>
-                if (tokenList[index].classStr == "=")
+                if (tokenList[index].classStr == Singleton.SingletonEnums.RelationalOp.ToString())
                 {
                     index++;
                     if (Variable_Value())
@@ -615,12 +619,15 @@ namespace LexicalAnaylzerRexton
                 tokenList[index].classStr == ";")
             {
                 //<LIST >  , ID <Variable_Link2> | ;
-                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
-                {
+                if (tokenList[index].classStr == ",") {
                     index++;
-                    if (Variable_Link2())
+                    if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                     {
-                        return true;
+                        index++;
+                        if (Variable_Link2())
+                        {
+                            return true;
+                        }
                     }
                 }
                 else if (tokenList[index].classStr == ";")
@@ -635,10 +642,11 @@ namespace LexicalAnaylzerRexton
         private bool Assign_Op()
         {
             //FIRST(<Assign_Op>) = { = }
-            if (tokenList[index].classStr == "=")
+            if (tokenList[index].classStr == Singleton.SingletonEnums.RelationalOp.ToString())
             {
-                //<Assign_Op>   = <Assign_Op2>      	
-                if (tokenList[index].classStr == "=")
+                //<Assign_Op>   = <Assign_Op2>      
+                //<Assign_Op> AOP <Assign_Op2>	
+                if (tokenList[index].classStr == Singleton.SingletonEnums.RelationalOp.ToString())
                 {
                     index++;
                     if (Assign_Op2())
@@ -787,16 +795,41 @@ namespace LexicalAnaylzerRexton
             if (tokenList[index].classStr == Singleton.SingletonEnums._return.ToString())
             {
                 //<Return>  return <Exp> ;
-                if (tokenList[index].classStr == Singleton.SingletonEnums._return.ToString())
+                //<Return> return <Return2> 
+                if (return2())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool return2()
+        {
+            //FIRST(<Return2>) = { ; , ID, INT_CONST , FLOAT_CONST , STRING_CONST , CHAR_CONST , BOOL_CONST , ! , ( , inc_dec }
+            if (tokenList[index].classStr == ";" ||
+                tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString() ||
+                tokenList[index].classStr == "!" ||
+                tokenList[index].classStr == "(" ||
+                tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString())
+            {
+                //<Return2>  ; | <Exp>;
+                if (tokenList[index].classStr == ";")
                 {
                     index++;
-                    if (Exp())
+                    return true;
+                }
+                else if(Exp())
+                {
+                    if (tokenList[index].classStr == ";")
                     {
-                        if (tokenList[index].classStr == ";")
-                        {
-                            index++;
-                            return true;
-                        }
+                        index++;
+                        return true;
                     }
                 }
             }
