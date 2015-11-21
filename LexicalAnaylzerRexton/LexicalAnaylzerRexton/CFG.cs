@@ -1008,6 +1008,7 @@ namespace LexicalAnaylzerRexton
                 tokenList[index].classStr == Singleton.SingletonEnums._class.ToString())
             {
                 //<Member_Link>  <Static><SS_A>| void ID <Method_Link 3> | DT <DT_2> |<Constructor_DEC> | <Class_Link>
+                //<Member_Link>  <Static><SS_A>| void ID <Method_Link 3> | DT<DT_2> |ID <Object_Constructor_DEC> | <Class_Link>
                 if (Static())
                 {
                     if (SS_A())
@@ -1038,12 +1039,36 @@ namespace LexicalAnaylzerRexton
                     }
                 }
 
-                else if (Constructor_DEC())
+                else if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                 {
-                    return true;
+                    index++;
+                    if (Object_Constructor_Dec())
+                    {
+                        return true;
+                    }
                 }
 
                 else if (Class_Link())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool Object_Constructor_Dec()
+        {
+            ////FIRST(<Object_Constructor_DEC>) = { ID, [ , (}
+            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == "[" ||
+                tokenList[index].classStr == "(")
+            {
+                //<Object_Constructor_DEC>  <object_link> | <Constructor_DEC>
+                if (Object_link())
+                {
+                    return true;
+                }
+                else if(Constructor_DEC())
                 {
                     return true;
                 }
@@ -1078,8 +1103,11 @@ namespace LexicalAnaylzerRexton
         private bool ID_1()
         {
             //FIRST(<ID_1>) = {( , =} //TEMP
+            //FIRST(<ID_1>) = {( , AOP , , , ; }
             if (tokenList[index].classStr == "(" ||
-                tokenList[index].classStr == "=")
+                tokenList[index].classStr == Singleton.SingletonEnums.RelationalOp.ToString() ||
+                tokenList[index].classStr == "," ||
+                tokenList[index].classStr == ";")
             {
                 //<ID_1><Varaiable_Link2> | <Method_Link 3>
                 if (Variable_Link2())
@@ -1120,8 +1148,11 @@ namespace LexicalAnaylzerRexton
         private bool ID_2()
         {
             //FIRST(<ID_2>) = {( , =}
+            //FIRST(<ID_2>) = {( , AOP , , , ; }
             if (tokenList[index].classStr == "(" ||
-                tokenList[index].classStr == "=")
+                tokenList[index].classStr == Singleton.SingletonEnums.RelationalOp.ToString() ||
+                tokenList[index].classStr == "," ||
+                tokenList[index].classStr == ";")
             {
                 //<ID_2>  <Method_Link3> | <Variable_Link2>
                 if (Method_Link3())
@@ -1162,8 +1193,10 @@ namespace LexicalAnaylzerRexton
         private bool Id_A()
         {
             //FIRST(<Id_A>) = {= , (}
-            if (tokenList[index].classStr == "=" ||
-                tokenList[index].classStr == "(")
+            //FIRST(<Id_A>) = {( , = , ;}
+            if (tokenList[index].wordStr == "=" ||
+                tokenList[index].classStr == "(" ||
+                tokenList[index].classStr == ";")
             {
                 //<Id_A>  <Method_Link3> | <Object_Creation_Exp>
                 if (Method_Link3())
@@ -1182,35 +1215,34 @@ namespace LexicalAnaylzerRexton
         private bool Constructor_DEC()
         {
             //FIRST(<Constructor_DEC>) = {ID}
-            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+            //FIRST(<Constructor_DEC>) = { ( }
+            if (tokenList[index].classStr == "(")
             {
                 //<Constructor_DEC>   ID (<List_Param>) {<M-St>}
-                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                //<Constructor_DEC> (<List_Param>) {<M-St>}
+                if (tokenList[index].classStr == "(")
                 {
                     index++;
-                    if (tokenList[index].classStr == "(")
+                    if (List_Param())
                     {
-                        index++;
-                        if (List_Param())
+                        if (tokenList[index].classStr == ")")
                         {
-                            if (tokenList[index].classStr == ")")
+                            index++;
+                            if (tokenList[index].classStr == "{")
                             {
                                 index++;
-                                if (tokenList[index].classStr == "{")
+                                if (M_ST())
                                 {
-                                    index++;
-                                    if (M_ST())
+                                    if (tokenList[index].classStr == "}")
                                     {
-                                        if (tokenList[index].classStr == "}")
-                                        {
-                                            index++;
-                                            return true;
-                                        }
+                                        index++;
+                                        return true;
                                     }
                                 }
                             }
                         }
                     }
+                    
                 }
 
             }
@@ -1267,7 +1299,7 @@ namespace LexicalAnaylzerRexton
                             if (tokenList[index].classStr == "[")
                             {
                                 index++;
-                                if (ID_Const())
+                                if (Exp())
                                 {
                                     if (tokenList[index].classStr == "]")
                                     {
@@ -1312,10 +1344,11 @@ namespace LexicalAnaylzerRexton
             if (tokenList[index].classStr == "{")
             {
                 //<Array_C>  { <Const> <Array_C2>
+                //<Array_C>{ <Exp><Array_C2>
                 if (tokenList[index].classStr == "{")
                 {
                     index++;
-                    if (CONST())
+                    if (Exp())
                     {
                         if (Array_C2())
                         {
@@ -1334,6 +1367,7 @@ namespace LexicalAnaylzerRexton
                 tokenList[index].classStr == ",")
             {
                 //<Array_C2>  , <Const> | } ;
+                //<Array_C2> , <Exp> | } ;
                 if (tokenList[index].classStr == "}")
                 {
                     index++;
@@ -1346,7 +1380,7 @@ namespace LexicalAnaylzerRexton
                 else if (tokenList[index].classStr == ",")
                 {
                     index++;
-                    if (CONST())
+                    if (Exp())
                     {
                         return true;
                     }
@@ -1394,6 +1428,30 @@ namespace LexicalAnaylzerRexton
             return false;
         }
 
+        private bool Method_DEC()
+        {
+            //FIRST(<Method_DEC>) = {DT , void}
+            if (tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums._void.ToString())
+            {
+                //<Method_DEC>   <Return_Type>  ID <Method_Link 3>
+                if (Return_Type())
+                {
+                    if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                    {
+                        index++;
+                        if (Method_Link3())
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+            }
+
+            return false;
+        }
+
         private bool Method_Link3()
         {
             //FIRST(<Method_Link 3>) = { ( }
@@ -1427,9 +1485,75 @@ namespace LexicalAnaylzerRexton
             return false;
         }
 
-        
+        private bool Object_link()
+        {
+            //FIRST(<Object_Link>) = {ID}
+            //FIRST(<Object_Link>) = {ID , [}
+            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == "[")
+            {
+                //<Object_Link> ID <Object_Creation_Exp>
+                //<Object_Link> ID <Object_Creation_Exp>| [] ID <object_array_dec>
+                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                {
+                    index++;
+                    if (Object_Creation_Exp())
+                    {
+                        return true;
+                    }
+                }
+                else if (tokenList[index].classStr == "[")
+                {
+                    index++;
+                    if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                    {
+                        index++;
+                        if (object_array_dec())
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
 
-        
+        private bool object_array_dec()
+        {
+            //FIRST(<object_array_dec>) = { = }
+            if (tokenList[index].wordStr == "=")
+            {
+                //<object_array_dec>  = new ID[<Exp>]<obj_arr_dec1>
+                if (tokenList[index].wordStr == "=")
+                {
+                    index++;
+                    if (tokenList[index].classStr == Singleton.SingletonEnums._new.ToString())
+                    {
+                        index++;
+                        if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                        {
+                            index++;
+                            if (tokenList[index].classStr == "[")
+                            {
+                                index++;
+                                if (Exp())
+                                {
+                                    if (tokenList[index].classStr == "]")
+                                    {
+                                        index++;
+                                        if (obj_arr_dec1())
+                                        {
+                                            return true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
 
         
 
@@ -1771,23 +1895,7 @@ namespace LexicalAnaylzerRexton
             return true;
         }
 
-        private bool Object_link()
-        {
-            //FIRST(<Object_Link>) = {ID}
-            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
-            {
-                //<Object_Link> ID <Object_Creation_Exp>
-                if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
-                {
-                    index++;
-                    if (Object_Creation_Exp())
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
+        
 
         
 
@@ -1897,29 +2005,7 @@ namespace LexicalAnaylzerRexton
             return false;
         }
 
-        private bool Method_DEC()
-        {
-            //FIRST(<Method_DEC>) = {DT , void}
-            if (tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString() ||
-                tokenList[index].classStr == Singleton.SingletonEnums._void.ToString())
-            {
-                //<Method_DEC>   <Return_Type>  ID <Method_Link 3>
-                if (Return_Type())
-                {
-                    if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
-                    {
-                        index++;
-                        if (Method_Link3())
-                        {
-                            return true;
-                        }
-                    }
-                }
-
-            }
-
-            return false;
-        }
+        
 
         
 
