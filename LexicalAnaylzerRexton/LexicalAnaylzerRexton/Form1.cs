@@ -77,12 +77,11 @@ namespace LexicalAnaylzerRexton
                 SyntaxAnalyzer syntaxAnalysis = new SyntaxAnalyzer(tokenSet);
                 if (syntaxAnalysis.validateCfg())
                 {
-                    button4.Text = "true";
+                    syntaxErrorLabel.Text = "No Error";
                 }
                 else
                 {
-                    button4.Text = "false";
-                    MessageBox.Show("Line number " + syntaxAnalysis.getErrors());
+                    syntaxErrorLabel.Text = "Error on " + syntaxAnalysis.getErrors();
                 }
             }
         }
@@ -114,6 +113,11 @@ namespace LexicalAnaylzerRexton
         }
 
         private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
 
         }
