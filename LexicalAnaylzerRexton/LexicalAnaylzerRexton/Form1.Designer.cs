@@ -57,7 +57,6 @@
             this.LexTabPage.SuspendLayout();
             this.SyntaxTabPage.SuspendLayout();
             this.tabControl2.SuspendLayout();
-            this.NotificationTabPage.SuspendLayout();
             this.ErrorTabPage.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -68,7 +67,7 @@
             this.codebox1.DetectUrls = false;
             this.codebox1.Font = new System.Drawing.Font("Consolas", 12F);
             this.codebox1.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.codebox1.Location = new System.Drawing.Point(653, 73);
+            this.codebox1.Location = new System.Drawing.Point(653, 40);
             this.codebox1.Name = "codebox1";
             this.codebox1.Size = new System.Drawing.Size(343, 376);
             this.codebox1.TabIndex = 1;
@@ -81,9 +80,9 @@
             // button2
             // 
             this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(6, 6);
+            this.button2.Location = new System.Drawing.Point(653, 422);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(117, 49);
+            this.button2.Size = new System.Drawing.Size(343, 49);
             this.button2.TabIndex = 3;
             this.button2.Text = "COMPILE";
             this.button2.UseVisualStyleBackColor = true;
@@ -238,7 +237,6 @@
             // 
             // NotificationTabPage
             // 
-            this.NotificationTabPage.Controls.Add(this.button2);
             this.NotificationTabPage.Location = new System.Drawing.Point(4, 22);
             this.NotificationTabPage.Name = "NotificationTabPage";
             this.NotificationTabPage.Padding = new System.Windows.Forms.Padding(3);
@@ -267,7 +265,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(653, 57);
+            this.label5.Location = new System.Drawing.Point(650, 22);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(72, 13);
             this.label5.TabIndex = 9;
@@ -303,6 +301,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1008, 595);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label5);
@@ -318,7 +317,6 @@
             this.LexTabPage.PerformLayout();
             this.SyntaxTabPage.ResumeLayout(false);
             this.tabControl2.ResumeLayout(false);
-            this.NotificationTabPage.ResumeLayout(false);
             this.ErrorTabPage.ResumeLayout(false);
             this.ErrorTabPage.PerformLayout();
             this.ResumeLayout(false);

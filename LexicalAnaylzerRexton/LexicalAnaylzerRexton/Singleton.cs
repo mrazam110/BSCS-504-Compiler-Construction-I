@@ -33,7 +33,7 @@ namespace LexicalAnaylzerRexton
                                {"new",          Singleton.SingletonEnums._new.ToString()                },
                                {"class",        Singleton.SingletonEnums._class.ToString()              },
                                {"this",         Singleton.SingletonEnums._this.ToString()               },
-                               {"stored",       Singleton.SingletonEnums._static.ToString()             },
+                               {"static",       Singleton.SingletonEnums._static.ToString()             },
                                {"abstract",     Singleton.SingletonEnums._abstract.ToString()           },
                                {"return",       Singleton.SingletonEnums._return.ToString()             },
                                {"void",         Singleton.SingletonEnums._void.ToString()               },
@@ -43,7 +43,7 @@ namespace LexicalAnaylzerRexton
                                {"true",         Singleton.SingletonEnums._boolean.ToString()            },
                                {"false",        Singleton.SingletonEnums._boolean.ToString()            },
                                {"nil",          Singleton.SingletonEnums._nil.ToString()                },
-                               {"main",         Singleton.SingletonEnums._main.ToString()               },
+                               //{"main",         Singleton.SingletonEnums._main.ToString()               },
                                {"const",        Singleton.SingletonEnums._const.ToString()              },
                            };
 

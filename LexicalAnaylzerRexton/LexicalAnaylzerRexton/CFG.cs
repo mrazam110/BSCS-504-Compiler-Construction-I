@@ -1428,9 +1428,13 @@ namespace LexicalAnaylzerRexton
                 else if (tokenList[index].classStr == Singleton.SingletonEnums._void.ToString())
                 {
                     index++;
-                    if (Method_Link3())
+                    if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                     {
-                        return true;
+                        index++;
+                        if (Method_Link3())
+                        {
+                            return true;
+                        }
                     }
                 }
             }
