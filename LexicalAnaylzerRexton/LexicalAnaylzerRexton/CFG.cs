@@ -1430,6 +1430,7 @@ namespace LexicalAnaylzerRexton
                     index++;
                     if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                     {
+
                         index++;
                         if (Method_Link3())
                         {

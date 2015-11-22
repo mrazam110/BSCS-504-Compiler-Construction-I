@@ -23,7 +23,7 @@ namespace LexicalAnaylzerRexton
         public Form1()
         {
             InitializeComponent();
-
+            characterCountLabel.Text = "" + codebox1.Text.Length;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -48,9 +48,15 @@ namespace LexicalAnaylzerRexton
 
         private void button2_Click(object sender, EventArgs e)
         {
+            Compile();
+        }
+
+        private void Compile()
+        {
             richTextBox1.Text = "";
             LexAnalyzer lex = new LexAnalyzer();
-            if (codebox1.Text.Length > 0) {
+            if (codebox1.Text.Length > 0)
+            {
                 wordBreaker = new breakWork();
 
                 wordBreakerOutput = new List<token>();
@@ -61,7 +67,7 @@ namespace LexicalAnaylzerRexton
                 List<token> tokensList = lex.getTokensList(wordBreakerOutput);
 
                 tokenSet = new List<token>();
-
+                String lexError = "";
                 foreach (token s in tokensList)
                 {
                     if (s.wordStr != " " && s.wordStr != "\n" && s.wordStr != "\t" && s.wordStr != "\r")
@@ -71,6 +77,20 @@ namespace LexicalAnaylzerRexton
 
                         token temp = new token(s.lineNumber, s.wordStr, s.classStr);
                         tokenSet.Add(temp);
+
+                        if (s.classStr == Singleton.nonKeywords._INVALID.ToString())
+                        {
+                            lexError += s.wordStr + "\n";
+                            lexicalErrorLabel.Text = lexError;
+                            lexicalErrorLabel.ForeColor = System.Drawing.Color.Maroon;
+                        }
+
+                    }
+
+                    if (lexError == "")
+                    {
+                        lexicalErrorLabel.Text = "No Error";
+                        lexicalErrorLabel.ForeColor = System.Drawing.Color.Green;
                     }
                 }
 
@@ -78,6 +98,7 @@ namespace LexicalAnaylzerRexton
                 if (syntaxAnalysis.validateCfg())
                 {
                     syntaxErrorLabel.Text = "No Error";
+                    syntaxErrorLabel.ForeColor = System.Drawing.Color.Green;
 
                     TreeNode tree = new TreeNode("<S>");
                     treeView.Nodes.Add(tree);
@@ -85,6 +106,14 @@ namespace LexicalAnaylzerRexton
                 else
                 {
                     syntaxErrorLabel.Text = "Error on " + syntaxAnalysis.getErrors();
+                    syntaxErrorLabel.ForeColor = System.Drawing.Color.Maroon;
+                }
+
+                if (checkBox1.Checked)
+                {
+                    totalTokenLabel.Text = "" + (tokenSet.Count - 1);
+                    totWordsLabel.Text = "" + (tokenSet.Count - 1);
+                    totLineLabel.Text = "" + wordBreakerOutput[wordBreakerOutput.Count - 1].lineNumber;
                 }
             }
         }
@@ -121,6 +150,40 @@ namespace LexicalAnaylzerRexton
         }
 
         private void richTextBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void codebox1_TextChanged(object sender, EventArgs e)
+        {
+            characterCountLabel.Text = "" + codebox1.Text.Length;
+            Compile();
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                Compile();
+            }
+        }
+
+        private void sementicErrorLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
         {
 
         }
