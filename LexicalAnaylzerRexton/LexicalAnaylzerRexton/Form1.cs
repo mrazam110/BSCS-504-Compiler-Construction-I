@@ -78,6 +78,9 @@ namespace LexicalAnaylzerRexton
                 if (syntaxAnalysis.validateCfg())
                 {
                     syntaxErrorLabel.Text = "No Error";
+
+                    TreeNode tree = new TreeNode("<S>");
+                    treeView.Nodes.Add(tree);
                 }
                 else
                 {

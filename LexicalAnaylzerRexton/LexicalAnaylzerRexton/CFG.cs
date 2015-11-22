@@ -67,6 +67,7 @@ namespace LexicalAnaylzerRexton
             {
                 //<Static>   Static
                 index++;
+                return true;
             }
             return false;
         }
