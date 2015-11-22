@@ -54,6 +54,9 @@ namespace LexicalAnaylzerRexton
         private void Compile()
         {
             richTextBox1.Text = "";
+            errorTextBox.Text = "";
+
+            String errorText = "";
             LexAnalyzer lex = new LexAnalyzer();
             if (codebox1.Text.Length > 0)
             {
@@ -83,8 +86,9 @@ namespace LexicalAnaylzerRexton
                             lexError += s.wordStr + "\n";
                             lexicalErrorLabel.Text = lexError;
                             lexicalErrorLabel.ForeColor = System.Drawing.Color.Maroon;
-                        }
 
+                            errorText += "Lexical Error on Line Number " + s.lineNumber + ": " + s.wordStr + "\n";
+                        }
                     }
 
                     if (lexError == "")
@@ -101,12 +105,15 @@ namespace LexicalAnaylzerRexton
                     syntaxErrorLabel.ForeColor = System.Drawing.Color.Green;
 
                     TreeNode tree = new TreeNode("<S>");
+                    treeView.Nodes.Clear();
                     treeView.Nodes.Add(tree);
                 }
                 else
                 {
-                    syntaxErrorLabel.Text = "Error on " + syntaxAnalysis.getErrors();
+                    syntaxErrorLabel.Text = "" + syntaxAnalysis.getErrors();
                     syntaxErrorLabel.ForeColor = System.Drawing.Color.Maroon;
+
+                    errorText += "Syntax Error: " + syntaxAnalysis.getErrors();
                 }
 
                 if (checkBox1.Checked)
@@ -114,6 +121,11 @@ namespace LexicalAnaylzerRexton
                     totalTokenLabel.Text = "" + (tokenSet.Count - 1);
                     totWordsLabel.Text = "" + (tokenSet.Count - 1);
                     totLineLabel.Text = "" + wordBreakerOutput[wordBreakerOutput.Count - 1].lineNumber;
+                }
+
+                if (errorText != "")
+                {
+                    errorTextBox.Text = errorText;
                 }
             }
         }

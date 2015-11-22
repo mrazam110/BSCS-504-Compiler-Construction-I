@@ -63,11 +63,13 @@
             this.lexicalErrorLabel = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.errorTextBox = new System.Windows.Forms.RichTextBox();
             this.tabControl1.SuspendLayout();
             this.LexTabPage.SuspendLayout();
             this.SyntaxTabPage.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.NotificationTabPage.SuspendLayout();
+            this.ErrorTabPage.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -208,7 +210,8 @@
             // 
             // ErrorTabPage
             // 
-            this.ErrorTabPage.BackColor = System.Drawing.Color.DimGray;
+            this.ErrorTabPage.BackColor = System.Drawing.Color.Black;
+            this.ErrorTabPage.Controls.Add(this.errorTextBox);
             this.ErrorTabPage.ForeColor = System.Drawing.Color.Gold;
             this.ErrorTabPage.Location = new System.Drawing.Point(4, 22);
             this.ErrorTabPage.Name = "ErrorTabPage";
@@ -425,6 +428,17 @@
             this.panel1.TabIndex = 14;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
+            // errorTextBox
+            // 
+            this.errorTextBox.BackColor = System.Drawing.SystemColors.WindowText;
+            this.errorTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.errorTextBox.ForeColor = System.Drawing.Color.Red;
+            this.errorTextBox.Location = new System.Drawing.Point(0, 0);
+            this.errorTextBox.Name = "errorTextBox";
+            this.errorTextBox.Size = new System.Drawing.Size(976, 106);
+            this.errorTextBox.TabIndex = 0;
+            this.errorTextBox.Text = "Errors:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -449,6 +463,7 @@
             this.tabControl2.ResumeLayout(false);
             this.NotificationTabPage.ResumeLayout(false);
             this.NotificationTabPage.PerformLayout();
+            this.ErrorTabPage.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
@@ -492,6 +507,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lexicalErrorLabel;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.RichTextBox errorTextBox;
     }
 }
 
