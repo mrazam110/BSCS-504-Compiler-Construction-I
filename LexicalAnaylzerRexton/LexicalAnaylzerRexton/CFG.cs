@@ -36,6 +36,7 @@ namespace LexicalAnaylzerRexton
             {
                 if (tokenList[index].classStr == "$")
                 {
+                    Program.compiler.treeView.Nodes.Add("( " + "END MARKER" + " )");
                     return true;
                 }
             }
@@ -60,29 +61,31 @@ namespace LexicalAnaylzerRexton
                 tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString() ||
                 tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
                 {
+                    currentNode = currentNode.Nodes.Add("<" + System.Reflection.MethodBase.GetCurrentMethod().Name + ">", "< " + System.Reflection.MethodBase.GetCurrentMethod().Name + " >");
+
                     if (tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString())
                     {
-                        T = "Int";
+                        T = "aur_int";
                         currentNode = currentNode.Parent;
                     }
                     else if (tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString())
                     {
-                        T = "Float";
+                        T = "aur_float";
                         currentNode = currentNode.Parent;
                     }
                     else if (tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString())
                     {
-                        T = "String";
+                        T = "aur_string";
                         currentNode = currentNode.Parent;
                     }
                     else if (tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString())
                     {
-                        T = "Char";
+                        T = "aur_char";
                         currentNode = currentNode.Parent;
                     }
                     else if (tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
                     {
-                        T = "Bool";
+                        T = "aur_bool";
                         currentNode = currentNode.Parent;
                     }
 
@@ -106,6 +109,7 @@ namespace LexicalAnaylzerRexton
             return false;
         }
 
+        /*MISSED*/
         private bool ID_CONST()
         {
             currentNode = currentNode.Nodes.Add("<" + System.Reflection.MethodBase.GetCurrentMethod().Name + ">", "< " + System.Reflection.MethodBase.GetCurrentMethod().Name + " >");
@@ -154,7 +158,7 @@ namespace LexicalAnaylzerRexton
                 tokenList[index].classStr == Singleton.SingletonEnums._void.ToString() ||
                 tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
             {
-                AM = "Private";
+                AM = CONSTANTS.defaultAccessModifier;
                 return true;
             }
 
@@ -190,7 +194,8 @@ namespace LexicalAnaylzerRexton
                 tokenList[index].classStr == Singleton.SingletonEnums._this.ToString())
             {
                 //<M_ST>   <S_ST><M_ST> | Null
-                if (S_ST())
+                String T = "";
+                if (S_ST(ref T))
                 {
                     if (M_ST())
                     {
@@ -223,13 +228,14 @@ namespace LexicalAnaylzerRexton
                 tokenList[index].classStr == ";" ||
                 tokenList[index].classStr == "{")
             {
+                String T = "";
                 //<Body>  ; | <S_ST> | {<M_ST>}
                 if (tokenList[index].classStr == ";")
                 {
                     index++;
                 }
-
-                else if (S_ST())
+    
+                else if (S_ST(ref T))
                 {
                     return true;
                 }
@@ -258,11 +264,14 @@ namespace LexicalAnaylzerRexton
                 //<List_Param>  DT ID <List_Param1> | Null
                 if (tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString())
                 {
+                    String T = tokenList[index].wordStr;
+                    PL += T;
                     index++;
                     if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                     {
+                        String N = tokenList[index].wordStr;
                         index++;
-                        if (List_Param())
+                        if (List_Param(ref AL, PL))
                         {
                             return true;
                         }
@@ -272,6 +281,7 @@ namespace LexicalAnaylzerRexton
             //FOLLOW(<List_Param>) = { ) }
             if (tokenList[index].classStr == ")")
             {
+                AL = PL;
                 return true;
             }
             return false;
@@ -288,11 +298,14 @@ namespace LexicalAnaylzerRexton
                     index++;
                     if (tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString())
                     {
+                        String T = tokenList[index].wordStr;
+                        PL += ("," + T);
                         index++;
                         if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                         {
+                            String N = tokenList[index].wordStr;
                             index++;
-                            if (List_Param1())
+                            if (List_Param1(ref AL, PL))
                             {
                                 return true;
                             }
@@ -303,6 +316,7 @@ namespace LexicalAnaylzerRexton
             //FOLLOW(<List_Param>) = { ) }
             if (tokenList[index].classStr == ")")
             {
+                AL = PL;
                 return true;
             }
             return false;
@@ -311,14 +325,19 @@ namespace LexicalAnaylzerRexton
         private bool Param(ref String AL, String PL)
         {
             //FIRST(<Param>) = {ID , Null}
+            //FIRST(<Param>) = { ID, INT_CONST , FLOAT_CONST , STRING_CONST , CHAR_CONST , BOOL_CONST , ! , ( , inc_dec , Null}
             if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
                 tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString() ||
                 tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString() ||
                 tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString() ||
                 tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
+                tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString() ||
+                tokenList[index].classStr == "!" ||
+                tokenList[index].classStr == "(" ||
+                tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString())
             {
                 //<Param>  ID <Param1> | Null
+                //<Param> <Exp> <Param1> | Null
                 if (ID_CONST())
                 {
                     if (Param1())

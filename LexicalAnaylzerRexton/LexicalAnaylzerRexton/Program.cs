@@ -8,6 +8,8 @@ namespace LexicalAnaylzerRexton
 {
     static class Program
     {
+
+        public static Form1 compiler = new Form1();
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
