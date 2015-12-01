@@ -20,6 +20,35 @@ namespace LexicalAnaylzerRexton
 
         private string errors = "";
 
+        //SEMACTIC DECLARATIONS
+        SemanticAnalyzer semantic = new SemanticAnalyzer();
+        List<semanticError> semErrors = new List<semanticError>();
+        VARIABLE variableRow = new VARIABLE();
+        private string Search_GetType(String N, string e)
+        {
+            string T = "";
+            if (semantic.Search(N))
+            {
+                T = semantic.getType(N);
+                if (T == "_INVALID")
+                {
+                    addError(e);
+                    return "_INVALID";
+                }
+                return T;
+            }
+            else
+            {
+                addError(e);
+                return "_INVALID";
+            }
+        }
+
+        private void addError(string message)
+        {
+            semErrors.Add(new semanticError(tokenList[index], message));
+        }
+
         public string getErrors()
         {
             return errors;
@@ -324,6 +353,7 @@ namespace LexicalAnaylzerRexton
 
         private bool Param(ref String AL, String PL)
         {
+            String T = "";
             //FIRST(<Param>) = {ID , Null}
             //FIRST(<Param>) = { ID, INT_CONST , FLOAT_CONST , STRING_CONST , CHAR_CONST , BOOL_CONST , ! , ( , inc_dec , Null}
             if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
@@ -338,9 +368,11 @@ namespace LexicalAnaylzerRexton
             {
                 //<Param>  ID <Param1> | Null
                 //<Param> <Exp> <Param1> | Null
-                if (ID_CONST())
+                
+                if (Exp(ref T))
                 {
-                    if (Param1())
+                    PL += T;
+                    if (Param1(ref AL, PL))
                     {
                         return true;
                     }
@@ -350,6 +382,7 @@ namespace LexicalAnaylzerRexton
             ////FOLLOW(<Param>) = { ) }
             if (tokenList[index].classStr == ")")
             {
+                AL = PL;
                 return true;
             }
             return false;
@@ -357,14 +390,16 @@ namespace LexicalAnaylzerRexton
 
         private bool Param1(ref String AL, String PL)
         {
+            String T = "";
             //FIRST(<Param1>) = {, , Null}
             if (tokenList[index].classStr == ",")
             {
                 //<Param1>  ,  ID <Param1> | Null
                 index++;
-                if (ID_CONST())
+                if (Exp(ref T))
                 {
-                    if (Param1())
+                    PL += "," + T;
+                    if (Param1(ref AL, PL))
                     {
                         return true;
                     }
@@ -373,7 +408,34 @@ namespace LexicalAnaylzerRexton
             //FOLLOW(<Param1>) = { ) }
             if (tokenList[index].classStr == ")")
             {
+                AL = PL;
                 return true;
+            }
+            return false;
+        }
+
+        /*LEFT*/
+        private bool Method_Call_1(ref String RT, String N)
+        {
+            String AL = "";
+            //FIRST(<Method_Call_1>) = { ( }
+            if (tokenList[index].classStr == "(")
+            {
+                //<Method_Call_1>  (<Param>) 
+                if (tokenList[index].classStr == "(")
+                {
+                    String PL = "";
+                    index++;
+                    if (Param(ref AL, PL))
+                    {
+                        if (tokenList[index].classStr == ")")
+                        {
+                            
+                            index++;
+                            return true;
+                        }
+                    }
+                }
             }
             return false;
         }
@@ -400,8 +462,9 @@ namespace LexicalAnaylzerRexton
                 }
                 else if (tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString())
                 {
+                    String T = tokenList[index].wordStr;
                     index++;
-                    if (S_St_DT())
+                    if (S_St_DT(T))
                     {
                         return true;
                     }
@@ -414,7 +477,7 @@ namespace LexicalAnaylzerRexton
                 {
                     return true;
                 }
-                else if (Return())
+                else if (Return(ref RT))
                 {
                     return true;
                 }
@@ -423,8 +486,19 @@ namespace LexicalAnaylzerRexton
                     index++;
                     if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                     {
+                        String N = tokenList[index].wordStr;
+                        String T = "";
+                        T = Search_GetType(N, "Undecalared Variable");
+                        /*if (!semantic.LookUpVariable(N, semantic.CurrentScope()))
+                        {
+                            addError("Undecalared Variable");
+                        }
+                        else
+                        {
+                            T = Search_GetType(N, "Undecalared Variable");
+                        }*/
                         index++;
-                        if (inc_dec_list())
+                        if (inc_dec_list(ref RT, N, T))
                         {
                             if (tokenList[index].classStr == ";")
                             {
@@ -435,8 +509,11 @@ namespace LexicalAnaylzerRexton
                 }
                 else if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                 {
+                    String N = tokenList[index].wordStr;
+                    String T = "";
+                    T = Search_GetType(N, "Undecalared Variable");
                     index++;
-                    if (S_St_ID())
+                    if (S_St_ID(N, T))
                     {
                         return true;
                     }
@@ -2367,28 +2444,6 @@ namespace LexicalAnaylzerRexton
                     tokenList[index].classStr == ";")
             {
                 return true;
-            }
-            return false;
-        }
-
-        private bool Method_Call_1(ref String RT, String N)
-        {
-            //FIRST(<Method_Call_1>) = { ( }
-            if (tokenList[index].classStr == "(")
-            {
-                //<Method_Call_1>  (<Param>) 
-                if (tokenList[index].classStr == "(")
-                {
-                    index++;
-                    if (Param())
-                    {
-                        if (tokenList[index].classStr == ")")
-                        {
-                            index++;
-                            return true;
-                        }
-                    }
-                }
             }
             return false;
         }
