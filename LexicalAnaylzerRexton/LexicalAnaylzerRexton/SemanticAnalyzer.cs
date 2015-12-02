@@ -363,5 +363,245 @@ namespace LexicalAnaylzerRexton
             return false;
 
         }
+
+        public bool CC_IncDec(string type)
+        {
+            switch (type)
+            {
+                case "int":
+                case "_int":
+                case "float":
+                case "_float":
+                case "char":
+                case "_char":
+                    return true;
+                    break;
+                default:
+                    return false;
+            }
+        }
+
+        public bool CC_Not_And_Or(string type)
+        {
+            switch (type)
+            {
+                case "bool":
+                case "true":
+                case "false":
+                    return true;
+                    break;
+                default:
+                    return false;
+            }
+            return true;
+        }
+
+        public bool CC_Return(string type)
+        {
+            if (NamespaceSymbolTable.Last().classes.Last().members.Last().type == type)
+                return true;
+            // implicit conversion
+            else if (NamespaceSymbolTable.Last().classes.Last().members.Last().type == "float" && type == "int")
+                return true;
+            else
+                return false;
+        }
+
+        public string CC_Return_Type()
+        {
+
+            string returnType = NamespaceSymbolTable.Last().classes.Last().members.Last().type;
+            return returnType;
+
+        }
+        public string CC(string t1, string t2, string oper)
+        {
+            string returnType = "";
+
+            if (oper == "+" || oper == "-" || oper == "*" || oper == "/")
+            {
+                switch (t1)
+                {
+                    case "int":
+                        if (t2 == "int")
+                            returnType = "int";
+                        else if (t2 == "float")
+                            returnType = "float";
+                        else if (t2 == "string" && oper == "+")
+                            returnType = "string";
+                        else if (t2 == "char")
+                            returnType = "int";
+                        else if (t2 == "bool")
+                            returnType = "invalid";
+                        else returnType = "invalid";
+                        break;
+                    case "float":
+                        if (t2 == "int")
+                            returnType = "float";
+                        else if (t2 == "float")
+                            returnType = "float";
+                        else if (t2 == "string" && oper == "+")
+                            returnType = "string";
+                        else if (t2 == "char")
+                            returnType = "float";
+                        else if (t2 == "bool")
+                            returnType = "invalid";
+                        else returnType = "invalid";
+                        break;
+                    case "string":
+                        if (t2 == "int" && oper == "+")
+                            returnType = "string";
+                        else if (t2 == "float" && oper == "+")
+                            returnType = "string";
+                        else if (t2 == "string" && oper == "+")
+                            returnType = "string";
+                        else if (t2 == "char" && oper == "+")
+                            returnType = "string";
+                        else if (t2 == "bool")
+                            returnType = "string";
+                        else returnType = "invalid";
+                        break;
+                    case "char":
+                        if (t2 == "int")
+                            returnType = "int";
+                        else if (t2 == "float")
+                            returnType = "float";
+                        else if (t2 == "string" && oper == "+")
+                            returnType = "string";
+                        else if (t2 == "char")
+                            returnType = "int";
+                        else if (t2 == "bool")
+                            returnType = "invalid";
+                        else returnType = "invalid";
+                        break;
+                    case "bool":
+                        if (t2 == "int")
+                            returnType = "invalid";
+                        else if (t2 == "float")
+                            returnType = "invalid";
+                        else if (t2 == "string" && oper == "+")
+                            returnType = "string";
+                        else if (t2 == "char")
+                            returnType = "invalid";
+                        else if (t2 == "bool")
+                            returnType = "invalid";
+                        else returnType = "invalid";
+                        break;
+                }
+            }
+            else if (oper == ">" || oper == ">=" || oper == "<" || oper == "<=" || oper == "&&" || oper == "||" || oper == "==")
+            {
+                switch (t1)
+                {
+                    case "int":
+                        if (t2 == "int")
+                            returnType = "bool";
+                        else if (t2 == "float")
+                            returnType = "bool";
+                        else if (t2 == "string" && oper == "+")
+                            returnType = "invalid";
+                        else if (t2 == "char")
+                            returnType = "bool";
+                        else if (t2 == "bool")
+                            returnType = "invalid";
+                        else returnType = "invalid";
+                        break;
+                    case "float":
+                        if (t2 == "int")
+                            returnType = "bool";
+                        else if (t2 == "float")
+                            returnType = "bool";
+                        else if (t2 == "string")
+                            returnType = "invalid";
+                        else if (t2 == "char")
+                            returnType = "bool";
+                        else if (t2 == "bool")
+                            returnType = "invalid";
+                        else returnType = "invalid";
+                        break;
+                    case "string":
+                        if (t2 == "int")
+                            returnType = "invalid";
+                        else if (t2 == "float")
+                            returnType = "invalid";
+                        else if (t2 == "string")
+                            returnType = "invalid";
+                        else if (t2 == "char")
+                            returnType = "invalid";
+                        else if (t2 == "bool")
+                            returnType = "invalid";
+                        else returnType = "invalid";
+                        break;
+                    case "char":
+                        if (t2 == "int")
+                            returnType = "bool";
+                        else if (t2 == "float")
+                            returnType = "bool";
+                        else if (t2 == "string")
+                            returnType = "invalid";
+                        else if (t2 == "char")
+                            returnType = "bool";
+                        else if (t2 == "bool")
+                            returnType = "invalid";
+                        else returnType = "invalid";
+                        break;
+                    case "bool":
+                        if (t2 == "int")
+                            returnType = "invalid";
+                        else if (t2 == "float")
+                            returnType = "invalid";
+                        else if (t2 == "string")
+                            returnType = "invalid";
+                        else if (t2 == "char")
+                            returnType = "invalid";
+                        else if (t2 == "bool" && (oper == "&&" || oper == "||"))
+                            returnType = "bool";
+                        else returnType = "invalid";
+                        break;
+                }
+            }
+            else if (oper == "=" || oper == "+=" || oper == "-=")
+            {
+                switch (t1)
+                {
+                    case "int":
+                        if (t2 == "int")
+                            returnType = "int";
+                        else if (t2 == "char")
+                            returnType = "int";
+                        else returnType = "invalid";
+                        break;
+                    case "float":
+                        if (t2 == "int")
+                            returnType = "foat";
+                        else if (t2 == "float")
+                            returnType = "float";
+                        else returnType = "invalid";
+                        break;
+                    case "string":
+                        if (t2 == "int" && oper == "+=")
+                            returnType = "string";
+                        else if (t2 == "float" && oper == "+=")
+                            returnType = "string";
+                        else if (t2 == "string" && (oper == "+=" || oper == "="))
+                            returnType = "string";
+                        else if (t2 == "char" && oper == "+=")
+                            returnType = "string";
+                        else returnType = "invalid";
+                        break;
+                    case "char":
+                        if (t2 == "char")
+                            returnType = "char";
+                        else returnType = "invalid";
+                        break;
+                    case "bool":
+                        if (t2 == "bool")
+                            returnType = "bool";
+                        else returnType = "invalid";
+                        break;
+                }
+            }
+            return returnType;
+        }
     }
 }
