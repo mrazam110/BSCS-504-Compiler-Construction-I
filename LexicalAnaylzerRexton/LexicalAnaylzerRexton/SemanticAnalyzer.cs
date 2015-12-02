@@ -339,5 +339,29 @@ namespace LexicalAnaylzerRexton
             scopeToAdd = 0;
             GlobalSymbolTable.Clear();
         }
+
+        public bool Search(string name)
+        {
+            int[] scopeArray = Scope.ToArray();
+            for (int i = scopeArray.Count() - 1; i >= 0; i--)
+            {
+
+                if (LookUpVariable(name, scopeArray[i]))
+                {
+                    return true;
+                }
+            }
+
+            for (int i = 0; i < GlobalSymbolTable.Last().classes.Last().members.Count; i++)
+            {
+                if (!GlobalSymbolTable.Last().classes.Last().members[i].isMethod &&
+                    GlobalSymbolTable.Last().classes.Last().members[i].name == name)
+                {
+                    return true;
+                }
+            }
+            return false;
+
+        }
     }
 }
