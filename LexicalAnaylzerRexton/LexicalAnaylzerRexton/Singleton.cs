@@ -72,17 +72,25 @@ namespace LexicalAnaylzerRexton
         public string name;
         public string type;
         public int scope;
+        public string AM = Singleton.defaultAccessModifier;
+        public string TM;
 
-        public VARIABLE(String N, String T, int S)
+        public VARIABLE(string N, string T, int S)
         {
             name = N;
             type = T;
             scope = S;
         }
 
-        public VARIABLE()
-        {
+        public VARIABLE() {}
 
+        public VARIABLE(string N, string T, int S, string AM, string TM)
+        {
+            name = N;
+            type = T;
+            scope = S;
+            this.AM = AM;
+            this.TM = TM;
         }
 
         public VARIABLE ShallowCopy()

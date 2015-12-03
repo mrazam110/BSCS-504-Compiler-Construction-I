@@ -62,6 +62,24 @@ namespace LexicalAnaylzerRexton
             }
         }
 
+        public bool insertVariables(string N, string T, int S, string AM, string TM)
+        {
+            VARIABLE currentVariable = new VARIABLE(N, T, S, AM, TM);
+            if (LookUpVariable(currentVariable.name, currentVariable.scope))
+            {
+                variableRedeclarationError(N, T, S);
+                //currentVariable.name = "ERROR-" + currentVariable.name;
+                //globalSymbolTable.Last().classes.Last().members.Last().variables.Add(currentVariable);
+                return false;
+
+            }
+            else
+            {
+                globalSymbolTable.Last().classes.Last().members.Last().variables.Add(currentVariable);
+                return true;
+            }
+        }
+
         public bool insertMember(CLASSMEMBER obj)
         {
             CLASSMEMBER currentMember = (CLASSMEMBER)obj.ShallowCopy();
