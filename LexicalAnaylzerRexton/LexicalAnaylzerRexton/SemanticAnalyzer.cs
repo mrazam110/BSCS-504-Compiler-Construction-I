@@ -280,40 +280,6 @@ namespace LexicalAnaylzerRexton
             return false;
         }
 
-        public string getType(string name)
-        {
-            int[] scopeArray = Scope.ToArray();
-            for (int j = scopeArray.Count() - 1; j >= 0; j--)
-            {
-                if (GlobalSymbolTable.Last().classes.Last().members.Count > 0)
-                {
-
-                    for (int i = 0; i < GlobalSymbolTable.Last().classes.Last().members.Last().variables.Count; i++)
-                    {
-                        if (GlobalSymbolTable.Last().classes.Last().members.Last().variables[i].name == name)
-                        {
-                            return GlobalSymbolTable.Last().classes.Last().members.Last().variables[i].type;
-                        }
-                    }
-                    //return "invalid";
-                }
-                //else
-                //{
-                //    return "invalid";
-                //}
-            }
-
-            for (int i = 0; i < GlobalSymbolTable.Last().classes.Last().members.Count; i++)
-            {
-                if (!GlobalSymbolTable.Last().classes.Last().members[i].isMethod &&
-                    GlobalSymbolTable.Last().classes.Last().members[i].name == name)
-                {
-                    return GlobalSymbolTable.Last().classes.Last().members[i].type;
-                }
-            }
-            return "invalid";
-
-        }
         public string removeIndex(string actualType, string toRemove)
         {
 

@@ -20,6 +20,7 @@ namespace LexicalAnaylzerRexton
         public static string[,] keywords = {
                                {"aur_int",      Singleton.SingletonEnums._DT.ToString()                 },
                                {"aur_float",    Singleton.SingletonEnums._DT.ToString()                 },
+                               {"aur_double",   Singleton.SingletonEnums._DT.ToString()                 },
                                {"aur_char",     Singleton.SingletonEnums._DT.ToString()                 },
                                {"aur_string",   Singleton.SingletonEnums._DT.ToString()                 },
                                {"aur_bool",     Singleton.SingletonEnums._DT.ToString()                 },
@@ -110,15 +111,5 @@ namespace LexicalAnaylzerRexton
         public static string signs = @"[+-]";
         public static string escapeCharacters = @"[nrtfbv]";
         public static string sc = "[\\\\\"\']";
-    }
-
-    public static class CONSTANTS
-    {
-        public static String defaultAccessModifier{
-            get
-            {
-                return "Private";
-            }
-        }
     }
 }
