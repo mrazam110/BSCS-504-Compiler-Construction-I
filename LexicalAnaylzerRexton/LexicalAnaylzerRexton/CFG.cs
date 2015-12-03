@@ -44,14 +44,15 @@ namespace LexicalAnaylzerRexton
 
         private void addError(string  message)
         {
-            semanticAnalyzer.errors.Add(message + " (" + tokenList[index] + " " + semanticAnalyzer.getCurrentClass() + ")");
+            SemanticAnalyzer.errors.Add(message + " (" + tokenList[index] + " " + semanticAnalyzer.getCurrentClass() + ")");
             //new semanticError(Tokens[tokenIndex], message)
         }
 
         public string getSemanticErrors()
         {
             string error = "";
-            foreach(string e in semanticAnalyzer.errors){
+            foreach (string e in SemanticAnalyzer.errors)
+            {
                 error += e + "\n";
             }
             return error;
@@ -277,11 +278,13 @@ namespace LexicalAnaylzerRexton
                 else if (tokenList[index].classStr == "{")
                 {
                     index++;
+                    semanticAnalyzer.createScope();
                     if (M_ST())
                     {
                         if (tokenList[index].classStr == "}")
                         {
                             index++;
+                            semanticAnalyzer.deleteScope();
                             return true;
                         }
                     }
@@ -468,6 +471,7 @@ namespace LexicalAnaylzerRexton
                     index++;
                     if (S_St_DT(T))
                     {
+                        RT = T;
                         return true;
                     }
                 }
@@ -698,10 +702,10 @@ namespace LexicalAnaylzerRexton
             //FIRST(<Variable_Link2>  ) = {=, , , ;}
             if (tokenList[index].classStr == "," ||
                 tokenList[index].classStr == ";" ||
-                tokenList[index].wordStr == Singleton.SingletonEnums.AssignmentOp.ToString())
+                tokenList[index].classStr == Singleton.SingletonEnums.AssignmentOp.ToString())
             {
                 //<Variable_Link2>   =  <Variable_Value>| <LIST>
-                if (tokenList[index].wordStr == Singleton.SingletonEnums.AssignmentOp.ToString())
+                if (tokenList[index].classStr == Singleton.SingletonEnums.AssignmentOp.ToString())
                 {
                     OP = tokenList[index].wordStr;
                     index++;

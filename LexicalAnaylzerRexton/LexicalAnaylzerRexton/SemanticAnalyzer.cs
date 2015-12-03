@@ -8,10 +8,10 @@ namespace LexicalAnaylzerRexton
 {
     class SemanticAnalyzer
     {
-        public List<String> errors = new List<string>();
+        public static List<String> errors = new List<string>();
 
-        List<CLASS> ClassSymbolTable = new List<CLASS>();
-        public List<GLOBAL> globalSymbolTable = new List<GLOBAL>();
+        public static List<CLASS> ClassSymbolTable = new List<CLASS>();
+        public static  List<GLOBAL> globalSymbolTable = new List<GLOBAL>();
 
         Stack<int> Scope = new Stack<int>();
         int scopeToAdd = 0;
@@ -19,7 +19,7 @@ namespace LexicalAnaylzerRexton
         public SemanticAnalyzer()
         {
             //Adding Global
-            globalSymbolTable.Add(new GLOBAL());
+            SemanticAnalyzer.globalSymbolTable.Add(new GLOBAL());
         }
 
         //Scope Functions

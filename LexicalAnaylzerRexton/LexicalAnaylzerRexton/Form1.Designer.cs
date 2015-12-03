@@ -38,39 +38,39 @@
             this.LexTabPage = new System.Windows.Forms.TabPage();
             this.label6 = new System.Windows.Forms.Label();
             this.SyntaxTabPage = new System.Windows.Forms.TabPage();
+            this.treeView = new System.Windows.Forms.TreeView();
             this.SemTabPage = new System.Windows.Forms.TabPage();
             this.ICGTabPage = new System.Windows.Forms.TabPage();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.NotificationTabPage = new System.Windows.Forms.TabPage();
-            this.ErrorTabPage = new System.Windows.Forms.TabPage();
-            this.label5 = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.treeView = new System.Windows.Forms.TreeView();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.totalTokenLabel = new System.Windows.Forms.Label();
-            this.characterCountLabel = new System.Windows.Forms.Label();
-            this.totWordsLabel = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.totLineLabel = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.sementicErrorLabel = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.lexicalErrorLabel = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.syntaxErrorLabel = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.lexicalErrorLabel = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.totLineLabel = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.totWordsLabel = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.totalTokenLabel = new System.Windows.Forms.Label();
+            this.characterCountLabel = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.ErrorTabPage = new System.Windows.Forms.TabPage();
             this.errorTextBox = new System.Windows.Forms.RichTextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.LexTabPage.SuspendLayout();
             this.SyntaxTabPage.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.NotificationTabPage.SuspendLayout();
-            this.ErrorTabPage.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.ErrorTabPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // codebox1
@@ -84,7 +84,7 @@
             this.codebox1.Name = "codebox1";
             this.codebox1.Size = new System.Drawing.Size(343, 376);
             this.codebox1.TabIndex = 1;
-            this.codebox1.Text = "class program {\n\n}";
+            this.codebox1.Text = "class program {\npublic static void main(){\naur_int a = 10;\n}\n}\n";
             this.codebox1.TextChanged += new System.EventHandler(this.codebox1_TextChanged);
             // 
             // openFileDialog1
@@ -161,6 +161,13 @@
             this.SyntaxTabPage.TabIndex = 1;
             this.SyntaxTabPage.Text = "Syntax Analyzer";
             // 
+            // treeView
+            // 
+            this.treeView.Location = new System.Drawing.Point(6, 6);
+            this.treeView.Name = "treeView";
+            this.treeView.Size = new System.Drawing.Size(338, 360);
+            this.treeView.TabIndex = 0;
+            // 
             // SemTabPage
             // 
             this.SemTabPage.BackColor = System.Drawing.Color.WhiteSmoke;
@@ -208,146 +215,19 @@
             this.NotificationTabPage.Text = "Notifications";
             this.NotificationTabPage.UseVisualStyleBackColor = true;
             // 
-            // ErrorTabPage
+            // panel1
             // 
-            this.ErrorTabPage.BackColor = System.Drawing.Color.Black;
-            this.ErrorTabPage.Controls.Add(this.errorTextBox);
-            this.ErrorTabPage.ForeColor = System.Drawing.Color.Gold;
-            this.ErrorTabPage.Location = new System.Drawing.Point(4, 22);
-            this.ErrorTabPage.Name = "ErrorTabPage";
-            this.ErrorTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.ErrorTabPage.Size = new System.Drawing.Size(976, 105);
-            this.ErrorTabPage.TabIndex = 1;
-            this.ErrorTabPage.Text = "Error";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(650, 22);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(72, 13);
-            this.label5.TabIndex = 9;
-            this.label5.Text = "Source Code:";
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(65, 12);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(42, 23);
-            this.button3.TabIndex = 11;
-            this.button3.Text = "Save Token";
-            this.button3.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(13, 12);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(46, 23);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "Open";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // treeView
-            // 
-            this.treeView.Location = new System.Drawing.Point(6, 6);
-            this.treeView.Name = "treeView";
-            this.treeView.Size = new System.Drawing.Size(338, 360);
-            this.treeView.TabIndex = 0;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(2, 12);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(113, 16);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Characters Count:";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(3, 33);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(107, 16);
-            this.label7.TabIndex = 1;
-            this.label7.Text = "Total Token Set:";
-            this.label7.Click += new System.EventHandler(this.label7_Click);
-            // 
-            // totalTokenLabel
-            // 
-            this.totalTokenLabel.AutoSize = true;
-            this.totalTokenLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.totalTokenLabel.Location = new System.Drawing.Point(116, 33);
-            this.totalTokenLabel.Name = "totalTokenLabel";
-            this.totalTokenLabel.Size = new System.Drawing.Size(15, 16);
-            this.totalTokenLabel.TabIndex = 3;
-            this.totalTokenLabel.Text = "0";
-            // 
-            // characterCountLabel
-            // 
-            this.characterCountLabel.AutoSize = true;
-            this.characterCountLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.characterCountLabel.Location = new System.Drawing.Point(115, 12);
-            this.characterCountLabel.Name = "characterCountLabel";
-            this.characterCountLabel.Size = new System.Drawing.Size(15, 16);
-            this.characterCountLabel.TabIndex = 2;
-            this.characterCountLabel.Text = "0";
-            // 
-            // totWordsLabel
-            // 
-            this.totWordsLabel.AutoSize = true;
-            this.totWordsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.totWordsLabel.Location = new System.Drawing.Point(116, 55);
-            this.totWordsLabel.Name = "totWordsLabel";
-            this.totWordsLabel.Size = new System.Drawing.Size(15, 16);
-            this.totWordsLabel.TabIndex = 5;
-            this.totWordsLabel.Text = "0";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(3, 55);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(85, 16);
-            this.label10.TabIndex = 4;
-            this.label10.Text = "Total Words:";
-            // 
-            // totLineLabel
-            // 
-            this.totLineLabel.AutoSize = true;
-            this.totLineLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.totLineLabel.Location = new System.Drawing.Point(116, 77);
-            this.totLineLabel.Name = "totLineLabel";
-            this.totLineLabel.Size = new System.Drawing.Size(15, 16);
-            this.totLineLabel.TabIndex = 7;
-            this.totLineLabel.Text = "0";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(3, 77);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(70, 16);
-            this.label12.TabIndex = 6;
-            this.label12.Text = "Total Line:";
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Checked = true;
-            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox1.Location = new System.Drawing.Point(550, 23);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(87, 22);
-            this.checkBox1.TabIndex = 8;
-            this.checkBox1.Text = "Live View";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.panel1.Controls.Add(this.sementicErrorLabel);
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.lexicalErrorLabel);
+            this.panel1.Controls.Add(this.label4);
+            this.panel1.Controls.Add(this.syntaxErrorLabel);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Location = new System.Drawing.Point(637, 33);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(339, 71);
+            this.panel1.TabIndex = 14;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // sementicErrorLabel
             // 
@@ -359,6 +239,28 @@
             this.sementicErrorLabel.Size = new System.Drawing.Size(53, 15);
             this.sementicErrorLabel.TabIndex = 13;
             this.sementicErrorLabel.Text = "No Error";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(8, 26);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(46, 15);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "Syntax:";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
+            // 
+            // lexicalErrorLabel
+            // 
+            this.lexicalErrorLabel.AutoSize = true;
+            this.lexicalErrorLabel.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lexicalErrorLabel.ForeColor = System.Drawing.Color.Green;
+            this.lexicalErrorLabel.Location = new System.Drawing.Point(88, 8);
+            this.lexicalErrorLabel.Name = "lexicalErrorLabel";
+            this.lexicalErrorLabel.Size = new System.Drawing.Size(53, 15);
+            this.lexicalErrorLabel.TabIndex = 11;
+            this.lexicalErrorLabel.Text = "No Error";
             // 
             // label4
             // 
@@ -392,41 +294,98 @@
             this.label2.TabIndex = 8;
             this.label2.Text = "Lexical:";
             // 
-            // lexicalErrorLabel
+            // totLineLabel
             // 
-            this.lexicalErrorLabel.AutoSize = true;
-            this.lexicalErrorLabel.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lexicalErrorLabel.ForeColor = System.Drawing.Color.Green;
-            this.lexicalErrorLabel.Location = new System.Drawing.Point(88, 8);
-            this.lexicalErrorLabel.Name = "lexicalErrorLabel";
-            this.lexicalErrorLabel.Size = new System.Drawing.Size(53, 15);
-            this.lexicalErrorLabel.TabIndex = 11;
-            this.lexicalErrorLabel.Text = "No Error";
+            this.totLineLabel.AutoSize = true;
+            this.totLineLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.totLineLabel.Location = new System.Drawing.Point(116, 77);
+            this.totLineLabel.Name = "totLineLabel";
+            this.totLineLabel.Size = new System.Drawing.Size(15, 16);
+            this.totLineLabel.TabIndex = 7;
+            this.totLineLabel.Text = "0";
             // 
-            // label3
+            // label12
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(8, 26);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(46, 15);
-            this.label3.TabIndex = 9;
-            this.label3.Text = "Syntax:";
-            this.label3.Click += new System.EventHandler(this.label3_Click);
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Location = new System.Drawing.Point(3, 77);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(70, 16);
+            this.label12.TabIndex = 6;
+            this.label12.Text = "Total Line:";
             // 
-            // panel1
+            // totWordsLabel
             // 
-            this.panel1.Controls.Add(this.sementicErrorLabel);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.lexicalErrorLabel);
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.syntaxErrorLabel);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Location = new System.Drawing.Point(637, 33);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(339, 71);
-            this.panel1.TabIndex = 14;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            this.totWordsLabel.AutoSize = true;
+            this.totWordsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.totWordsLabel.Location = new System.Drawing.Point(116, 55);
+            this.totWordsLabel.Name = "totWordsLabel";
+            this.totWordsLabel.Size = new System.Drawing.Size(15, 16);
+            this.totWordsLabel.TabIndex = 5;
+            this.totWordsLabel.Text = "0";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Location = new System.Drawing.Point(3, 55);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(85, 16);
+            this.label10.TabIndex = 4;
+            this.label10.Text = "Total Words:";
+            // 
+            // totalTokenLabel
+            // 
+            this.totalTokenLabel.AutoSize = true;
+            this.totalTokenLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.totalTokenLabel.Location = new System.Drawing.Point(116, 33);
+            this.totalTokenLabel.Name = "totalTokenLabel";
+            this.totalTokenLabel.Size = new System.Drawing.Size(15, 16);
+            this.totalTokenLabel.TabIndex = 3;
+            this.totalTokenLabel.Text = "0";
+            // 
+            // characterCountLabel
+            // 
+            this.characterCountLabel.AutoSize = true;
+            this.characterCountLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.characterCountLabel.Location = new System.Drawing.Point(115, 12);
+            this.characterCountLabel.Name = "characterCountLabel";
+            this.characterCountLabel.Size = new System.Drawing.Size(15, 16);
+            this.characterCountLabel.TabIndex = 2;
+            this.characterCountLabel.Text = "0";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(3, 33);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(107, 16);
+            this.label7.TabIndex = 1;
+            this.label7.Text = "Total Token Set:";
+            this.label7.Click += new System.EventHandler(this.label7_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(2, 12);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(113, 16);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Characters Count:";
+            // 
+            // ErrorTabPage
+            // 
+            this.ErrorTabPage.BackColor = System.Drawing.Color.Black;
+            this.ErrorTabPage.Controls.Add(this.errorTextBox);
+            this.ErrorTabPage.ForeColor = System.Drawing.Color.Gold;
+            this.ErrorTabPage.Location = new System.Drawing.Point(4, 22);
+            this.ErrorTabPage.Name = "ErrorTabPage";
+            this.ErrorTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.ErrorTabPage.Size = new System.Drawing.Size(976, 105);
+            this.ErrorTabPage.TabIndex = 1;
+            this.ErrorTabPage.Text = "Error";
             // 
             // errorTextBox
             // 
@@ -438,6 +397,47 @@
             this.errorTextBox.Size = new System.Drawing.Size(976, 106);
             this.errorTextBox.TabIndex = 0;
             this.errorTextBox.Text = "Errors:";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(650, 22);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(72, 13);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "Source Code:";
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(65, 12);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(42, 23);
+            this.button3.TabIndex = 11;
+            this.button3.Text = "Save Token";
+            this.button3.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(13, 12);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(46, 23);
+            this.button1.TabIndex = 10;
+            this.button1.Text = "Open";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Checked = true;
+            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox1.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox1.Location = new System.Drawing.Point(550, 23);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(87, 22);
+            this.checkBox1.TabIndex = 8;
+            this.checkBox1.Text = "Live View";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // Form1
             // 
@@ -463,9 +463,9 @@
             this.tabControl2.ResumeLayout(false);
             this.NotificationTabPage.ResumeLayout(false);
             this.NotificationTabPage.PerformLayout();
-            this.ErrorTabPage.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.ErrorTabPage.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

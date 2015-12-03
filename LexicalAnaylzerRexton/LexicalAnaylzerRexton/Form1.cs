@@ -175,8 +175,13 @@ namespace LexicalAnaylzerRexton
 
         private void codebox1_TextChanged(object sender, EventArgs e)
         {
-            characterCountLabel.Text = "" + codebox1.Text.Length;
-            Compile();
+            if (checkBox1.Checked)
+            {
+                SemanticAnalyzer.errors = new List<string>();
+                characterCountLabel.Text = "" + codebox1.Text.Length;
+                Compile();
+
+            }
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
