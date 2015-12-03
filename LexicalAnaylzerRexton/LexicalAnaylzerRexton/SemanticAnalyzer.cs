@@ -8,7 +8,7 @@ namespace LexicalAnaylzerRexton
 {
     class SemanticAnalyzer
     {
-        List<String> errors = new List<string>();
+        public List<String> errors = new List<string>();
 
         List<CLASS> ClassSymbolTable = new List<CLASS>();
         public List<GLOBAL> globalSymbolTable = new List<GLOBAL>();
@@ -36,6 +36,11 @@ namespace LexicalAnaylzerRexton
         public int currentScope()
         {
             return Scope.Peek();
+        }
+
+        public string getCurrentClass()
+        {
+            return globalSymbolTable.Last().classes.Last().name;
         }
 
         //Insert
@@ -515,40 +520,6 @@ namespace LexicalAnaylzerRexton
             globalSymbolTable.Clear();
         }
 
-        public string getType(string name)
-        {
-            int[] scopeArray = Scope.ToArray();
-            for (int j = scopeArray.Count() - 1; j >= 0; j--)
-            {
-                if (globalSymbolTable.Last().classes.Last().members.Count > 0)
-                {
-
-                    for (int i = 0; i < globalSymbolTable.Last().classes.Last().members.Last().variables.Count; i++)
-                    {
-                        if (globalSymbolTable.Last().classes.Last().members.Last().variables[i].name == name)
-                        {
-                            return globalSymbolTable.Last().classes.Last().members.Last().variables[i].type;
-                        }
-                    }
-                    //return "invalid";
-                }
-                //else
-                //{
-                //    return "invalid";
-                //}
-            }
-
-            for (int i = 0; i < globalSymbolTable.Last().classes.Last().members.Count; i++)
-            {
-                if (!globalSymbolTable.Last().classes.Last().members[i].isMethod &&
-                    globalSymbolTable.Last().classes.Last().members[i].name == name)
-                {
-                    return globalSymbolTable.Last().classes.Last().members[i].type;
-                }
-            }
-            return "invalid";
-
-        }
 
         public bool Search(string name)
         {

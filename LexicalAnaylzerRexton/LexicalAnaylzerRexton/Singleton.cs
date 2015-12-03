@@ -20,6 +20,7 @@ namespace LexicalAnaylzerRexton
             accessModifier = AM;
             parent = Parent;
         }
+
         public CLASS()
         {
 
@@ -92,7 +93,7 @@ namespace LexicalAnaylzerRexton
 
     static class Singleton
     {
-
+        public const string defaultAccessModifier = "Private"; 
         public enum SingletonEnums
         {
             _DT, _agar, _warna, _break, _barbar, _jabtak, _continue, _new, _class, _this, _static,
