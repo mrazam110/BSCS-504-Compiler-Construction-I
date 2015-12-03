@@ -54,7 +54,8 @@ namespace LexicalAnaylzerRexton
         private void Compile()
         {
             richTextBox1.Text = "";
-            errorTextBox.Text = "";
+            errorTextBox.Text = ""; 
+            treeView.Nodes.Clear();
 
             String errorText = "";
             LexAnalyzer lex = new LexAnalyzer();
@@ -104,9 +105,9 @@ namespace LexicalAnaylzerRexton
                     syntaxErrorLabel.Text = "No Error";
                     syntaxErrorLabel.ForeColor = System.Drawing.Color.Green;
 
-                    TreeNode tree = new TreeNode("<S>");
-                    treeView.Nodes.Clear();
-                    treeView.Nodes.Add(tree);
+                    //TreeNode tree = new TreeNode("<S>");
+                    
+                    //treeView.Nodes.Add(tree);
                 }
                 else
                 {
@@ -129,6 +130,7 @@ namespace LexicalAnaylzerRexton
                 {
                     errorTextBox.Text = errorText;
                 }
+                treeView.ExpandAll();
             }
         }
 

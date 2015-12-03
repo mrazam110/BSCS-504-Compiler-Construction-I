@@ -428,8 +428,6 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Checked = true;
-            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox1.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBox1.Location = new System.Drawing.Point(550, 23);
             this.checkBox1.Name = "checkBox1";
@@ -490,7 +488,6 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TreeView treeView;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label totalTokenLabel;
@@ -508,6 +505,7 @@
         private System.Windows.Forms.Label lexicalErrorLabel;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.RichTextBox errorTextBox;
+        public System.Windows.Forms.TreeView treeView;
     }
 }
 
