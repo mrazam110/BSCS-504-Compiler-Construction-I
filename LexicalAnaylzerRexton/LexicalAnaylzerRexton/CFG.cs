@@ -21,33 +21,7 @@ namespace LexicalAnaylzerRexton
         private string errors = "";
 
         //SEMACTIC DECLARATIONS
-        SemanticAnalyzer semantic = new SemanticAnalyzer();
-        List<semanticError> semErrors = new List<semanticError>();
-        VARIABLE variableRow = new VARIABLE();
-        private string Search_GetType(String N, string e)
-        {
-            string T = "";
-            if (semantic.Search(N))
-            {
-                T = semantic.getType(N);
-                if (T == "_INVALID")
-                {
-                    addError(e);
-                    return "_INVALID";
-                }
-                return T;
-            }
-            else
-            {
-                addError(e);
-                return "_INVALID";
-            }
-        }
-
-        private void addError(string message)
-        {
-            semErrors.Add(new semanticError(tokenList[index], message));
-        }
+        
 
         public string getErrors()
         {
@@ -351,13 +325,9 @@ namespace LexicalAnaylzerRexton
                 tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
             {
                 //<Param>  ID <Param1> | Null
-<<<<<<< HEAD
                 //<Param> <Exp> <Param1> | Null
                 
                 if (Exp(ref T))
-=======
-                if (ID_CONST())
->>>>>>> parent of deee13c... complete till param
                 {
                     PL += T;
                     if (Param1(ref AL, PL))
@@ -476,7 +446,6 @@ namespace LexicalAnaylzerRexton
                     {
                         String N = tokenList[index].wordStr;
                         String T = "";
-                        T = Search_GetType(N, "Undecalared Variable");
                         /*if (!semantic.LookUpVariable(N, semantic.CurrentScope()))
                         {
                             addError("Undecalared Variable");
@@ -499,7 +468,6 @@ namespace LexicalAnaylzerRexton
                 {
                     String N = tokenList[index].wordStr;
                     String T = "";
-                    T = Search_GetType(N, "Undecalared Variable");
                     index++;
                     if (S_St_ID(N, T))
                     {
@@ -540,7 +508,6 @@ namespace LexicalAnaylzerRexton
                 {
                     //String N = tokenList[index].wordStr;
                     //String T = "";
-                    T = Search_GetType(N, "Undecalared Variable");
                     index++;
                     if (tokenList[index].classStr == ";")
                     {
@@ -550,24 +517,14 @@ namespace LexicalAnaylzerRexton
                 }
                 else if (Assign_Op(T))
                 {
-                    T = Search_GetType(N, "Undecalared Variable");
                     return true;
                 }
                 else if (Object_link("",N))
                 {
-                    if (semantic.LookUpClass(N))
-                    {
-
-                    }
-                    else
-                    {
-                        addError(N + "Class does not exists");
-                    }
                     return true;
                 }
                 else if (Object_Call())
                 {
-                    T = Search_GetType(N, "Undecalared Variable");
                     if (tokenList[index].classStr == ";")
                     {
                         index++;
@@ -584,7 +541,6 @@ namespace LexicalAnaylzerRexton
                 }
                 else if (tokenList[index].classStr == "[")
                 {
-                    T = Search_GetType(N, "Undecalared Array");
                     index++;
                     if (Exp(ref RT))
                     {
@@ -615,13 +571,6 @@ namespace LexicalAnaylzerRexton
                 if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                 {
                     N = tokenList[index].wordStr;
-                    variableRow.type = T;
-                    variableRow.name = N;
-                    variableRow.scope = semantic.CurrentScope();
-                    if (!semantic.AddVariables(variableRow))
-                    {
-                        addError("Variable Redeclaration");
-                    }
                     index++;
                     if (S_St_DT2(T))
                     {
@@ -688,13 +637,6 @@ namespace LexicalAnaylzerRexton
                 if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                 {
                     N = tokenList[index].wordStr;
-                    variableRow.scope = semantic.CurrentScope();
-                    variableRow.name = N;
-                    variableRow.type = T;
-                    if (!semantic.AddVariables(variableRow))
-                    {
-                        addError("Variable Redeclaration");
-                    }
                     index++;
                     if (Variable_Link2(T))
                     {

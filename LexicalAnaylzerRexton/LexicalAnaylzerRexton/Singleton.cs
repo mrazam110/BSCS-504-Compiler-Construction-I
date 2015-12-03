@@ -6,6 +6,90 @@ using System.Threading.Tasks;
 
 namespace LexicalAnaylzerRexton
 {
+    class CLASS
+    {
+        public string name;
+        public string accessModifier;
+        public string parent;
+        //public CLASS parentLink;
+        public List<CLASSMEMBER> members = new List<CLASSMEMBER>();
+
+        public CLASS(string N, string AM, string Parent)
+        {
+            name = N;
+            accessModifier = AM;
+            parent = Parent;
+        }
+        public CLASS()
+        {
+
+        }
+
+        public CLASS ShallowCopy()
+        {
+            return (CLASS)this.MemberwiseClone();
+        }
+    }
+
+    class GLOBAL
+    {
+        public string name;
+        public List<CLASS> classes;
+        public List<GLOBAL> global;
+
+        public GLOBAL()
+        {
+            name = "";
+            classes = new List<CLASS>();
+            global = new List<GLOBAL>();
+        }
+        public GLOBAL ShallowCopy()
+        {
+            return (GLOBAL)this.MemberwiseClone();
+        }
+    }
+
+    class CLASSMEMBER
+    {
+        public bool isMethod;
+        public string name;
+        public string type;
+        public string accessModifier;
+        public string category;
+        public string param;
+        //public List<string> param = new List<string>();
+        public List<VARIABLE> variables = new List<VARIABLE>();
+
+        public CLASSMEMBER ShallowCopy()
+        {
+            return (CLASSMEMBER)this.MemberwiseClone();
+        }
+    }
+
+    class VARIABLE
+    {
+        public string name;
+        public string type;
+        public int scope;
+
+        public VARIABLE(String N, String T, int S)
+        {
+            name = N;
+            type = T;
+            scope = S;
+        }
+
+        public VARIABLE()
+        {
+
+        }
+
+        public VARIABLE ShallowCopy()
+        {
+            return (VARIABLE)this.MemberwiseClone();
+        }
+    }
+
     static class Singleton
     {
 
