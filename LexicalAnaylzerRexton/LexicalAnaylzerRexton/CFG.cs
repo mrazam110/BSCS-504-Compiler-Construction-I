@@ -1537,16 +1537,29 @@ namespace LexicalAnaylzerRexton
                         if (tokenList[index].classStr == ")")
                         {
                             String TM = "";
-                            
+                            CLASSMEMBER classMemberRow = new CLASSMEMBER();
+                            classMemberRow.name = N;
+                            classMemberRow.isMethod = true;
+                            classMemberRow.type = "void";
+                            classMemberRow.category = "null";
+                            classMemberRow.param = new List<string>();
+                            classMemberRow.variables = new List<VARIABLE>();
+
+                            if (!semantic.AddConstructor(classMemberRow))
+                            {
+                                addError(N + "Constructor redeclaration");
+                            }
                             index++;
                             if (tokenList[index].classStr == "{")
                             {
                                 index++;
+                                semantic.CreateScope();
                                 if (M_ST())
                                 {
                                     if (tokenList[index].classStr == "}")
                                     {
                                         index++;
+                                        semantic.DeleteScope();
                                         return true;
                                     }
                                 }
@@ -1572,10 +1585,19 @@ namespace LexicalAnaylzerRexton
                     if (tokenList[index].classStr == "]")
                     {
                         index++;
+                        String T = RT + "[]";
                         if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                         {
+                            String N = tokenList[index].wordStr;
+                            variableRow.name = N;
+                            variableRow.type = RT;
+                            variableRow.scope = semantic.CurrentScope();
+                            if (semantic.AddVariables(variableRow))
+                            {
+                                addError(N + "Redeclaration Error");
+                            }
                             index++;
-                            if (INIT_Array())
+                            if (INIT_Array(T))
                             {
                                 return true;
                             }
@@ -1606,14 +1628,21 @@ namespace LexicalAnaylzerRexton
                         index++;
                         if (tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString())
                         {
+                            String T2 = tokenList[index].wordStr;
                             index++;
                             if (tokenList[index].classStr == "[")
                             {
                                 index++;
-                                if (Exp())
+                                String ET = "";
+                                if (Exp(ref ET))
                                 {
                                     if (tokenList[index].classStr == "]")
                                     {
+                                        T2 += "[]";
+                                        if (T2 != T)
+                                        {
+                                            addError("Array type mismatch");
+                                        }
                                         index++;
                                         if (Array_const())
                                         {
@@ -1659,7 +1688,8 @@ namespace LexicalAnaylzerRexton
                 if (tokenList[index].classStr == "{")
                 {
                     index++;
-                    if (Exp())
+                    String ET = "";
+                    if (Exp(ref ET))
                     {
                         if (Array_C2())
                         {
@@ -1691,7 +1721,8 @@ namespace LexicalAnaylzerRexton
                 else if (tokenList[index].classStr == ",")
                 {
                     index++;
-                    if (Exp())
+                    String ET = "";
+                    if (Exp(ref ET))
                     {
                         if (Array_C2())
                         {
@@ -1737,10 +1768,13 @@ namespace LexicalAnaylzerRexton
                 if (tokenList[index].classStr == "(")
                 {
                     index++;
-                    if (List_Param())
+                    String PL = "";
+                    String AL = "";
+                    if (List_Param(ref AL, PL))
                     {
                         if (tokenList[index].classStr == ")")
                         {
+                            AL += "->" + RT;
                             index++;
                             if (tokenList[index].classStr == "{")
                             {
