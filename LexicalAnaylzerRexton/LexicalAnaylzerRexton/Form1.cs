@@ -114,8 +114,10 @@ namespace LexicalAnaylzerRexton
                     syntaxErrorLabel.ForeColor = System.Drawing.Color.Maroon;
 
                     errorText += "Syntax Error: " + syntaxAnalysis.getErrors();
-                }
 
+                    
+                }
+                errorText += "\n" + syntaxAnalysis.getSemanticError();
                 if (checkBox1.Checked)
                 {
                     totalTokenLabel.Text = "" + (tokenSet.Count - 1);

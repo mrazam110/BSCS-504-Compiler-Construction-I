@@ -56,7 +56,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SemanticAnalyzer.cs" />
-    <Compile Include="SemanticClasses.cs" />
     <Compile Include="Singleton.cs" />
     <Compile Include="SyntaxAnalyzer.cs" />
     <Compile Include="token.cs" />

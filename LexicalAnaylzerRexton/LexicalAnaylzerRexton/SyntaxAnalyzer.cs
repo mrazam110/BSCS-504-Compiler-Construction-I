@@ -11,10 +11,11 @@ namespace LexicalAnaylzerRexton
         private List<token> tokenList;
 
         private string errors;
-
+        CFG cfg;
         public SyntaxAnalyzer(List<token> tokenList)
         {
             this.tokenList = tokenList;
+            cfg = new CFG(tokenList);
             addDollarToken();
         }
 
@@ -25,7 +26,6 @@ namespace LexicalAnaylzerRexton
 
         public bool validateCfg()
         {
-            CFG cfg = new CFG(tokenList);
             bool t = cfg.validate();
             this.errors = cfg.getErrors();
             return t;
@@ -34,6 +34,11 @@ namespace LexicalAnaylzerRexton
         public string getErrors()
         {
             return errors;
+        }
+
+        public string getSemanticError()
+        {
+            return cfg.getSemanticErrors();
         }
 
     }

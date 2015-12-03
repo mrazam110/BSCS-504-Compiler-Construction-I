@@ -48,7 +48,14 @@ namespace LexicalAnaylzerRexton
             //new semanticError(Tokens[tokenIndex], message)
         }
 
-
+        public string getSemanticErrors()
+        {
+            string error = "";
+            foreach(string e in semanticAnalyzer.errors){
+                error += e + "\n";
+            }
+            return error;
+        }
 
         public string getErrors()
         {
@@ -93,27 +100,27 @@ namespace LexicalAnaylzerRexton
                     if (tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString())
                     {
                         T = "aur_int";
-                        currentNode = currentNode.Parent;
+                        //currentNode = currentNode.Parent;
                     }
                     else if (tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString())
                     {
                         T = "aur_float";
-                        currentNode = currentNode.Parent;
+                        //currentNode = currentNode.Parent;
                     }
                     else if (tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString())
                     {
                         T = "aur_string";
-                        currentNode = currentNode.Parent;
+                        //currentNode = currentNode.Parent;
                     }
                     else if (tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString())
                     {
                         T = "aur_char";
-                        currentNode = currentNode.Parent;
+                        //currentNode = currentNode.Parent;
                     }
                     else if (tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
                     {
                         T = "aur_bool";
-                        currentNode = currentNode.Parent;
+                        //currentNode = currentNode.Parent;
                     }
 
                     index++;
@@ -618,10 +625,10 @@ namespace LexicalAnaylzerRexton
                 {
                     return true;
                 }*/
-                else if (Array_DEC(T))
+                /*else if (Array_DEC(T))
                 {
                     return true;
-                }
+                }*/
             }
             return false;
         }
@@ -1253,10 +1260,10 @@ namespace LexicalAnaylzerRexton
                     }
                 }
 
-                else if (Class_Link())
+                /*else if (Class_Link())
                 {
                     return true;
-                }
+                }*/
             }
             return false;
         }
@@ -2214,6 +2221,7 @@ namespace LexicalAnaylzerRexton
                 tokenList[index].classStr == "]" ||
                 tokenList[index].classStr == ")")
             {
+                T3 = T;
                 return true;
             }
             return false;
@@ -2231,9 +2239,10 @@ namespace LexicalAnaylzerRexton
                 tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
             {
                 //<ROP>  <E> <ROP2>
-                if (E())
+                string T = "";
+                if (E(ref T))
                 {
-                    if (ROP2())
+                    if (ROP2(ref T2, T))
                     {
                         return true;
                     }
@@ -2277,6 +2286,7 @@ namespace LexicalAnaylzerRexton
                     tokenList[index].classStr == "]" ||
                     tokenList[index].classStr == ";")
             {
+                T3 = T;
                 return true;
             }
             return false;
@@ -2293,9 +2303,10 @@ namespace LexicalAnaylzerRexton
                 tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
             {
                 //<E>  <T> <E2>
-                if (T())
+                string T = "";
+                if (this.T(ref T))
                 {
-                    if (E2())
+                    if (E2(ref T2, T))
                     {
                         return true;
                     }
@@ -2315,7 +2326,7 @@ namespace LexicalAnaylzerRexton
                     string OP = tokenList[index].wordStr;
                     index++;
                     string RT = "";
-                    if (T(ref RT))
+                    if (this.T(ref RT))
                     {
                         string T2 = semanticAnalyzer.CC(T, RT, OP);
                         if (T2 == "invalid")
@@ -2339,6 +2350,7 @@ namespace LexicalAnaylzerRexton
                     tokenList[index].classStr == "]" ||
                     tokenList[index].classStr == ";")
             {
+                T3 = T;
                 return true;
             }
             return false;
@@ -2355,9 +2367,10 @@ namespace LexicalAnaylzerRexton
                 tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
             {
                 //<T>  <F> <T2>
-                if (F())
+                string T = "";
+                if (F(ref T))
                 {
-                    if (T2())
+                    if (this.T2(ref T2, T))
                     {
                         return true;
                     }
@@ -2372,7 +2385,9 @@ namespace LexicalAnaylzerRexton
             if (tokenList[index].classStr == Singleton.SingletonEnums.MultiDivideMode.ToString())
             {
                 //<T2>  M_D_M <F> <T2> | Nulll
-                string OP = tokenList[index].wordStr;
+                if (tokenList[index].classStr == Singleton.SingletonEnums.MultiDivideMode.ToString())
+                {
+                    string OP = tokenList[index].wordStr;
                     index++;
                     string RT = "";
                     if (F(ref RT))
@@ -2382,7 +2397,7 @@ namespace LexicalAnaylzerRexton
                         {
                             addError("Type Mismatch" + RT + " " + OP + " " + T);
                         }
-                        if (T2(ref T3, T2))
+                        if (this.T2(ref T3, T2))
                         {
                             return true;
                         }
@@ -2401,6 +2416,7 @@ namespace LexicalAnaylzerRexton
                     tokenList[index].classStr == "]" ||
                     tokenList[index].classStr == ";")
             {
+                T3 = T;
                 return true;
             }
             return false;
@@ -2420,36 +2436,49 @@ namespace LexicalAnaylzerRexton
                 tokenList[index].classStr == "(" ||
                 tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString())
             {
+                string constT = "";
                 //<F>  ID | <CONST>
                 //<F> ID <id_op>  |<Const> |!<F> | (<Exp>) | Inc_Dec  ID<inc_dec_list>
                 if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                 {
+                    string N = tokenList[index].wordStr;
+                    string T = Search_GetType(N, "Undeclared Variable");
                     index++;
-                    if (id_op())
+                    if (id_op(ref RT, N, T))
                     {
                         return true;
                     }
                 }
-                else if (CONST())
+                else if (CONST(ref constT))
                 {
+                    RT = constT;
                     return true;
                 }
                 else if (tokenList[index].classStr == "!")
                 {
+                    string OP = tokenList[index].wordStr;
+                    string T = "";
                     index++;
-                    if (F())
+                    if (F(ref T))
                     {
+                        if (T != "aur_bool")
+                        {
+                            addError("Type Mismatch !" + T);
+                        }
+                        RT = T;
                         return true;
                     }
                 }
                 else if (tokenList[index].classStr == "(")
                 {
+                    string T = "";
                     index++;
-                    if (Exp())
+                    if (Exp(ref T))
                     {
                         if (tokenList[index].classStr == ")")
                         {
                             index++;
+                            RT = T;
                             return true;
                         }
                     }
@@ -2459,8 +2488,11 @@ namespace LexicalAnaylzerRexton
                     index++;
                     if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                     {
+                        string N = tokenList[index].wordStr;
+                        string T = Search_GetType(N, "Undeclared");
+                        string T2 = "";
                         index++;
-                        if (inc_dec_list())
+                        if (inc_dec_list(ref T2, N, T))
                         {
                             return true;
                         }
@@ -2479,25 +2511,40 @@ namespace LexicalAnaylzerRexton
                 //<inc_dec_list>  [<Exp>] | .ID[<Exp>] |Null 
                 if(tokenList[index].classStr == "["){
                     index++;
-                    if(Exp())
+                    string ET = "";
+                    if(Exp(ref ET))
                     {
                         if(tokenList[index].classStr == "]")
                         {
+                            if (Search_GetType(N, "Undeclared Array") != "invalid")
+                            {
+                                RT = T1;
+                            }
                             return true;
                         }
                     }
                 }else if(tokenList[index].classStr == ".")
                 {
+                    if (Search_GetType(N, "Undeclared Object") != "invalid")
+                    {
+                        RT = T1;
+                    }
                     index++;
                     if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                     {
+                        string N1 = tokenList[index].wordStr;
                         index++;
                         if(tokenList[index].classStr == "["){
                             index++;
-                            if(Exp())
+                            string ET = "";
+                            if(Exp(ref ET))
                             {
                                 if(tokenList[index].classStr == "]")
                                 {
+                                    if (Search_GetType(N1, "Undeclared Array") != "invalid")
+                                    {
+                                        RT = T1;
+                                    }
                                     return true;
                                 }
                             }
@@ -2517,6 +2564,10 @@ namespace LexicalAnaylzerRexton
                     tokenList[index].classStr == "]" ||
                     tokenList[index].classStr == ";")
             {
+                if (Search_GetType(N, "Undeclared variable") != "invalid")
+                {
+                    RT = T1;
+                }
                 return true;
             }
             return false;
@@ -2531,29 +2582,39 @@ namespace LexicalAnaylzerRexton
                 tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString())
             {
                 //<id_op>  Null | <Method_Call_1> | [ <Exp> ] |<Member_exp> |  Inc_Dec 
-                if (Method_Call_1())
+
+                if (Method_Call_1(ref RT, N))
                 {
                     return true;
                 }
                 else if (tokenList[index].classStr == "[")
                 {
                     index++;
-                    if (Exp())
+                    string ET = "";
+                    if (Exp(ref ET))
                     {
                         if (tokenList[index].classStr == "]")
                         {
+                            if (Search_GetType(N, "Undeclared Array") != "invalid")
+                            {
+                            }
+                            RT = T;
                             index++;
                             return true;
                         }
                     }
                 }
-                else if (Member_exp())
+                else if (Member_exp(ref RT, N))
                 {
                     return true;
                 }
                 else if (tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString())
                 {
+                    if (Search_GetType(N, "Undeclared variable") != "invalid")
+                    {
+                    }
                     index++;
+                    RT = T;
                     return false;
                 }
             }
@@ -2570,6 +2631,11 @@ namespace LexicalAnaylzerRexton
                     tokenList[index].classStr == "]" ||
                     tokenList[index].classStr == ";")
             {
+                if (Search_GetType(N, "Undeclared variable") != "invalid")
+                {
+                    
+                }
+                RT = T;
                 return true;
             }
             return false;
@@ -2583,11 +2649,15 @@ namespace LexicalAnaylzerRexton
                 //<Member_exp> -> .ID < Member_exp_2>
                 if (tokenList[index].classStr == ".")
                 {
+                    Search_GetType(N, "Undeclared Object");
                     index++;
                     if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                     {
+                        string N1 = tokenList[index].wordStr;
+                        string T1 = Search_GetType(N1, "Undeclared variable");
+
                         index++;
-                        if (Member_exp_2())
+                        if (Member_exp_2(ref RT, N1, T1))
                         {
                             return true;
                         }
@@ -2604,17 +2674,20 @@ namespace LexicalAnaylzerRexton
                 tokenList[index].classStr == "[")
             {
                 //< Member_exp_2> -> Null | <Method_Call_1> | [<Exp>]
-                if (Method_Call_1())
+                if (Method_Call_1(ref RT, N))
                 {
                     return true;
                 }
                 else if (tokenList[index].classStr == "[")
                 {
                     index++;
-                    if (Exp())
+                    string ET = "";
+                    if (Exp(ref ET))
                     {
                         if (tokenList[index].classStr == "]")
                         {
+                            RT = T;
+                            Search_GetType(N, "Undeclared Array");
                             index++;
                             return true;
                         }
@@ -2634,6 +2707,10 @@ namespace LexicalAnaylzerRexton
                     tokenList[index].classStr == "]" ||
                     tokenList[index].classStr == ";")
             {
+
+                RT = T;
+                Search_GetType(N, "Undeclared Variable");
+
                 return true;
             }
             return false;
