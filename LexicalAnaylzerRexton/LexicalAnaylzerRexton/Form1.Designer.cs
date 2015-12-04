@@ -64,13 +64,24 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.classes_data = new System.Windows.Forms.ComboBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.semanticTreeView = new System.Windows.Forms.TreeView();
             this.tabControl1.SuspendLayout();
             this.LexTabPage.SuspendLayout();
             this.SyntaxTabPage.SuspendLayout();
+            this.SemTabPage.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.NotificationTabPage.SuspendLayout();
             this.panel1.SuspendLayout();
             this.ErrorTabPage.SuspendLayout();
+            this.groupBox8.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // codebox1
@@ -84,7 +95,8 @@
             this.codebox1.Name = "codebox1";
             this.codebox1.Size = new System.Drawing.Size(343, 376);
             this.codebox1.TabIndex = 1;
-            this.codebox1.Text = "class program {\npublic static void main(){\naur_int a = 10;\n}\n}\n";
+            this.codebox1.Text = "class program {\npublic static void main(){\naur_int a = 10;\naur_bool flag = false;" +
+    "\nagar(a == 10 && !flag){\n++a;\na++;\n}\n}\n}\n\n";
             this.codebox1.TextChanged += new System.EventHandler(this.codebox1_TextChanged);
             // 
             // openFileDialog1
@@ -165,12 +177,16 @@
             // 
             this.treeView.Location = new System.Drawing.Point(6, 6);
             this.treeView.Name = "treeView";
-            this.treeView.Size = new System.Drawing.Size(338, 360);
+            this.treeView.Size = new System.Drawing.Size(615, 360);
             this.treeView.TabIndex = 0;
             // 
             // SemTabPage
             // 
             this.SemTabPage.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.SemTabPage.Controls.Add(this.semanticTreeView);
+            this.SemTabPage.Controls.Add(this.groupBox2);
+            this.SemTabPage.Controls.Add(this.groupBox1);
+            this.SemTabPage.Controls.Add(this.groupBox8);
             this.SemTabPage.Location = new System.Drawing.Point(4, 22);
             this.SemTabPage.Name = "SemTabPage";
             this.SemTabPage.Size = new System.Drawing.Size(627, 372);
@@ -437,6 +453,70 @@
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.classes_data);
+            this.groupBox8.Location = new System.Drawing.Point(6, 3);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(195, 52);
+            this.groupBox8.TabIndex = 3;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Classes";
+            // 
+            // classes_data
+            // 
+            this.classes_data.FormattingEnabled = true;
+            this.classes_data.Location = new System.Drawing.Point(6, 19);
+            this.classes_data.Name = "classes_data";
+            this.classes_data.Size = new System.Drawing.Size(183, 21);
+            this.classes_data.TabIndex = 0;
+            this.classes_data.Text = "Select a Class";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.comboBox1);
+            this.groupBox1.Location = new System.Drawing.Point(6, 61);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(195, 52);
+            this.groupBox1.TabIndex = 4;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Classes";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(6, 19);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(183, 21);
+            this.comboBox1.TabIndex = 0;
+            this.comboBox1.Text = "Select a Class";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.comboBox2);
+            this.groupBox2.Location = new System.Drawing.Point(6, 119);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(195, 52);
+            this.groupBox2.TabIndex = 5;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Classes";
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Location = new System.Drawing.Point(6, 19);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(183, 21);
+            this.comboBox2.TabIndex = 0;
+            this.comboBox2.Text = "Select a Class";
+            // 
+            // semanticTreeView
+            // 
+            this.semanticTreeView.Location = new System.Drawing.Point(207, 4);
+            this.semanticTreeView.Name = "semanticTreeView";
+            this.semanticTreeView.Size = new System.Drawing.Size(414, 183);
+            this.semanticTreeView.TabIndex = 6;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -458,12 +538,16 @@
             this.LexTabPage.ResumeLayout(false);
             this.LexTabPage.PerformLayout();
             this.SyntaxTabPage.ResumeLayout(false);
+            this.SemTabPage.ResumeLayout(false);
             this.tabControl2.ResumeLayout(false);
             this.NotificationTabPage.ResumeLayout(false);
             this.NotificationTabPage.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ErrorTabPage.ResumeLayout(false);
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -506,6 +590,13 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.RichTextBox errorTextBox;
         public System.Windows.Forms.TreeView treeView;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.ComboBox classes_data;
+        public System.Windows.Forms.TreeView semanticTreeView;
     }
 }
 

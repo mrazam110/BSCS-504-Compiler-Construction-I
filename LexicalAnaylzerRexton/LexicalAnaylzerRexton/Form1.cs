@@ -46,9 +46,42 @@ namespace LexicalAnaylzerRexton
             //codebox1.Text = "@abc 'a' \t \n@";
         }
 
+        private void loadSemanticTree() 
+        {
+            TreeNode currentNode;
+            semanticTreeView.Nodes.Clear();
+            currentNode = semanticTreeView.Nodes.Add("Global: " + SemanticAnalyzer.globalSymbolTable[0].name);
+            for (int b = 0; b < SemanticAnalyzer.globalSymbolTable[0].classes.Count; b++)
+            {
+                currentNode = currentNode.Nodes.Add("Class: " + SemanticAnalyzer.globalSymbolTable[0].classes[b].name);
+                for (int k = 0; k < SemanticAnalyzer.globalSymbolTable[0].classes[b].members.Count; k++)
+                {
+                    string memberType;
+                    if (SemanticAnalyzer.globalSymbolTable[0].classes[b].members[k].isMethod)
+                    {
+                        memberType = "Method: ";
+                    }
+                    else
+                    {
+                        memberType = "Field: ";
+                    }
+                    currentNode = currentNode.Nodes.Add(memberType + SemanticAnalyzer.globalSymbolTable[0].classes[b].members[k].type + " " + SemanticAnalyzer.globalSymbolTable[0].classes[b].members[k].name);
+
+                    for (int l = 0; l < SemanticAnalyzer.globalSymbolTable[0].classes[b].members[k].variables.Count; l++)
+                    {
+                        currentNode.Nodes.Add(SemanticAnalyzer.globalSymbolTable[0].classes[b].members[k].variables[l].type + ": " + SemanticAnalyzer.globalSymbolTable[0].classes[b].members[k].variables[l].name);
+                    }
+                    currentNode = currentNode.Parent;
+                }
+                currentNode = currentNode.Parent;
+            }
+            currentNode = currentNode.Parent;
+        }
+
         private void button2_Click(object sender, EventArgs e)
         {
             Compile();
+            loadSemanticTree();
         }
 
         private void Compile()
