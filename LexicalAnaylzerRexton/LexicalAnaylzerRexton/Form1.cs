@@ -104,6 +104,7 @@ namespace LexicalAnaylzerRexton
 
         private void Compile()
         {
+            ICG_text.Text = "";
             richTextBox1.Text = "";
             errorTextBox.Text = ""; 
             treeView.Nodes.Clear();

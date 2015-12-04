@@ -16,6 +16,9 @@ namespace LexicalAnaylzerRexton
 
         private string errors = "";
 
+        //ICG
+        ICG icg = new ICG();
+
         //SEMACTIC DECLARATIONS
         SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer();
         private string Search_GetType(string  N, string e)
@@ -61,6 +64,7 @@ namespace LexicalAnaylzerRexton
 
         public CFG(List<token> tokenList)
         {
+            icg.reset();
             this.tokenList = tokenList;
         }
 
@@ -296,14 +300,15 @@ namespace LexicalAnaylzerRexton
                 else if (tokenList[index].classStr == "{")
                 {
                     index++;
-                    
+                    string nextLabel = icg.CreateLabel();
+                    icg.GenerateCode("if(" + icg.getLastLabel() + "==false) jmp " + nextLabel);
                     semanticAnalyzer.createScope();
                     if (M_ST())
                     {
                         if (tokenList[index].classStr == "}")
                         {
-                            
                             index++;
+                            icg.GenerateCode(nextLabel + ":");
                             semanticAnalyzer.deleteScope();
                             currentNode = currentNode.Parent; return true;
                         }
@@ -961,13 +966,10 @@ namespace LexicalAnaylzerRexton
                 //<agar_warna>  agar (<Exp>) {<M_ST>} <O_Else>
                 if (tokenList[index].classStr == Singleton.SingletonEnums._agar.ToString())
                 {
-                    
-                    
-
+                    icg.GenerateCode(icg.CreateLabel() + ":");
                     index++;
                     if (tokenList[index].classStr == "(")
                     {
-                        
                         index++;
                         if (Exp(ref ET))
                         {
@@ -977,7 +979,8 @@ namespace LexicalAnaylzerRexton
                             }
                             if (tokenList[index].classStr == ")")
                             {
-                                
+                                string startLabel = icg.CreateLabel();
+                                icg.GenerateCode("if(" + icg.getLastTemp() + "==false) jmp " + startLabel);
                                 index++;
                                 if (tokenList[index].classStr == "{")
                                 {
@@ -988,8 +991,8 @@ namespace LexicalAnaylzerRexton
                                     {
                                         if (tokenList[index].classStr == "}")
                                         {
-                                            
                                             index++;
+                                            icg.GenerateCode(startLabel + ":");
                                             semanticAnalyzer.deleteScope();
                                             if (O_Else())
                                             {
@@ -1068,13 +1071,11 @@ namespace LexicalAnaylzerRexton
                 //<Jab_tak>  jabtak (<Exp>) <Body>
                 if (tokenList[index].classStr == Singleton.SingletonEnums._jabtak.ToString())
                 {
-                    
-                    
-
                     index++;
+                    string loopLabel = icg.CreateLabel();
+                    icg.GenerateCode(loopLabel + ":");
                     if (tokenList[index].classStr == "(")
                     {
-                        
                         index++;
                         if (Exp(ref ET))
                         {
@@ -1084,7 +1085,6 @@ namespace LexicalAnaylzerRexton
                             }
                             if (tokenList[index].classStr == ")")
                             {
-                                
                                 index++;
                                 if (Body())
                                 {
@@ -2011,17 +2011,34 @@ namespace LexicalAnaylzerRexton
                             mem.type = RT;
                             mem.param = AL;
                             semanticAnalyzer.insertMember(mem);
+                            
                             if (tokenList[index].classStr == "{")
                             {
-                                
                                 index++;
                                 semanticAnalyzer.createScope();
+                                icg.GenerateCode(semanticAnalyzer.getCurrentClass() + "_" + N + AL +" Proc");
+                                if (AL != "")
+                                {
+                                    if (AL.Contains(","))
+                                    {
+                                        string[] temp = AL.Split(',');
+                                        for (int i = temp.Length - 1; i >= 0; i--)
+                                        {
+                                            icg.GenerateCode("pop " + icg.CreateTemp());
+                                        }
+                                    }
+                                    else
+                                    {
+                                        icg.GenerateCode("pop " + icg.CreateTemp());
+                                    }
+                                }
                                 if (M_ST())
                                 {
                                     if (tokenList[index].classStr == "}")
                                     {
                                         
                                         semanticAnalyzer.deleteScope();
+                                        icg.GenerateCode(semanticAnalyzer.getCurrentClass() + "_" + N + AL + " endP");
                                         index++;
                                         currentNode = currentNode.Parent; return true;
                                     }

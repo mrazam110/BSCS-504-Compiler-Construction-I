@@ -100,7 +100,7 @@
             this.label21 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
-            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
+            this.ICG_text = new System.Windows.Forms.RichTextBox();
             this.tabControl1.SuspendLayout();
             this.LexTabPage.SuspendLayout();
             this.SyntaxTabPage.SuspendLayout();
@@ -233,7 +233,7 @@
             // ICGTabPage
             // 
             this.ICGTabPage.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ICGTabPage.Controls.Add(this.richTextBox2);
+            this.ICGTabPage.Controls.Add(this.ICG_text);
             this.ICGTabPage.Location = new System.Drawing.Point(4, 22);
             this.ICGTabPage.Name = "ICGTabPage";
             this.ICGTabPage.Size = new System.Drawing.Size(627, 372);
@@ -845,16 +845,16 @@
             this.label23.TabIndex = 8;
             this.label23.Text = "Type";
             // 
-            // richTextBox2
+            // ICG_text
             // 
-            this.richTextBox2.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.richTextBox2.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBox2.ForeColor = System.Drawing.Color.OrangeRed;
-            this.richTextBox2.Location = new System.Drawing.Point(3, 3);
-            this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(621, 366);
-            this.richTextBox2.TabIndex = 0;
-            this.richTextBox2.Text = "ICG CODE:";
+            this.ICG_text.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.ICG_text.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ICG_text.ForeColor = System.Drawing.Color.OrangeRed;
+            this.ICG_text.Location = new System.Drawing.Point(3, 3);
+            this.ICG_text.Name = "ICG_text";
+            this.ICG_text.Size = new System.Drawing.Size(621, 366);
+            this.ICG_text.TabIndex = 0;
+            this.ICG_text.Text = "ICG CODE:";
             // 
             // Form1
             // 
@@ -871,7 +871,7 @@
             this.Controls.Add(this.codebox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Rexton Compiler";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl1.ResumeLayout(false);
             this.LexTabPage.ResumeLayout(false);
@@ -972,7 +972,7 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.RichTextBox richTextBox2;
+        public System.Windows.Forms.RichTextBox ICG_text;
     }
 }
 
