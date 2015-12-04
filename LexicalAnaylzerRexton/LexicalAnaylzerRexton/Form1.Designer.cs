@@ -124,7 +124,7 @@
             this.codebox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.codebox1.DetectUrls = false;
             this.codebox1.Font = new System.Drawing.Font("Consolas", 12F);
-            this.codebox1.ForeColor = System.Drawing.Color.DodgerBlue;
+            this.codebox1.ForeColor = System.Drawing.Color.DeepSkyBlue;
             this.codebox1.Location = new System.Drawing.Point(653, 40);
             this.codebox1.Name = "codebox1";
             this.codebox1.Size = new System.Drawing.Size(343, 376);
@@ -154,7 +154,7 @@
             this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.richTextBox1.BulletIndent = 1;
             this.richTextBox1.DetectUrls = false;
-            this.richTextBox1.Font = new System.Drawing.Font("Consolas", 12F);
+            this.richTextBox1.Font = new System.Drawing.Font("Courier New", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.richTextBox1.Location = new System.Drawing.Point(6, 20);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;

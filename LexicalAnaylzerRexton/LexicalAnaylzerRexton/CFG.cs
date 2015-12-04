@@ -549,14 +549,9 @@ namespace LexicalAnaylzerRexton
                 }
                 else if (tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString())
                 {
-                    
-                    
-
                     index++;
                     if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
-                    {
-                        
-                        
+                    {   
                         string N = tokenList[index].wordStr;
                         string T = Search_GetType(N, "Undeclared Variable");
                         index++;
@@ -572,9 +567,6 @@ namespace LexicalAnaylzerRexton
                 }
                 else if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                 {
-                    
-                    
-
                     string N = tokenList[index].wordStr;
                     string T = Search_GetType(N, " ");
                     index++;
@@ -625,9 +617,6 @@ namespace LexicalAnaylzerRexton
                     index++;
                     if (tokenList[index].classStr == ";")
                     {
-                        
-                        
-
                         index++;
                         currentNode = currentNode.Parent; return true;
                     }
@@ -658,16 +647,14 @@ namespace LexicalAnaylzerRexton
                 {
                     if (tokenList[index].classStr == ";")
                     {
-                        
-                        
-
                         index++;
                         currentNode = currentNode.Parent; return true;
                     }
                 }
                 else if (tokenList[index].classStr == "[")
                 {
-                    
+                    currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
+                    //currentNode = currentNode.Parent;
                     T = Search_GetType(N, "Undeclared Array");
                     
                     index++;
@@ -675,7 +662,8 @@ namespace LexicalAnaylzerRexton
                     {
                         if (tokenList[index].classStr == "]")
                         {
-                            
+                            currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
+                            //currentNode = currentNode.Parent;
                             index++;
                             if (Assign_Op(T))
                             {
@@ -702,9 +690,6 @@ namespace LexicalAnaylzerRexton
                 //<S_St_DT>  ID <S_St_DT2> | <Method_DEC> | <Array_DEC>
                 if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                 {
-                    
-                    
-
                     N = tokenList[index].wordStr;
                     semanticAnalyzer.insertVariables(N, T, semanticAnalyzer.currentScope());
                     index++;
@@ -717,10 +702,10 @@ namespace LexicalAnaylzerRexton
                 {
                     currentNode = currentNode.Parent; return true;
                 }*/
-                /*else if (Array_DEC(T))
+                else if (Array_DEC("","",T))
                 {
                     currentNode = currentNode.Parent; return true;
-                }*/
+                }
             }
             currentNode = currentNode.Parent; return false;
         }
@@ -1784,11 +1769,13 @@ namespace LexicalAnaylzerRexton
                 //<Array_DEC>   [] ID <INIT_Array>
                 if (tokenList[index].classStr == "[")
                 {
-                    
+                    currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
+                    //currentNode = currentNode.Parent;
                     index++;
                     if (tokenList[index].classStr == "]")
                     {
-                        
+                        currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
+                        //currentNode = currentNode.Parent;
                         index++;
                         RT += "[]";
                         if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
@@ -1842,7 +1829,8 @@ namespace LexicalAnaylzerRexton
                             index++;
                             if (tokenList[index].classStr == "[")
                             {
-                                
+                                currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
+                                //currentNode = currentNode.Parent;
                                 index++;
                                 string ET = "";
                                 if (Exp(ref ET))
@@ -2080,11 +2068,13 @@ namespace LexicalAnaylzerRexton
                 }
                 else if (tokenList[index].classStr == "[")
                 {
-                    
+                    currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
+                   // currentNode = currentNode.Parent;
                     index++;
                     if (tokenList[index].classStr == "]")
                     {
-                        
+                        currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
+                        //currentNode = currentNode.Parent;
                         index++;
                         if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                         {
@@ -2128,14 +2118,17 @@ namespace LexicalAnaylzerRexton
                             index++;
                             if (tokenList[index].classStr == "[")
                             {
-                                
+                                currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
+                                //currentNode = currentNode.Parent;
                                 index++;
                                 string ET = "";
                                 if (Exp(ref ET))
                                 {
                                     if (tokenList[index].classStr == "]")
                                     {
-                                        
+                                        currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
+                                       // currentNode = currentNode.Parent;
+
                                         index++;
 
                                         CLASSMEMBER cm = new CLASSMEMBER();
@@ -2415,7 +2408,8 @@ namespace LexicalAnaylzerRexton
                 }
                 else if (tokenList[index].classStr == "[")
                 {
-                    
+                    currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
+                    //currentNode = currentNode.Parent;
                     index++;
                     string ET = "";
                     if (Exp(ref ET))
@@ -2484,8 +2478,9 @@ namespace LexicalAnaylzerRexton
                 tokenList[index].classStr == "("
                 )
             {
+                string N = "";
                 //<Exp>  <OR_Exp>
-                if (OR_Exp(ref T))
+                if (OR_Exp(ref T, ref N))
                 {
                     
                     currentNode = currentNode.Parent; return true;
@@ -2494,7 +2489,7 @@ namespace LexicalAnaylzerRexton
             currentNode = currentNode.Parent; return false;
         }
 
-        private bool OR_Exp(ref string T2)
+        private bool OR_Exp(ref string T2, ref string N2)
         {
             currentNode = currentNode.Nodes.Add("<" + System.Reflection.MethodBase.GetCurrentMethod().Name + ">", "< " + System.Reflection.MethodBase.GetCurrentMethod().Name + " >");
             
@@ -2513,11 +2508,11 @@ namespace LexicalAnaylzerRexton
             {
                 //<OR_Exp>  <AND_Exp> <OR_Exp2>
                 string T = "";
-                if (AND_Exp(ref T))
+                string N = "";
+                if (AND_Exp(ref T, ref N))
                 {
-                    if (OR_Exp2(ref T2, T))
+                    if (OR_Exp2(ref T2, T, ref N2, N))
                     {
-                        
                         currentNode = currentNode.Parent; return true;
                     }
                 }
@@ -2525,7 +2520,7 @@ namespace LexicalAnaylzerRexton
             currentNode = currentNode.Parent; return false;
         }
 
-        private bool OR_Exp2(ref string T3, string T)
+        private bool OR_Exp2(ref string T3, string T, ref string N3, string N)
         {
             currentNode = currentNode.Nodes.Add("<" + System.Reflection.MethodBase.GetCurrentMethod().Name + ">", "< " + System.Reflection.MethodBase.GetCurrentMethod().Name + " >");
             
@@ -2535,20 +2530,20 @@ namespace LexicalAnaylzerRexton
                 //<OR_Exp2>  || <AND_Exp> <OR_Exp2> | Null
                 if (tokenList[index].classStr == Singleton.SingletonEnums.OrOp.ToString())
                 {
-                    
-                    
-
                     string OP = tokenList[index].wordStr;
                     index++;
                     string RT = "";
-                    if (AND_Exp(ref RT))
+                    string NT = "";
+                    if (AND_Exp(ref RT, ref NT))
                     {
                         string T2 = semanticAnalyzer.CC(T, RT, OP);
+                        string N2 = icg.CreateTemp();
+                        icg.GenerateCode(N2 + " = " + N + " " + OP + " " + NT);
                         if (T2 == "invalid")
                         {
                             addError("Type Mismatch" + RT + " " + OP + " " + T);
                         }
-                        if (OR_Exp2(ref T3, T2))
+                        if (OR_Exp2(ref T3, T2, ref N3, N2))
                         {
                             
                             currentNode = currentNode.Parent; return true;
@@ -2564,15 +2559,13 @@ namespace LexicalAnaylzerRexton
                 tokenList[index].classStr == ";" ||
                 tokenList[index].classStr == ")")
             {
-                
-                
                 T3 = T;
                 currentNode = currentNode.Parent; return true;
             }
             currentNode = currentNode.Parent; return false;
         }
 
-        private bool AND_Exp(ref string T2)
+        private bool AND_Exp(ref string T2, ref string N2)
         {
             currentNode = currentNode.Nodes.Add("<" + System.Reflection.MethodBase.GetCurrentMethod().Name + ">", "< " + System.Reflection.MethodBase.GetCurrentMethod().Name + " >");
             
@@ -2590,9 +2583,10 @@ namespace LexicalAnaylzerRexton
             {
                 //<AND_Exp>  <ROP> <AND_Exp2>
                 string T = "";
-                if (ROP(ref T))
+                string N = "";
+                if (ROP(ref T, ref N))
                 {
-                    if (AND_Exp2(ref T2, T))
+                    if (AND_Exp2(ref T2, T, ref N2, N))
                     {
                         
                         currentNode = currentNode.Parent; return true;
@@ -2602,7 +2596,7 @@ namespace LexicalAnaylzerRexton
             currentNode = currentNode.Parent; return false;
         }
 
-        private bool AND_Exp2(ref string T3, string T)
+        private bool AND_Exp2(ref string T3, string T, ref string N3, string N)
         {
             currentNode = currentNode.Nodes.Add("<" + System.Reflection.MethodBase.GetCurrentMethod().Name + ">", "< " + System.Reflection.MethodBase.GetCurrentMethod().Name + " >");
             
@@ -2612,20 +2606,20 @@ namespace LexicalAnaylzerRexton
                 //<AND_Exp2>  && <ROP> <AND_Exp2> | Null
                 if (tokenList[index].classStr == Singleton.SingletonEnums.AndOp.ToString())
                 {
-                    
-                    
-
                     string OP = tokenList[index].wordStr;
                     index++;
                     string RT = "";
-                    if (ROP(ref RT))
+                    string NT = "";
+                    if (ROP(ref RT, ref NT))
                     {
                         string T2 = semanticAnalyzer.CC(T, RT, OP);
+                        string N2 = icg.CreateTemp();
+                        icg.GenerateCode(N2 + " = " + N + " " + OP + " " + NT);
                         if (T2 == "invalid")
                         {
                             addError("Type Mismatch" + RT + " " + OP + " " + T);
                         }
-                        if (AND_Exp2(ref T3, T2))
+                        if (AND_Exp2(ref T3, T2, ref N3, N2))
                         {
                             
                             currentNode = currentNode.Parent; return true;
@@ -2651,7 +2645,7 @@ namespace LexicalAnaylzerRexton
         }
 
 
-        private bool ROP(ref string T2)
+        private bool ROP(ref string T2, ref string N2)
         {
             currentNode = currentNode.Nodes.Add("<" + System.Reflection.MethodBase.GetCurrentMethod().Name + ">", "< " + System.Reflection.MethodBase.GetCurrentMethod().Name + " >");
             
@@ -2669,9 +2663,10 @@ namespace LexicalAnaylzerRexton
             {
                 //<ROP>  <E> <ROP2>
                 string T = "";
-                if (E(ref T))
+                string N = "";
+                if (E(ref T, ref N))
                 {
-                    if (ROP2(ref T2, T))
+                    if (ROP2(ref T2, T, ref N2, N))
                     {
                         
                         currentNode = currentNode.Parent; return true;
@@ -2681,7 +2676,7 @@ namespace LexicalAnaylzerRexton
             currentNode = currentNode.Parent; return false;
         }
 
-        private bool ROP2(ref string T3, string T)
+        private bool ROP2(ref string T3, string T, ref string N3, string N)
         {
             currentNode = currentNode.Nodes.Add("<" + System.Reflection.MethodBase.GetCurrentMethod().Name + ">", "< " + System.Reflection.MethodBase.GetCurrentMethod().Name + " >");
             
@@ -2691,20 +2686,20 @@ namespace LexicalAnaylzerRexton
                 //<ROP2>  ROP <E> <ROP2> | Null
                 if (tokenList[index].classStr == Singleton.SingletonEnums.RelationalOp.ToString())
                 {
-                    
-                    
-
                     string OP = tokenList[index].wordStr;
                     index++;
                     string RT = "";
-                    if (E(ref RT))
+                    string NT = "";
+                    if (E(ref RT, ref NT))
                     {
                         string T2 = semanticAnalyzer.CC(T, RT, OP);
+                        string N2 = icg.CreateTemp();
+                        icg.GenerateCode(N2 + " = " + N + " " + OP + " " + NT);
                         if (T2 == "invalid")
                         {
                             addError("Type Mismatch" + RT + " " + OP + " " + T);
                         }
-                        if (ROP2(ref T3, T2))
+                        if (ROP2(ref T3, T2, ref N3, N2))
                         {
                             
                             currentNode = currentNode.Parent; return true;
@@ -2730,7 +2725,7 @@ namespace LexicalAnaylzerRexton
             currentNode = currentNode.Parent; return false;
         }
 
-        private bool E(ref string T2)
+        private bool E(ref string T2, ref string N2)
         {
             currentNode = currentNode.Nodes.Add("<" + System.Reflection.MethodBase.GetCurrentMethod().Name + ">", "< " + System.Reflection.MethodBase.GetCurrentMethod().Name + " >");
             
@@ -2748,9 +2743,10 @@ namespace LexicalAnaylzerRexton
             {
                 //<E>  <T> <E2>
                 string T = "";
-                if (this.T(ref T))
+                string N = "";
+                if (this.T(ref T, ref N))
                 {
-                    if (E2(ref T2, T))
+                    if (E2(ref T2, T, ref N2, N))
                     {
                         
                         currentNode = currentNode.Parent; return true;
@@ -2760,30 +2756,30 @@ namespace LexicalAnaylzerRexton
             currentNode = currentNode.Parent; return false;
         }
 
-        private bool E2(ref string T3, string T)
+        private bool E2(ref string T3, string T, ref string N3, string N)
         {
             currentNode = currentNode.Nodes.Add("<" + System.Reflection.MethodBase.GetCurrentMethod().Name + ">", "< " + System.Reflection.MethodBase.GetCurrentMethod().Name + " >");
             
             //FIRST(<E2 >) = {Plus_Minus , Null}
             if (tokenList[index].classStr == Singleton.SingletonEnums.PlusMinus.ToString())
             {
-                
-                
-
                 //<E2 >  Plus_Minus <T > <E2> | Null
                 if (tokenList[index].classStr == Singleton.SingletonEnums.PlusMinus.ToString())
                 {
                     string OP = tokenList[index].wordStr;
                     index++;
                     string RT = "";
-                    if (this.T(ref RT))
+                    string NT = "";
+                    if (this.T(ref RT, ref NT))
                     {
                         string T2 = semanticAnalyzer.CC(T, RT, OP);
+                        string N2 = icg.CreateTemp();
+                        icg.GenerateCode(N2 + " = " + N + " " + OP + " " + NT);
                         if (T2 == "invalid")
                         {
                             addError("Type Mismatch" + RT + " " + OP + " " + T);
                         }
-                        if (E2(ref T3, T2))
+                        if (E2(ref T3, T2, ref N3, N2))
                         {
                             
                             currentNode = currentNode.Parent; return true;
@@ -2809,7 +2805,7 @@ namespace LexicalAnaylzerRexton
             currentNode = currentNode.Parent; return false;
         }
 
-        private bool T(ref string T2)
+        private bool T(ref string T2, ref string N2)
         {
             currentNode = currentNode.Nodes.Add("<" + System.Reflection.MethodBase.GetCurrentMethod().Name + ">", "< " + System.Reflection.MethodBase.GetCurrentMethod().Name + " >");
             
@@ -2827,9 +2823,10 @@ namespace LexicalAnaylzerRexton
             {
                 //<T>  <F> <T2>
                 string T = "";
-                if (F(ref T))
+                string N = "";
+                if (F(ref T, ref N))
                 {
-                    if (this.T2(ref T2, T))
+                    if (this.T2(ref T2, T, ref N2, N))
                     {
                         
                         currentNode = currentNode.Parent; return true;
@@ -2839,30 +2836,30 @@ namespace LexicalAnaylzerRexton
             currentNode = currentNode.Parent; return false;
         }
 
-        private bool T2(ref string T3, string T)
+        private bool T2(ref string T3, string T, ref string N3, string N)
         {
             currentNode = currentNode.Nodes.Add("<" + System.Reflection.MethodBase.GetCurrentMethod().Name + ">", "< " + System.Reflection.MethodBase.GetCurrentMethod().Name + " >");
             
             //FIRST(<T2>) = { M_D_M , Null}
             if (tokenList[index].classStr == Singleton.SingletonEnums.MultiDivideMode.ToString())
             {
-                
-                
-
                 //<T2>  M_D_M <F> <T2> | Nulll
                 if (tokenList[index].classStr == Singleton.SingletonEnums.MultiDivideMode.ToString())
                 {
                     string OP = tokenList[index].wordStr;
                     index++;
                     string RT = "";
-                    if (F(ref RT))
+                    string NT = "";
+                    if (F(ref RT, ref NT))
                     {
                         string T2 = semanticAnalyzer.CC(T, RT, OP);
+                        string N2 = icg.CreateTemp();
+                        icg.GenerateCode(N2 + " = " + N + " " + OP + " " + NT);
                         if (T2 == "invalid")
                         {
                             addError("Type Mismatch" + RT + " " + OP + " " + T);
                         }
-                        if (this.T2(ref T3, T2))
+                        if (this.T2(ref T3, T2, ref N3, N2))
                         {
                             
                             currentNode = currentNode.Parent; return true;
@@ -2890,7 +2887,7 @@ namespace LexicalAnaylzerRexton
             currentNode = currentNode.Parent; return false;
         }
 
-        private bool F(ref string RT)
+        private bool F(ref string RT, ref string NT)
         {
             currentNode = currentNode.Nodes.Add("<" + System.Reflection.MethodBase.GetCurrentMethod().Name + ">", "< " + System.Reflection.MethodBase.GetCurrentMethod().Name + " >");
             
@@ -2917,29 +2914,30 @@ namespace LexicalAnaylzerRexton
                     index++;
                     if (id_op(ref RT, N, T))
                     {
+                        NT = N;
                         currentNode = currentNode.Parent; return true;
                     }
                 }
                 else if (CONST(ref constT))
                 {
                     RT = constT;
+                    NT = constT;
                     currentNode = currentNode.Parent; return true;
                 }
                 else if (tokenList[index].classStr == Singleton.SingletonEnums.NotOp.ToString())
                 {
-                    
-                    
-
                     string OP = tokenList[index].wordStr;
                     string T = "";
+                    string NN = "";
                     index++;
-                    if (F(ref T))
+                    if (F(ref T, ref NN))
                     {
                         if (T != "aur_bool")
                         {
                             addError("Type Mismatch !" + T);
                         }
                         RT = T;
+                        NT = NN;
                         currentNode = currentNode.Parent; return true;
                     }
                 }
@@ -2955,15 +2953,13 @@ namespace LexicalAnaylzerRexton
                             
                             index++;
                             RT = T;
+                            NT = RT;
                             currentNode = currentNode.Parent; return true;
                         }
                     }
                 }
                 else if (tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString())
                 {
-                    
-                    
-
                     index++;
                     if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                     {
@@ -2992,14 +2988,17 @@ namespace LexicalAnaylzerRexton
                 //<inc_dec_list>  [<Exp>] | .ID[<Exp>] |Null 
                 if(tokenList[index].classStr == "["){
 
-                    
+                    currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
+                    //currentNode = currentNode.Parent;
                     index++;
                     string ET = "";
                     if(Exp(ref ET))
                     {
                         if(tokenList[index].classStr == "]")
                         {
-                            
+                            currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
+                            //currentNode = currentNode.Parent;
+                            index++;
                             if (Search_GetType(N, "Undeclared Array") != "invalid")
                             {
                                 RT = T1;
@@ -3026,14 +3025,17 @@ namespace LexicalAnaylzerRexton
                         index++;
                         if (tokenList[index].classStr == "[")
                         {
-                            
+                            currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
+                            //currentNode = currentNode.Parent;
                             index++;
                             string ET = "";
                             if(Exp(ref ET))
                             {
                                 if(tokenList[index].classStr == "]")
                                 {
-                                    
+                                    currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
+                                    //currentNode = currentNode.Parent;
+                                    index++;
                                     if (Search_GetType(N1, "Undeclared Array") != "invalid")
                                     {
                                         RT = T1;
@@ -3188,14 +3190,16 @@ namespace LexicalAnaylzerRexton
                 }
                 else if (tokenList[index].classStr == "[")
                 {
-                    
+                    currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
+                    //currentNode = currentNode.Parent;
                     index++;
                     string ET = "";
                     if (Exp(ref ET))
                     {
                         if (tokenList[index].classStr == "]")
                         {
-                            
+                            currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
+                            //currentNode = currentNode.Parent;
                             RT = T;
                             Search_GetType(N, "Undeclared Array");
                             index++;

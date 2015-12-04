@@ -179,7 +179,17 @@ namespace LexicalAnaylzerRexton
 
                     
                 }
-                errorText += "\n" + syntaxAnalysis.getSemanticError();
+                if (syntaxAnalysis.getSemanticError() != "")
+                {
+                    errorText += "\n" + syntaxAnalysis.getSemanticError(); 
+                    sementicErrorLabel.Text = "Errors";
+                    sementicErrorLabel.ForeColor = System.Drawing.Color.Maroon;
+                }
+                else
+                {
+                    sementicErrorLabel.Text = "No Error";
+                    sementicErrorLabel.ForeColor = System.Drawing.Color.Green;
+                }
                 if (checkBox1.Checked)
                 {
                     totalTokenLabel.Text = "" + (tokenSet.Count - 1);
@@ -348,6 +358,7 @@ namespace LexicalAnaylzerRexton
             List<CLASS> classesTable = SemanticAnalyzer.globalSymbolTable[0].classes;
             string selectedclass = classes_data.SelectedItem.ToString();
             string selectedMember = member_data.SelectedItem.ToString();
+            string selectedVariable = variables_data.SelectedItem.ToString();
 
             for (int i = 0; i < classesTable.Count; i++)
             {
@@ -369,9 +380,12 @@ namespace LexicalAnaylzerRexton
                             z_members_params.Text = classesTable[i].members[j].param;
                             for (int k = 0; k < classesTable[i].members[j].variables.Count; k++)
                             {
-                                z_var_name.Text = classesTable[i].members[j].variables[k].name;
-                                z_var_scope.Text = classesTable[i].members[j].variables[k].scope.ToString();
-                                z_var_type.Text = classesTable[i].members[j].variables[k].type;
+                                if (selectedVariable == classesTable[i].members[j].variables[k].name)
+                                {
+                                    z_var_name.Text = classesTable[i].members[j].variables[k].name;
+                                    z_var_scope.Text = classesTable[i].members[j].variables[k].scope.ToString();
+                                    z_var_type.Text = classesTable[i].members[j].variables[k].type;
+                                }
                             }
                         }
 
