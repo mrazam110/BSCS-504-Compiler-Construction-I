@@ -2120,7 +2120,15 @@ namespace LexicalAnaylzerRexton
                                     {
                                         
                                         index++;
-                                        semanticAnalyzer.insertVariables(N, N1, semanticAnalyzer.currentScope(), AM, "");
+
+                                        CLASSMEMBER cm = new CLASSMEMBER();
+                                        cm.accessModifier = AM;
+                                        cm.name = N;
+                                        cm.type = N1;
+                                        cm.isMethod = false;
+                                        cm.param = "";
+                                        semanticAnalyzer.insertMember(cm);
+                                        //semanticAnalyzer.insertVariables(N, N1, semanticAnalyzer.currentScope(), AM, "");
                                         if (obj_arr_dec1())
                                         {
                                             currentNode = currentNode.Parent; return true;
@@ -2306,7 +2314,14 @@ namespace LexicalAnaylzerRexton
                                     {
                                         
                                         index++;
-                                        semanticAnalyzer.insertVariables(N1, N, semanticAnalyzer.currentScope(), AM, "");
+                                        CLASSMEMBER cm = new CLASSMEMBER();
+                                        cm.accessModifier = AM;
+                                        cm.name = N1;
+                                        cm.type = N;
+                                        cm.isMethod = false;
+                                        cm.param = "";
+                                        semanticAnalyzer.insertMember(cm);
+                                        //semanticAnalyzer.insertVariables(N1, N, semanticAnalyzer.currentScope(), AM, "");
                                         if (Object_List(N, AM))
                                         {
                                             currentNode = currentNode.Parent; return true;

@@ -43,17 +43,34 @@ namespace LexicalAnaylzerRexton
                     MessageBox.Show("Can not read from file");
                 }
             }
-            //codebox1.Text = "@abc 'a' \t \n@";
         }
 
         private void loadSemanticTree() 
         {
+            z_class_access.Text = "";
+            z_class_access.Text = "";
+            z_class_parent.Text = "";
+            z_class_totalmembers.Text = "";
+
+            z_member_access.Text = "";
+            z_member_category.Text = "";
+            z_member_name.Text = "";
+            z_member_totalvar.Text = "";
+            z_member_type.Text = "";
+            z_members_params.Text = "";
+
+            z_var_name.Text = "";
+            z_var_scope.Text = "";
+            z_var_type.Text = "";
+
             TreeNode currentNode;
             semanticTreeView.Nodes.Clear();
+
             currentNode = semanticTreeView.Nodes.Add("Global: " + SemanticAnalyzer.globalSymbolTable[0].name);
             for (int b = 0; b < SemanticAnalyzer.globalSymbolTable[0].classes.Count; b++)
             {
                 currentNode = currentNode.Nodes.Add("Class: " + SemanticAnalyzer.globalSymbolTable[0].classes[b].name);
+                classes_data.Items.Add(SemanticAnalyzer.globalSymbolTable[0].classes[b].name);
                 for (int k = 0; k < SemanticAnalyzer.globalSymbolTable[0].classes[b].members.Count; k++)
                 {
                     string memberType;
@@ -76,6 +93,7 @@ namespace LexicalAnaylzerRexton
                 currentNode = currentNode.Parent;
             }
             currentNode = currentNode.Parent;
+            semanticTreeView.ExpandAll();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -89,6 +107,15 @@ namespace LexicalAnaylzerRexton
             richTextBox1.Text = "";
             errorTextBox.Text = ""; 
             treeView.Nodes.Clear();
+            SemanticAnalyzer.globalSymbolTable = new List<GLOBAL>();
+            SemanticAnalyzer.ClassSymbolTable = new List<CLASS>();
+            SemanticAnalyzer.errors = new List<string>();
+            classes_data.Text = "Select a Class";
+            member_data.Text = "Select a Member";
+            variables_data.Text = "Select a variable";
+            classes_data.Items.Clear();
+            member_data.Items.Clear();
+            variables_data.Items.Clear();
 
             String errorText = "";
             LexAnalyzer lex = new LexAnalyzer();
@@ -240,6 +267,116 @@ namespace LexicalAnaylzerRexton
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void classes_data_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            z_member_access.Text = "";
+            z_member_category.Text = "";
+            z_member_name.Text = "";
+            z_member_totalvar.Text = "";
+            z_member_type.Text = "";
+            z_members_params.Text = "";
+
+            z_var_name.Text = "";
+            z_var_scope.Text = "";
+            z_var_type.Text = "";
+
+            member_data.Items.Clear();
+            variables_data.Items.Clear();
+
+            List<CLASS> classesTable = SemanticAnalyzer.globalSymbolTable[0].classes;
+            string selectedclass = classes_data.SelectedItem.ToString();
+
+            for (int i = 0; i < classesTable.Count; i++)
+            {
+                if (selectedclass == classesTable[i].name)
+                {
+                    z_class_name.Text = classesTable[i].name;
+                    z_class_access.Text = classesTable[i].accessModifier;
+                    z_class_parent.Text = classesTable[i].parent;
+                    z_class_totalmembers.Text = classesTable[i].members.Count.ToString();
+                    for (int j = 0; j < classesTable[i].members.Count; j++)
+                    {
+                        member_data.Items.Add(classesTable[i].members[j].name);
+
+                    }
+                }
+            }
+        }
+
+        private void member_data_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            variables_data.Items.Clear();
+
+            List<CLASS> classesTable = SemanticAnalyzer.globalSymbolTable[0].classes;
+            string selectedclass = classes_data.SelectedItem.ToString();
+            string selectedMember = member_data.SelectedItem.ToString();
+
+            for (int i = 0; i < classesTable.Count; i++)
+            {
+                if (selectedclass == classesTable[i].name)
+                {
+                    z_class_name.Text = classesTable[i].name;
+                    z_class_access.Text = classesTable[i].accessModifier;
+                    z_class_parent.Text = classesTable[i].parent;
+                    z_class_totalmembers.Text = classesTable[i].members.Count.ToString();
+                    for (int j = 0; j < classesTable[i].members.Count; j++)
+                    {
+                        if (selectedMember == classesTable[i].members[j].name)
+                        {
+                            z_member_name.Text = classesTable[i].members[j].name;
+                            z_member_access.Text = classesTable[i].members[j].accessModifier;
+                            z_member_category.Text = classesTable[i].members[j].category;
+                            z_member_totalvar.Text = classesTable[i].members[j].variables.Count.ToString();
+                            z_member_type.Text = classesTable[i].members[j].type;
+                            z_members_params.Text = classesTable[i].members[j].param;
+                            for (int k = 0; k < classesTable[i].members[j].variables.Count; k++)
+                            {
+                                variables_data.Items.Add(classesTable[i].members[j].variables[k].name);
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
+        private void variables_data_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            List<CLASS> classesTable = SemanticAnalyzer.globalSymbolTable[0].classes;
+            string selectedclass = classes_data.SelectedItem.ToString();
+            string selectedMember = member_data.SelectedItem.ToString();
+
+            for (int i = 0; i < classesTable.Count; i++)
+            {
+                if (selectedclass == classesTable[i].name)
+                {
+                    z_class_name.Text = classesTable[i].name;
+                    z_class_access.Text = classesTable[i].accessModifier;
+                    z_class_parent.Text = classesTable[i].parent;
+                    z_class_totalmembers.Text = classesTable[i].members.Count.ToString();
+                    for (int j = 0; j < classesTable[i].members.Count; j++)
+                    {
+                        if (selectedMember == classesTable[i].members[j].name)
+                        {
+                            z_member_name.Text = classesTable[i].members[j].name;
+                            z_member_access.Text = classesTable[i].members[j].accessModifier;
+                            z_member_category.Text = classesTable[i].members[j].category;
+                            z_member_totalvar.Text = classesTable[i].members[j].variables.Count.ToString();
+                            z_member_type.Text = classesTable[i].members[j].type;
+                            z_members_params.Text = classesTable[i].members[j].param;
+                            for (int k = 0; k < classesTable[i].members[j].variables.Count; k++)
+                            {
+                                z_var_name.Text = classesTable[i].members[j].variables[k].name;
+                                z_var_scope.Text = classesTable[i].members[j].variables[k].scope.ToString();
+                                z_var_type.Text = classesTable[i].members[j].variables[k].type;
+                            }
+                        }
+
+                    }
+                }
+            }
         }
     }
 }
