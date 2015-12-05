@@ -24,6 +24,8 @@ namespace LexicalAnaylzerRexton
         {
             InitializeComponent();
             characterCountLabel.Text = "" + codebox1.Text.Length;
+            mainLabel.Text = "No Main Found";
+            mainLabel.ForeColor = System.Drawing.Color.Maroon;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -100,6 +102,30 @@ namespace LexicalAnaylzerRexton
         {
             Compile();
             loadSemanticTree();
+            checkMain();
+        }
+
+        private void checkMain()
+        {
+            mainLabel.Text = "No Main Found";
+            mainLabel.ForeColor = System.Drawing.Color.Maroon;
+            List<CLASS> classesTable = SemanticAnalyzer.globalSymbolTable[0].classes;
+
+            for (int i = 0; i < classesTable.Count; i++)
+            {
+                for (int j = 0; j < classesTable[i].members.Count; j++)
+                {
+                    for (int k = 0; k < classesTable[i].members[j].variables.Count; k++)
+                    {
+                        if (classesTable[i].members[j].name == "main" && classesTable[i].members[j].isMethod == true)
+                        {
+                            mainLabel.Text = "Main Found";
+                            mainLabel.ForeColor = System.Drawing.Color.Green;
+                        }
+                    }
+                }
+            }
+            
         }
 
         private void Compile()
@@ -248,10 +274,10 @@ namespace LexicalAnaylzerRexton
 
         private void codebox1_TextChanged(object sender, EventArgs e)
         {
+            characterCountLabel.Text = "" + codebox1.Text.Length;
             if (checkBox1.Checked)
             {
                 SemanticAnalyzer.errors = new List<string>();
-                characterCountLabel.Text = "" + codebox1.Text.Length;
                 Compile();
 
             }
@@ -310,7 +336,6 @@ namespace LexicalAnaylzerRexton
                     for (int j = 0; j < classesTable[i].members.Count; j++)
                     {
                         member_data.Items.Add(classesTable[i].members[j].name);
-
                     }
                 }
             }

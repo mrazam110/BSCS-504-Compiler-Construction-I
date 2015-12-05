@@ -15,7 +15,7 @@ namespace LexicalAnaylzerRexton
         public TreeNode currentNode;
         //private bool isMethodStarted = false;
         private string errors = "";
-
+        private bool isMethodStart = false;
         //ICG
         ICG icg = new ICG();
 
@@ -161,9 +161,6 @@ namespace LexicalAnaylzerRexton
                 //<ID_CONST> ID|<CONST>
                 if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                 {
-                    
-                    
-
                     index++;
                     //T = tokenList[index - 1].wordStr;
                     currentNode = currentNode.Parent; return true;
@@ -186,7 +183,7 @@ namespace LexicalAnaylzerRexton
                 //<Access_Modifier>  access_modifier | Null
                 if (tokenList[index].classStr == Singleton.SingletonEnums._Access_Modifier.ToString())
                 {
-                    AM = tokenList[index].classStr;
+                    AM = tokenList[index].wordStr;
                     index++;
                     currentNode = currentNode.Parent; return true;
                 }
@@ -572,7 +569,7 @@ namespace LexicalAnaylzerRexton
                 else if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                 {
                     string N = tokenList[index].wordStr;
-                    string T = Search_GetType(N, N + "is not a variable");
+                    string T = Search_GetType(N, N + "No Error");
                     index++;
                     if (S_St_ID(N, T))
                     {
@@ -613,8 +610,6 @@ namespace LexicalAnaylzerRexton
                 //inc_dec; | <Assign_Op>| <Object_link> | <Object_Call>; | <Method_Call_1>; | [<Exp>] <Assign_Op>	
                 if (tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString())
                 {
-                    
-                    
                     //String N = tokenList[index].wordStr;
                     //String T = "";
                     T = Search_GetType(N, "Undeclared Variable");
@@ -2008,11 +2003,12 @@ namespace LexicalAnaylzerRexton
                             mem.accessModifier = AM;
                             
                             semanticAnalyzer.insertMember(mem);
+
+                            isMethodStart = true;
                             
                             if (tokenList[index].classStr == "{")
                             {
                                 index++;
-                                //isMethodStarted = true;
                                 semanticAnalyzer.createScope();
                                 icg.GenerateCode(semanticAnalyzer.getCurrentClass() + "_" + N + AL +" Proc");
                                 if (AL != "")
@@ -2034,7 +2030,7 @@ namespace LexicalAnaylzerRexton
                                 {
                                     if (tokenList[index].classStr == "}")
                                     {
-                                        //isMethodStarted = false;
+                                        isMethodStart = false;
                                         semanticAnalyzer.deleteScope();
                                         icg.GenerateCode(semanticAnalyzer.getCurrentClass() + "_" + N + AL + " endP");
                                         index++;
@@ -2111,9 +2107,6 @@ namespace LexicalAnaylzerRexton
                 //<object_array_dec>  = new ID[<Exp>]<obj_arr_dec1>
                 if (tokenList[index].wordStr == "=")
                 {
-                    
-                    
-
                     index++;
                     if (tokenList[index].classStr == Singleton.SingletonEnums._new.ToString())
                     {
@@ -2140,8 +2133,20 @@ namespace LexicalAnaylzerRexton
                                        // currentNode = currentNode.Parent;
 
                                         index++;
-                                        semanticAnalyzer.insertVariables(N, N1, semanticAnalyzer.currentScope());
-                                        
+                                        if (isMethodStart)
+                                        {
+                                            semanticAnalyzer.insertVariables(N, N1, semanticAnalyzer.currentScope());
+                                        }
+                                        else
+                                        {
+                                            CLASSMEMBER cm = new CLASSMEMBER();
+                                            cm.accessModifier = AM;
+                                            cm.name = N;
+                                            cm.type = N1;
+                                            cm.isMethod = false;
+                                            cm.param = "";
+                                            semanticAnalyzer.insertMember(cm);
+                                        }
                                         //semanticAnalyzer.insertVariables(N, N1, semanticAnalyzer.currentScope(), AM, "");
                                         if (obj_arr_dec1())
                                         {
@@ -2328,7 +2333,21 @@ namespace LexicalAnaylzerRexton
                                     {
                                         
                                         index++;
-                                        semanticAnalyzer.insertVariables(N1, N, semanticAnalyzer.currentScope());
+                                        if (isMethodStart)
+                                        {
+                                            semanticAnalyzer.insertVariables(N1, N, semanticAnalyzer.currentScope());
+                                        }
+                                        else
+                                        {
+                                            CLASSMEMBER cm = new CLASSMEMBER();
+                                            cm.accessModifier = AM;
+                                            cm.name = N1;
+                                            cm.type = N;
+                                            cm.isMethod = false;
+                                            cm.param = "";
+                                            semanticAnalyzer.insertMember(cm);
+                                        }
+                                        //semanticAnalyzer.insertVariables(N1, N, semanticAnalyzer.currentScope());
                                         
                                         //semanticAnalyzer.insertVariables(N1, N, semanticAnalyzer.currentScope(), AM, "");
                                         if (Object_List(N, AM))
