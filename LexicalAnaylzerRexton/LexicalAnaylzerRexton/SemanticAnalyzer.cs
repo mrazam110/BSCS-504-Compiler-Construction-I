@@ -173,7 +173,7 @@ namespace LexicalAnaylzerRexton
                     {
                         string memberParam = globalSymbolTable.Last().classes.Last().members[i].param;
                         string objParam = obj.param;
-                        if (objParam != memberParam)
+                        if (objParam == memberParam)
                         {
                             paramNotMatch = true;
                         }
@@ -584,6 +584,49 @@ namespace LexicalAnaylzerRexton
                 }
             } // For loop end for finding classes 
             return false;
+        }
+
+        public string SearchMember(string classType, CLASSMEMBER obj)
+        {
+            // a.b;   || a.b(int i, float j); || a.b(int j)
+            // classType.obj
+            for (int i = 0; i < globalSymbolTable.Last().classes.Count; i++)
+            {
+
+                if (globalSymbolTable.Last().classes[i].name == classType)
+                {
+                    CLASS currentClass = globalSymbolTable.Last().classes[i];
+                    
+                    for (int j = 0; j < currentClass.members.Count; j++)
+                    {
+                        if (currentClass.members[j].name == obj.name)
+                        {
+                            CLASSMEMBER currentMember = currentClass.members[j];
+                            if (!obj.isMethod && !currentMember.isMethod) // check if both obj and currentMember are feilds of a class , NOT METHOD
+                            {
+                                obj.type = currentMember.type;
+                                return obj.type;
+                            }
+
+                            else if (obj.isMethod && currentMember.isMethod) // check if both obj and currentMember are methods of a class , NOT feilds
+                            {
+                                if (obj.param == currentMember.param)
+                                {
+                                    obj.type = currentMember.type;
+                                    return obj.type;
+                                }
+                                //return true;
+                            }
+                            else
+                            {
+                                return "invalid";
+                            }
+                        }
+                    } // For loop end for finding member of a class
+                    return "invalid";
+                }
+            } // For loop end for finding classes 
+            return "invalid";
         }
     }
 }
