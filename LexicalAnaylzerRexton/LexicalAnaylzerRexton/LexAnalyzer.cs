@@ -439,7 +439,6 @@ namespace LexicalAnaylzerRexton
 
         private string checkPunctuators(string word)
         {
-            Console.WriteLine(word);
             for (int i = 0; i < Singleton.punctuators.Length / 2; i++)
             {
                 if (word == Singleton.punctuators[i, 0])
