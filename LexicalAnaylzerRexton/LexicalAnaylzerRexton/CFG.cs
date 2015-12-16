@@ -2279,9 +2279,6 @@ namespace LexicalAnaylzerRexton
                 //<obj_arr_dec3>  , <obj_arr_dec2>|}; 
                 if (tokenList[index].classStr == ",")
                 {
-                    
-                    
-
                     index++;
                     if (obj_arr_dec2())
                     {
@@ -2384,9 +2381,6 @@ namespace LexicalAnaylzerRexton
                 //<Object_List> , ID<Object_Creation_Exp>
                 if (tokenList[index].classStr == ",")
                 {
-                    
-                    
-
                     index++;
                     if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                     {
@@ -2421,9 +2415,6 @@ namespace LexicalAnaylzerRexton
                 //<Object_Call> . <Exp> | [<Exp>].<Exp>
                 if (tokenList[index].classStr == ".")
                 {
-
-
-
                     index++;
                     string ET = "";
                     string NET = "";
