@@ -2312,21 +2312,12 @@ namespace LexicalAnaylzerRexton
                 //<Object_Creation_Exp> = new ID  (<Param>) <Object_List>  |;
                 if (tokenList[index].wordStr == "=")
                 {
-                    
-                    
-
                     index++;
                     if (tokenList[index].classStr == Singleton.SingletonEnums._new.ToString())
                     {
-                        
-                        
-
                         index++;
                         if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                         {
-                            
-                            
-
                             string N2 = tokenList[index].wordStr;
                             if (!semanticAnalyzer.LookUpClass(N2))
                             {
@@ -2342,22 +2333,27 @@ namespace LexicalAnaylzerRexton
                                 {
                                     if (tokenList[index].classStr == ")")
                                     {
-                                        
+                                        CLASSMEMBER cm = new CLASSMEMBER();
+                                        cm.accessModifier = AM;
+                                        cm.name = N1;
+                                        cm.type = N;
+                                        cm.isMethod = false;
+                                        cm.param = AL;
+                                        if(semanticAnalyzer.LookUpContructor(cm)){
+                                            if (isMethodStart)
+                                            {
+                                                semanticAnalyzer.insertVariables(N1, N, semanticAnalyzer.currentScope());
+                                            }
+                                            else
+                                            {
+                                                //cm.param = "";
+                                                semanticAnalyzer.insertMember(cm);
+                                            }
+                                        }else{
+                                            addError("Constructor not found in class " + N);
+                                        }
                                         index++;
-                                        if (isMethodStart)
-                                        {
-                                            semanticAnalyzer.insertVariables(N1, N, semanticAnalyzer.currentScope());
-                                        }
-                                        else
-                                        {
-                                            CLASSMEMBER cm = new CLASSMEMBER();
-                                            cm.accessModifier = AM;
-                                            cm.name = N1;
-                                            cm.type = N;
-                                            cm.isMethod = false;
-                                            cm.param = "";
-                                            semanticAnalyzer.insertMember(cm);
-                                        }
+                                        
                                         //semanticAnalyzer.insertVariables(N1, N, semanticAnalyzer.currentScope());
                                         
                                         //semanticAnalyzer.insertVariables(N1, N, semanticAnalyzer.currentScope(), AM, "");
