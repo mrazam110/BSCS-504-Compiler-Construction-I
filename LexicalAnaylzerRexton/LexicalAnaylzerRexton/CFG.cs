@@ -13,7 +13,7 @@ namespace LexicalAnaylzerRexton
         private List<token> tokenList;
 
         public TreeNode currentNode;
-        //private bool isMethodStarted = false;
+
         private string errors = "";
         private bool isMethodStart = false;
         //ICG

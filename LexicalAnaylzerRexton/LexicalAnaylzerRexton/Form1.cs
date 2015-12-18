@@ -130,6 +130,8 @@ namespace LexicalAnaylzerRexton
 
         private void Compile()
         {
+            characterCountLabel.Text = "" + codebox1.Text.Length;
+
             ICG_text.Text = "";
             richTextBox1.Text = "";
             errorTextBox.Text = ""; 
@@ -216,12 +218,9 @@ namespace LexicalAnaylzerRexton
                     sementicErrorLabel.Text = "No Error";
                     sementicErrorLabel.ForeColor = System.Drawing.Color.Green;
                 }
-                if (checkBox1.Checked)
-                {
-                    totalTokenLabel.Text = "" + (tokenSet.Count - 1);
-                    totWordsLabel.Text = "" + (tokenSet.Count - 1);
-                    totLineLabel.Text = "" + wordBreakerOutput[wordBreakerOutput.Count - 1].lineNumber;
-                }
+                totalTokenLabel.Text = "" + (tokenSet.Count - 1);
+                totWordsLabel.Text = "" + (tokenSet.Count - 1);
+                totLineLabel.Text = "" + wordBreakerOutput[wordBreakerOutput.Count - 1].lineNumber;
 
                 if (errorText != "")
                 {

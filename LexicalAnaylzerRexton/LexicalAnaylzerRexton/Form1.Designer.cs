@@ -80,6 +80,7 @@
             this.ICG_text = new System.Windows.Forms.RichTextBox();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.NotificationTabPage = new System.Windows.Forms.TabPage();
+            this.mainLabel = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.sementicErrorLabel = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -101,7 +102,6 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.mainLabel = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.LexTabPage.SuspendLayout();
             this.SyntaxTabPage.SuspendLayout();
@@ -636,6 +636,17 @@
             this.NotificationTabPage.Text = "Notifications";
             this.NotificationTabPage.UseVisualStyleBackColor = true;
             // 
+            // mainLabel
+            // 
+            this.mainLabel.AutoSize = true;
+            this.mainLabel.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.mainLabel.ForeColor = System.Drawing.Color.Maroon;
+            this.mainLabel.Location = new System.Drawing.Point(725, 12);
+            this.mainLabel.Name = "mainLabel";
+            this.mainLabel.Size = new System.Drawing.Size(91, 15);
+            this.mainLabel.TabIndex = 15;
+            this.mainLabel.Text = "No Main Found";
+            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.sementicErrorLabel);
@@ -857,17 +868,6 @@
             this.checkBox1.Text = "Live View";
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // mainLabel
-            // 
-            this.mainLabel.AutoSize = true;
-            this.mainLabel.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.mainLabel.ForeColor = System.Drawing.Color.Maroon;
-            this.mainLabel.Location = new System.Drawing.Point(725, 12);
-            this.mainLabel.Name = "mainLabel";
-            this.mainLabel.Size = new System.Drawing.Size(91, 15);
-            this.mainLabel.TabIndex = 15;
-            this.mainLabel.Text = "No Main Found";
             // 
             // Form1
             // 
