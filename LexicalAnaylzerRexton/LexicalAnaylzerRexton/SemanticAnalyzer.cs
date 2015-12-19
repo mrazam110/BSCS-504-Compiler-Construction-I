@@ -232,6 +232,12 @@ namespace LexicalAnaylzerRexton
             return false;
         }
 
+        public bool LookupObject(string CN, string N)
+        {
+            //for(int )
+            return false;
+        }
+
         //
         public string getType(string name)
         {

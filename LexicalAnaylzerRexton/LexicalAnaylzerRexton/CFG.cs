@@ -124,7 +124,8 @@ namespace LexicalAnaylzerRexton
                         T = "aur_bool";
                     }
                     index++;
-                    currentNode = currentNode.Parent; return true;
+                    currentNode = currentNode.Parent; 
+                    return true;
                 }
             }
             currentNode = currentNode.Parent; return false;
@@ -662,9 +663,9 @@ namespace LexicalAnaylzerRexton
                         return true;
                     }
                 }
-                else if (Object_Call())
+                else if (Object_Call(T))
                 {
-                    T = Search_GetType(N, "Undeclared Object");
+                    RT = Search_GetType(N, "Undeclared Object");
                     
                     if (tokenList[index].classStr == ";")
                     {
@@ -1799,7 +1800,6 @@ namespace LexicalAnaylzerRexton
                 //<Constructor_DEC> (<List_Param>) {<M-St>}
                 if (tokenList[index].classStr == "(")
                 {
-
                     string AL = "", PL = "", NAL = "", NPL = "";
                     index++;
                     if (List_Param(ref AL, PL, ref NAL, NPL))
@@ -1934,14 +1934,13 @@ namespace LexicalAnaylzerRexton
                                 {
                                     if (tokenList[index].classStr == "]")
                                     {
-                                        
-                                        T2 += "[]";
-                                        if (T != T2)
+                                        string T3 = T2 + "[]";
+                                        if (T != T3)
                                         {
-                                            addError("Array type mismatch " + T + " " + T2);
+                                            addError("Array type mismatch " + T + " " + T3);
                                         }
                                         index++;
-                                        if (Array_const())
+                                        if (Array_const(T2))
                                         {
                                             currentNode = currentNode.Parent; return true;
                                         }
@@ -1955,7 +1954,7 @@ namespace LexicalAnaylzerRexton
             currentNode = currentNode.Parent; return false;
         }
 
-        private bool Array_const()
+        private bool Array_const(string AT)
         {
             currentNode = currentNode.Nodes.Add("<" + System.Reflection.MethodBase.GetCurrentMethod().Name + ">", "< " + System.Reflection.MethodBase.GetCurrentMethod().Name + " >");
             
@@ -1966,13 +1965,10 @@ namespace LexicalAnaylzerRexton
                 //<Array_const>  <Array_C> | ;
                 if (tokenList[index].classStr == ";")
                 {
-                    
-                    
-
                     index++;
                     currentNode = currentNode.Parent; return true;
                 }
-                else if (Array_C())
+                else if (Array_C(AT))
                 {
                     currentNode = currentNode.Parent; return true;
                 }
@@ -1980,7 +1976,7 @@ namespace LexicalAnaylzerRexton
             currentNode = currentNode.Parent; return false;
         }
 
-        private bool Array_C()
+        private bool Array_C(string AT)
         {
             currentNode = currentNode.Nodes.Add("<" + System.Reflection.MethodBase.GetCurrentMethod().Name + ">", "< " + System.Reflection.MethodBase.GetCurrentMethod().Name + " >");
             
@@ -1991,13 +1987,16 @@ namespace LexicalAnaylzerRexton
                 //<Array_C>{ <Exp><Array_C2>
                 if (tokenList[index].classStr == "{")
                 {
-
                     index++;
                     string ET = "";
                     string NET = "";
                     if (Exp(ref ET, ref NET))
                     {
-                        if (Array_C2())
+                        if (AT != ET)
+                        {
+                            addError("Array Type " + AT + " is not equal to " + ET);
+                        }
+                        if (Array_C2(AT))
                         {
                             currentNode = currentNode.Parent; return true;
                         }
@@ -2007,7 +2006,7 @@ namespace LexicalAnaylzerRexton
             currentNode = currentNode.Parent; return false;
         }
 
-        private bool Array_C2()
+        private bool Array_C2(string AT)
         {
             currentNode = currentNode.Nodes.Add("<" + System.Reflection.MethodBase.GetCurrentMethod().Name + ">", "< " + System.Reflection.MethodBase.GetCurrentMethod().Name + " >");
             
@@ -2029,15 +2028,16 @@ namespace LexicalAnaylzerRexton
                 }
                 else if (tokenList[index].classStr == ",")
                 {
-
-
-
                     index++;
                     string ET = "";
                     string NET = "";
                     if (Exp(ref ET, ref NET))
                     {
-                        if (Array_C2())
+                        if (AT != ET)
+                        {
+                            addError(NET + " Array Type " + AT + " is not equal to " + ET);
+                        }
+                        if (Array_C2(AT))
                         {
                             currentNode = currentNode.Parent; return true;
                         }
@@ -2508,7 +2508,7 @@ namespace LexicalAnaylzerRexton
             currentNode = currentNode.Parent; return false;
         }
 
-        private bool Object_Call()
+        private bool Object_Call(string T)
         {
             currentNode = currentNode.Nodes.Add("<" + System.Reflection.MethodBase.GetCurrentMethod().Name + ">", "< " + System.Reflection.MethodBase.GetCurrentMethod().Name + " >");
             
@@ -2522,25 +2522,27 @@ namespace LexicalAnaylzerRexton
                 if (tokenList[index].classStr == ".")
                 {
                     index++;
+                    
                     string ET = "";
                     string NET = "";
                     if (Exp(ref ET, ref NET))
                     {
-                        currentNode = currentNode.Parent; return true;
+                        Console.Write(NET);
+                        currentNode = currentNode.Parent; 
+                        return true;
                     }
                 }
                 else if (tokenList[index].classStr == "[")
                 {
                     currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
-                    //currentNode = currentNode.Parent;
                     index++;
+                    
                     string ET = "";
                     string NET = "";
                     if (Exp(ref ET, ref NET))
                     {
                         if (tokenList[index].classStr == "]")
                         {
-                            
                             index++;
                             if (tokenList[index].classStr == ".")
                             {
@@ -2549,7 +2551,8 @@ namespace LexicalAnaylzerRexton
                                 string NET2 = "";
                                 if (Exp(ref ET2, ref NET2))
                                 {
-                                    currentNode = currentNode.Parent; return true;
+                                    currentNode = currentNode.Parent; 
+                                    return true;
                                 }
                             }
                         }
