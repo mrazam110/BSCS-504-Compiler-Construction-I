@@ -17,6 +17,7 @@ namespace LexicalAnaylzerRexton
         private string errors = "";
         private bool isMethodStart = false;
         private bool isObjectCalling = false;
+        private string OC = "";
 
         //ICG
         ICG icg = new ICG();
@@ -470,7 +471,6 @@ namespace LexicalAnaylzerRexton
                 //<Method_Call_1>  (<Param>) 
                 if (tokenList[index].classStr == "(")
                 {
-                    
                     string AL = "";
                     string PL = "";
                     index++;
@@ -479,17 +479,21 @@ namespace LexicalAnaylzerRexton
                         if (tokenList[index].classStr == ")")
                         {
                             //RT = Search_GetType(N, "Undeclared Method");
+                            CLASSMEMBER cm = new CLASSMEMBER();
+                            cm.name = N;
+                            cm.param = AL;
+                            cm.isMethod = true;
                             if (!isObjectCalling)
                             {
-                                CLASSMEMBER cm = new CLASSMEMBER();
-                                cm.name = N;
-                                cm.param = AL;
-                                cm.isMethod = true;
                                 RT = semanticAnalyzer.SearchMember(semanticAnalyzer.getCurrentClass(), cm);
-                                if (RT == "invalid")
-                                {
-                                    addError("Undeclared Member");
-                                }
+                            }
+                            else
+                            {
+                                RT = semanticAnalyzer.SearchMember(OC, cm);
+                            }
+                            if (RT == "invalid")
+                            {
+                                addError("Undeclared Member");
                             }
                             index++;
                             currentNode = currentNode.Parent; return true;
@@ -2514,6 +2518,9 @@ namespace LexicalAnaylzerRexton
                 {
                     isObjectCalling = true;
                     index++;
+
+                    string OT = Search_GetType(N, "Undeclared Object");
+                    OC = OT;
                     
                     string ET = "";
                     string NET = "";
@@ -2522,14 +2529,14 @@ namespace LexicalAnaylzerRexton
                         Console.Write(NET);
                         currentNode = currentNode.Parent;
 
-                        string OT = Search_GetType(N, "Undeclared Object");
                         if (OT != "invalid")
                         {
-                            string objType = semanticAnalyzer.LookupObject(OT, NET);
+
+                            /*string objType = semanticAnalyzer.LookupObject(OT, NET);
                             if (objType == "invalid")
                             {
                                 addError("Obj member not found " + NET);
-                            }
+                            }*/
                         }
                         
                         isObjectCalling = false;
@@ -3453,37 +3460,6 @@ namespace LexicalAnaylzerRexton
         }*/
 
         
-
-        
-
-        
-
-        
-
-        private bool ID_Const()
-        {
-            currentNode = currentNode.Nodes.Add("<" + System.Reflection.MethodBase.GetCurrentMethod().Name + ">", "< " + System.Reflection.MethodBase.GetCurrentMethod().Name + " >");
-            
-            //FIRST(<ID_Const>) = { ID, INT_CONST , FLOAT_CONST , STRING_CONST , CHAR_CONST , BOOL_CONST }
-            if (tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString() ||
-                tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString())
-            {
-                index++;
-                currentNode = currentNode.Parent; return true;
-            }
-            currentNode = currentNode.Parent; return false;
-        }
-
-        
-
-        
-
-        
-
 
         private bool Bar_Bar()
         {
