@@ -232,10 +232,25 @@ namespace LexicalAnaylzerRexton
             return false;
         }
 
-        public bool LookupObject(string CN, string N)
+        public string LookupObject(string CN, string N)
         {
-            //for(int )
-            return false;
+            for (int j = 0; j < globalSymbolTable[globalSymbolTable.Count - 1].classes.Count; j++)
+            {
+                if (globalSymbolTable.Last().classes[j].name == CN)
+                {
+                    foreach (CLASSMEMBER i in globalSymbolTable.Last().classes[j].members)
+                    {
+                        if (N == i.name)
+                        {
+                            if (i.accessModifier != "private")
+                            {
+                                return i.type;
+                            }
+                        }
+                    }
+                }
+            }
+            return "invalid";
         }
 
         //

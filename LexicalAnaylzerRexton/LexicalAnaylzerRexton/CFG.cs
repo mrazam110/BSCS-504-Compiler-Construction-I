@@ -16,6 +16,8 @@ namespace LexicalAnaylzerRexton
 
         private string errors = "";
         private bool isMethodStart = false;
+        private bool isObjectCalling = false;
+
         //ICG
         ICG icg = new ICG();
 
@@ -477,28 +479,17 @@ namespace LexicalAnaylzerRexton
                         if (tokenList[index].classStr == ")")
                         {
                             //RT = Search_GetType(N, "Undeclared Method");
-                            if (AL != "")
+                            if (!isObjectCalling)
                             {
-                                //string[] splitOp = { "," };
-                                //string[] abc = AL.Split(splitOp, StringSplitOptions.None);
-                                //for (int i = (abc.Length - 1); i >= 0; i++)
-                                //{
-                                //    Console.WriteLine(abc[i]);
-                                //}
-                            }
-                            else
-                            {
-                                
-                            }
-
-                            CLASSMEMBER cm = new CLASSMEMBER();
-                            cm.name = N;
-                            cm.param = AL;
-                            cm.isMethod = true;
-                            RT = semanticAnalyzer.SearchMember(semanticAnalyzer.getCurrentClass(), cm);
-                            if (RT == "invalid")
-                            {
-                                addError("Undeclared Member");
+                                CLASSMEMBER cm = new CLASSMEMBER();
+                                cm.name = N;
+                                cm.param = AL;
+                                cm.isMethod = true;
+                                RT = semanticAnalyzer.SearchMember(semanticAnalyzer.getCurrentClass(), cm);
+                                if (RT == "invalid")
+                                {
+                                    addError("Undeclared Member");
+                                }
                             }
                             index++;
                             currentNode = currentNode.Parent; return true;
@@ -663,9 +654,9 @@ namespace LexicalAnaylzerRexton
                         return true;
                     }
                 }
-                else if (Object_Call(T))
+                else if (Object_Call(N))
                 {
-                    RT = Search_GetType(N, "Undeclared Object");
+                    //RT = Search_GetType(N, "Undeclared Object");
                     
                     if (tokenList[index].classStr == ";")
                     {
@@ -2508,7 +2499,7 @@ namespace LexicalAnaylzerRexton
             currentNode = currentNode.Parent; return false;
         }
 
-        private bool Object_Call(string T)
+        private bool Object_Call(string N)
         {
             currentNode = currentNode.Nodes.Add("<" + System.Reflection.MethodBase.GetCurrentMethod().Name + ">", "< " + System.Reflection.MethodBase.GetCurrentMethod().Name + " >");
             
@@ -2521,6 +2512,7 @@ namespace LexicalAnaylzerRexton
                 //<Object_Call> . <Exp> | [<Exp>].<Exp>
                 if (tokenList[index].classStr == ".")
                 {
+                    isObjectCalling = true;
                     index++;
                     
                     string ET = "";
@@ -2528,7 +2520,19 @@ namespace LexicalAnaylzerRexton
                     if (Exp(ref ET, ref NET))
                     {
                         Console.Write(NET);
-                        currentNode = currentNode.Parent; 
+                        currentNode = currentNode.Parent;
+
+                        string OT = Search_GetType(N, "Undeclared Object");
+                        if (OT != "invalid")
+                        {
+                            string objType = semanticAnalyzer.LookupObject(OT, NET);
+                            if (objType == "invalid")
+                            {
+                                addError("Obj member not found " + NET);
+                            }
+                        }
+                        
+                        isObjectCalling = false;
                         return true;
                     }
                 }
