@@ -43,7 +43,7 @@ namespace LexicalAnaylzerRexton
 
         private void addError(string  message)
         {
-            SemanticAnalyzer.errors.Add(message + " (" + tokenList[index].wordStr + " " + semanticAnalyzer.getCurrentClass() + ") on line no. " + tokenList[index].lineNumber);
+            SemanticAnalyzer.errors.Add(message + " ( WordStr: " + tokenList[index].wordStr + " ClassStr: " + semanticAnalyzer.getCurrentClass() + ") on line no. " + tokenList[index].lineNumber);
             //new semanticError(Tokens[tokenIndex], message)
         }
 
@@ -2279,15 +2279,16 @@ namespace LexicalAnaylzerRexton
                 //<obj_arr_dec1>  ;| {<obj_arr_dec2>
                 if (tokenList[index].classStr == ";")
                 {
-                    
-                    
-
                     index++;
                     currentNode = currentNode.Parent; return true;
                 }
-                else if (obj_arr_dec2())
+                else if (tokenList[index].classStr == "{")
                 {
-                    currentNode = currentNode.Parent; return true;
+                    index++;
+                    if (obj_arr_dec2())
+                    {
+                        currentNode = currentNode.Parent; return true;
+                    }
                 }
             }
             currentNode = currentNode.Parent; return false;
@@ -2303,15 +2304,9 @@ namespace LexicalAnaylzerRexton
                 //<obj_arr_dec2>  new ID  (<Param>)<obj_arr_dec3>
                 if (tokenList[index].classStr == Singleton.SingletonEnums._new.ToString())
                 {
-                    
-                    
-
                     index++;
                     if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                     {
-                        
-                        
-
                         string N = tokenList[index].wordStr;
                         if (!semanticAnalyzer.LookUpClass(N))
                         {
@@ -2320,16 +2315,23 @@ namespace LexicalAnaylzerRexton
                         index++;
                         if (tokenList[index].classStr == "(")
                         {
-                            
                             string PL = "", AL = "";
                             index++;
                             if (Param(ref AL, PL))
                             {
                                 if (tokenList[index].classStr == ")")
                                 {
-                                    
+                                    CLASSMEMBER cm = new CLASSMEMBER();
+                                    cm.accessModifier = Singleton.defaultAccessModifier;
+                                    cm.name = N;
+                                    cm.type = N;
+                                    cm.isMethod = false;
+                                    cm.param = AL;
+                                    if (semanticAnalyzer.LookUpContructor(cm))
+                                    {
+                                        addError("Constructor Not Found");
+                                    }
                                     index++;
-
                                     if (obj_arr_dec3())
                                     {
                                         currentNode = currentNode.Parent; return true;
@@ -2341,7 +2343,7 @@ namespace LexicalAnaylzerRexton
                 }
             } 
 
-            /*///FOLLOW(<obj_arr_dec2>) = { access_modifier , static, DT , void , ID , class  , jabtak , barbar , agar , return , inc_dec ,
+            ///FOLLOW(<obj_arr_dec2>) = { access_modifier , static, DT , void , ID , class  , jabtak , barbar , agar , return , inc_dec ,
             ///break , continue , this ,} }
             else if (tokenList[index].classStr == Singleton.SingletonEnums._Access_Modifier.ToString() ||
                 tokenList[index].classStr == Singleton.SingletonEnums._static.ToString() ||
@@ -2358,7 +2360,7 @@ namespace LexicalAnaylzerRexton
                 tokenList[index].classStr == Singleton.SingletonEnums._this.ToString())
             {
                 currentNode = currentNode.Parent; return true;
-            }*/
+            }
             currentNode = currentNode.Parent; return false;
         }
 
@@ -2381,9 +2383,12 @@ namespace LexicalAnaylzerRexton
                 }
                 else if (tokenList[index].classStr == "}")
                 {
-                    
                     index++;
-                    currentNode = currentNode.Parent; return true;
+                    if (tokenList[index].classStr == ";")
+                    {
+                        index++;
+                        currentNode = currentNode.Parent; return true;
+                    }
                 }
             }
 
@@ -2410,6 +2415,7 @@ namespace LexicalAnaylzerRexton
                         if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                         {
                             string N2 = tokenList[index].wordStr;
+                            
                             if (!semanticAnalyzer.LookUpClass(N2))
                             {
                                 addError("Class unspecified");
@@ -2424,30 +2430,36 @@ namespace LexicalAnaylzerRexton
                                 {
                                     if (tokenList[index].classStr == ")")
                                     {
-                                        CLASSMEMBER cm = new CLASSMEMBER();
-                                        cm.accessModifier = AM;
-                                        cm.name = N1;
-                                        cm.type = N;
-                                        cm.isMethod = false;
-                                        cm.param = AL;
-                                        if(semanticAnalyzer.LookUpContructor(cm)){
-                                            if (isMethodStart)
+                                        if (N != N2)
+                                        {
+                                            addError(N + " is not equal " + N2);
+                                        }
+                                        else
+                                        {
+                                            CLASSMEMBER cm = new CLASSMEMBER();
+                                            cm.accessModifier = AM;
+                                            cm.name = N1;
+                                            cm.type = N;
+                                            cm.isMethod = false;
+                                            cm.param = AL;
+                                            if (semanticAnalyzer.LookUpContructor(cm))
                                             {
-                                                semanticAnalyzer.insertVariables(N1, N, semanticAnalyzer.currentScope());
+                                                if (isMethodStart)
+                                                {
+                                                    semanticAnalyzer.insertVariables(N1, N, semanticAnalyzer.currentScope());
+                                                }
+                                                else
+                                                {
+                                                    //cm.param = "";
+                                                    semanticAnalyzer.insertMember(cm);
+                                                }
                                             }
                                             else
                                             {
-                                                //cm.param = "";
-                                                semanticAnalyzer.insertMember(cm);
+                                                addError("Constructor not found in class " + N);
                                             }
-                                        }else{
-                                            addError("Constructor not found in class " + N);
                                         }
                                         index++;
-                                        
-                                        //semanticAnalyzer.insertVariables(N1, N, semanticAnalyzer.currentScope());
-                                        
-                                        //semanticAnalyzer.insertVariables(N1, N, semanticAnalyzer.currentScope(), AM, "");
                                         if (Object_List(N, AM))
                                         {
                                             currentNode = currentNode.Parent; return true;
