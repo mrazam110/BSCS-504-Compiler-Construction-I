@@ -603,8 +603,9 @@ namespace LexicalAnaylzerRexton
 
             string RT = "";
             string NRT = "";
+            string AM = Singleton.defaultAccessModifier;
             //FIRST(<S_St_ID>) = {inc_dec , = , ID ,  .  , (  }
-            ////FIRST(<S_St_ID>) = {inc_dec , AOP , ID , [ ,  .  , (  }
+            ////FIRST(<S_St_ID>) = {inc_dec , AOP , ID , [ ,  .  , (  ,}
             if (tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString() ||
                 tokenList[index].classStr == Singleton.SingletonEnums.AssignmentOp.ToString() ||
                 tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
@@ -614,6 +615,8 @@ namespace LexicalAnaylzerRexton
             {
                 //<S_St_ID>  inc_dec | <Assign_Op> | <Object_link> | <Object_Call> | <Method_Call_1>7
                 //inc_dec; | <Assign_Op>| <Object_link> | <Object_Call>; | <Method_Call_1>; | [<Exp>] <Assign_Op>	
+
+                //<S_St_ID>inc_dec; | <Assign_Op>| <Object_Call>; | <Method_Call_1>; | [ <2> | ID <Object_Creation_Exp>
                 if (tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString())
                 {
                     //String N = tokenList[index].wordStr;
@@ -631,10 +634,33 @@ namespace LexicalAnaylzerRexton
                     T = Search_GetType(N, "Undeclared Variable");
                     currentNode = currentNode.Parent; return true;
                 }
-                else if (Object_link(Singleton.defaultAccessModifier, N))
+                //else if (Object_link(Singleton.defaultAccessModifier, N))
+                //{
+                //    T = Search_GetType(N, "Undeclared Class");
+                //    currentNode = currentNode.Parent; return true;
+                //}
+                else if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                 {
-                    T = Search_GetType(N, "Undeclared Class");
-                    currentNode = currentNode.Parent; return true;
+                    string N1 = tokenList[index].wordStr;
+                    if (semanticAnalyzer.LookUpVariable(N1, semanticAnalyzer.currentScope()))
+                    {
+                        addError("Redeclaration Error");
+                    }
+                    index++;
+                    if (Object_Creation_Exp(N, N1, AM))
+                    {
+                        currentNode = currentNode.Parent; return true;
+                    }
+                }
+                else if (tokenList[index].classStr == "[")
+                {
+                    currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
+                    T = Search_GetType(N, "Undeclared Array");
+                    index++;
+                    if (Array_Access(N, T, AM))
+                    {
+                        return true;
+                    }
                 }
                 else if (Object_Call())
                 {
@@ -642,8 +668,6 @@ namespace LexicalAnaylzerRexton
                     
                     if (tokenList[index].classStr == ";")
                     {
-                        
-                        
                         index++;
                         currentNode = currentNode.Parent; return true;
                     }
@@ -679,6 +703,57 @@ namespace LexicalAnaylzerRexton
                 }
             }
             currentNode = currentNode.Parent; return false;
+        }
+
+        private bool Array_Access(string N, string T, string AM)
+        {
+            //FIRST(<Array_Access >) = { ID, INT_CONST , FLOAT_CONST , STRING_CONST , CHAR_CONST , BOOL_CONST , ! , ( , inc_dec  , ] }
+            if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.INT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.FLOAT_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.STRING_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.CHAR_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.nonKeywords.BOOL_CONSTANT.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums.IncDec.ToString() ||
+                tokenList[index].classStr == Singleton.SingletonEnums.NotOp.ToString() ||
+                tokenList[index].classStr == "(" ||
+                tokenList[index].classStr == "]"
+                )
+            {
+                //<Array_Access>  <Exp>]<Assign_Op> | ] ID<object_array_dec>	
+                
+                string NET = "", ET = "";
+                if (Exp(ref ET, ref NET))
+                {
+                    if (tokenList[index].classStr == "]")
+                    {
+                        currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
+                        //currentNode = currentNode.Parent;
+                        index++;
+                        if (Assign_Op(T))
+                        {
+                            currentNode = currentNode.Parent; return true;
+                        }
+                    }
+                }
+                else if (tokenList[index].classStr == "]")
+                {
+                    currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
+                    //currentNode = currentNode.Parent;
+                    index++;
+                    if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
+                    {
+                        string N1 = tokenList[index].wordStr;
+                        index++;
+                        if (object_array_dec(N, N1, AM))
+                        {
+                            currentNode = currentNode.Parent; return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
 
         private bool S_St_DT(string  T)
@@ -1794,8 +1869,9 @@ namespace LexicalAnaylzerRexton
                         RT += "[]";
                         if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                         {
-                            index++;
                             string N = tokenList[index].wordStr;
+                            index++;
+                            
                             if (isMethodStart)
                             {
                                 semanticAnalyzer.insertVariables(N, RT, semanticAnalyzer.currentScope());
