@@ -551,6 +551,13 @@ namespace LexicalAnaylzerRexton
                     {   
                         string N = tokenList[index].wordStr;
                         string T = Search_GetType(N, "Undeclared Variable");
+                        if (T != "invalid")
+                        {
+                            if (!semanticAnalyzer.CC_IncDec(T))
+                            {
+                                addError("Type Mismatch inc dec is not possible with type " + T + " --- " + N);
+                            }
+                        }
                         string NT = "";
                         index++;
                         if (inc_dec_list(ref RT, N, T, ref NT))
@@ -615,6 +622,13 @@ namespace LexicalAnaylzerRexton
                     //String N = tokenList[index].wordStr;
                     //String T = "";
                     T = Search_GetType(N, "Undeclared Variable");
+                    if (T != "invalid") 
+                    {
+                        if (!semanticAnalyzer.CC_IncDec(T))
+                        {
+                            addError("Type Mismatch inc dec is not possible with type " + T + " --- " + N);
+                        }
+                    }
                     index++;
                     if (tokenList[index].classStr == ";")
                     {
@@ -627,11 +641,6 @@ namespace LexicalAnaylzerRexton
                     T = Search_GetType(N, "Undeclared Variable");
                     currentNode = currentNode.Parent; return true;
                 }
-                //else if (Object_link(Singleton.defaultAccessModifier, N))
-                //{
-                //    T = Search_GetType(N, "Undeclared Class");
-                //    currentNode = currentNode.Parent; return true;
-                //}
                 else if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                 {
                     string N1 = tokenList[index].wordStr;
@@ -673,27 +682,27 @@ namespace LexicalAnaylzerRexton
                         currentNode = currentNode.Parent; return true;
                     }
                 }
-                else if (tokenList[index].classStr == "[")
-                {
-                    currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
-                    //currentNode = currentNode.Parent;
-                    T = Search_GetType(N, "Undeclared Array");
+                //else if (tokenList[index].classStr == "[")
+                //{
+                //    currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
+                //    //currentNode = currentNode.Parent;
+                //    T = Search_GetType(N, "Undeclared Array");
                     
-                    index++;
-                    if (Exp(ref RT, ref NRT))
-                    {
-                        if (tokenList[index].classStr == "]")
-                        {
-                            currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
-                            //currentNode = currentNode.Parent;
-                            index++;
-                            if (Assign_Op(T))
-                            {
-                                currentNode = currentNode.Parent; return true;
-                            }
-                        }
-                    }
-                }
+                //    index++;
+                //    if (Exp(ref RT, ref NRT))
+                //    {
+                //        if (tokenList[index].classStr == "]")
+                //        {
+                //            currentNode.Nodes.Add("(" + tokenList[index].classStr + ")", "( " + tokenList[index].classStr + " )");
+                //            //currentNode = currentNode.Parent;
+                //            index++;
+                //            if (Assign_Op(T))
+                //            {
+                //                currentNode = currentNode.Parent; return true;
+                //            }
+                //        }
+                //    }
+                //}
             }
             currentNode = currentNode.Parent; return false;
         }
@@ -945,9 +954,6 @@ namespace LexicalAnaylzerRexton
                 }
                 else if (tokenList[index].classStr == ";")
                 {
-                    
-                    
-
                     index++;
                     currentNode = currentNode.Parent; return true;
                 }
@@ -969,8 +975,6 @@ namespace LexicalAnaylzerRexton
                 {
                     OP = tokenList[index].wordStr;
                     
-                    
-
                     index++;
                     if (Assign_Op2(T, OP))
                     {
@@ -1004,8 +1008,6 @@ namespace LexicalAnaylzerRexton
                     }
                     if (tokenList[index].classStr == ";")
                     {
-                        
-                        
 
                         index++;
                         currentNode = currentNode.Parent; return true;
@@ -1080,13 +1082,9 @@ namespace LexicalAnaylzerRexton
                 //<O_Else>  warna {<M_ST>} | Null
                 if (tokenList[index].classStr == Singleton.SingletonEnums._warna.ToString())
                 {
-                    
-                    
-
                     index++;
                     if (tokenList[index].classStr == "{")
                     {
-                        
                         index++;
                         semanticAnalyzer.createScope();
                         if (M_ST())
@@ -1264,15 +1262,9 @@ namespace LexicalAnaylzerRexton
                 //<Break>  break ;
                 if (tokenList[index].classStr == Singleton.SingletonEnums._continue.ToString())
                 {
-                    
-                    
-
                     index++;
                     if (tokenList[index].classStr == ";")
                     {
-                        
-                        
-
                         currentNode = currentNode.Parent; return true;
                     }
                 }
@@ -3054,20 +3046,18 @@ namespace LexicalAnaylzerRexton
                             addError("Type Mismatch !" + T);
                         }
                         RT = T;
-                        NT = T;
+                        NT = NN;
                         currentNode = currentNode.Parent; return true;
                     }
                 }
                 else if (tokenList[index].classStr == "(")
                 {
-                    
                     string T = "";
-                    index++;
+                    index++; 
                     if (Exp(ref T, ref NT))
                     {
                         if (tokenList[index].classStr == ")")
                         {
-                            
                             index++;
                             RT = T;
                             NT = RT;
@@ -3217,7 +3207,6 @@ namespace LexicalAnaylzerRexton
                     {
                         if (tokenList[index].classStr == "]")
                         {
-                            
                             if (Search_GetType(N, "Undeclared Array") != "invalid")
                             {
                             }
@@ -3236,6 +3225,10 @@ namespace LexicalAnaylzerRexton
                 {
                     if (Search_GetType(N, "Undeclared variable") != "invalid")
                     {
+                        if (!semanticAnalyzer.CC_IncDec(T))
+                        {
+                            addError("Type Mismatch inc dec is not possible with type " + T + " -- " + N);
+                        }
                     }
                     index++;
                     NT = N;
@@ -3573,7 +3566,14 @@ namespace LexicalAnaylzerRexton
                     if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                     {
                         string N = tokenList[index].wordStr;
-                        Search_GetType(N, "Undeclared Variable");
+                        string T = Search_GetType(N, "Undeclared Variable");
+                        if (T != "invalid")
+                        {
+                            if (!semanticAnalyzer.CC_IncDec(T))
+                            {
+                                addError("Type Mismatch inc dec is not possible with type " + T + " -- " + N);
+                            }
+                        }
                         index++;
                         currentNode = currentNode.Parent; return true;
                     }
@@ -3642,6 +3642,7 @@ namespace LexicalAnaylzerRexton
                 //<X>  , <Exp> <X> | Null
                 string ET = "";
                 string N = "";
+                index++;
                 if (Exp(ref ET, ref N))
                 {
                     if (ET != "aur_bool")
@@ -3659,8 +3660,6 @@ namespace LexicalAnaylzerRexton
             
             else if (tokenList[index].classStr == ";")
             {
-                
-                
                 currentNode = currentNode.Parent; return true;
             }
             currentNode = currentNode.Parent; return false;
