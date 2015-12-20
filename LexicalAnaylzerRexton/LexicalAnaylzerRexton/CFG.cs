@@ -218,9 +218,6 @@ namespace LexicalAnaylzerRexton
             if (tokenList[index].classStr == Singleton.SingletonEnums._void.ToString() ||
                 tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString())
             {
-                
-                
-
                 //<Return_Type>  void | DT
                 RT = tokenList[index].wordStr;
                 index++;
@@ -282,7 +279,7 @@ namespace LexicalAnaylzerRexton
                 tokenList[index].classStr == ";" ||
                 tokenList[index].classStr == "{")
             {
-                String RT = "";
+                string RT = "";
                 //<Body>  ; | <S_ST> | {<M_ST>}
                 if (tokenList[index].classStr == ";")
                 {
@@ -1511,8 +1508,6 @@ namespace LexicalAnaylzerRexton
                 else if (tokenList[index].classStr == Singleton.SingletonEnums._DT.ToString())
                 {
                     
-                    
-
                     string T = tokenList[index].wordStr;
                     index++;
                     if (DT_2(T, AM))
@@ -1523,9 +1518,6 @@ namespace LexicalAnaylzerRexton
 
                 else if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                 {
-                    
-                    
-
                     string N = tokenList[index].wordStr;
                     if (!semanticAnalyzer.LookUpClass(N))
                     {
@@ -1582,13 +1574,6 @@ namespace LexicalAnaylzerRexton
                 {
                     string N = tokenList[index].wordStr;
 
-                    CLASSMEMBER cm = new CLASSMEMBER();
-                    cm.accessModifier = Singleton.defaultAccessModifier;
-                    cm.name = N;
-                    cm.type = T;
-                    cm.isMethod = false;
-                    cm.param = "";
-                    semanticAnalyzer.insertMember(cm);
                     index++;
                     if (ID_1(AM, T, N))
                     {
@@ -1618,6 +1603,13 @@ namespace LexicalAnaylzerRexton
                 //<ID_1><Varaiable_Link2> | <Method_Link 3>
                 if (Variable_Link2(RT, N))
                 {
+                    CLASSMEMBER cm = new CLASSMEMBER();
+                    cm.accessModifier = Singleton.defaultAccessModifier;
+                    cm.name = N;
+                    cm.type = RT;
+                    cm.isMethod = false;
+                    cm.param = "";
+                    semanticAnalyzer.insertMember(cm);
                     currentNode = currentNode.Parent; return true;
                 }
                 else if (Method_Link3(AM, "", RT, N))
@@ -1806,6 +1798,7 @@ namespace LexicalAnaylzerRexton
                             cons.type = semanticAnalyzer.getCurrentClass();
                             cons.param = AL;
                             cons.isMethod = true;
+                            cons.accessModifier = AM;
                             semanticAnalyzer.insertConstructor(cons);
                             if (AL != "")
                             {
@@ -2113,21 +2106,7 @@ namespace LexicalAnaylzerRexton
                                 index++;
                                 semanticAnalyzer.createScope();
                                 icg.GenerateCode(semanticAnalyzer.getCurrentClass() + "_" + N + "_" + AL +" Proc");
-                                //if (AL != "")
-                                //{
-                                //    if (AL.Contains(","))
-                                //    {
-                                //        string[] temp = AL.Split(',');
-                                //        for (int i = temp.Length - 1; i >= 0; i--)
-                                //        {
-                                //            icg.GenerateCode("pop " + icg.CreateTemp());
-                                //        }
-                                //    }
-                                //    else
-                                //    {
-                                //        icg.GenerateCode("pop " + icg.CreateTemp());
-                                //    }
-                                //}
+                                
                                 if (M_ST())
                                 {
                                     if (tokenList[index].classStr == "}")
@@ -3047,10 +3026,12 @@ namespace LexicalAnaylzerRexton
                 if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                 {
                     string N = tokenList[index].wordStr;
-                    string T = Search_GetType(N, "Undeclared Variable");
+                    //semanticAnalyzer.Search(N);
+                    string T = semanticAnalyzer.getType(N);
                     index++;
                     if (id_op(ref RT, N, T, ref NT))
                     {
+                        //T = Search_GetType(N, "Undeclared Variable");
                         currentNode = currentNode.Parent; return true;
                     }
                 }
@@ -3298,16 +3279,13 @@ namespace LexicalAnaylzerRexton
                 //<Member_exp> -> .ID < Member_exp_2>
                 if (tokenList[index].classStr == ".")
                 {
-                    
-                    
-
                     Search_GetType(N, "Undeclared Object");
                     index++;
                     if (tokenList[index].classStr == Singleton.nonKeywords.IDENTIFIER.ToString())
                     {
                         string N1 = tokenList[index].wordStr;
-                        string T1 = Search_GetType(N1, "Undeclared variable");
-
+                        //string T1 = Search_GetType(N1, "Undeclared variable");
+                        string T1 = "";
                         index++;
                         if (Member_exp_2(ref RT, N1, T1, ref NT))
                         {
@@ -3372,7 +3350,7 @@ namespace LexicalAnaylzerRexton
                 
                 RT = T;
                 NT = N;
-                Search_GetType(N, "Undeclared Variable");
+                //Search_GetType(N, "Undeclared Variable");
 
                 currentNode = currentNode.Parent; return true;
             }
