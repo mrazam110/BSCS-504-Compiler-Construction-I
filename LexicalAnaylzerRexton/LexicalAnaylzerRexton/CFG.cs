@@ -985,7 +985,7 @@ namespace LexicalAnaylzerRexton
             currentNode = currentNode.Parent; return false;
         }
 
-        private bool Assign_Op2(string  T, string OP)
+        private bool Assign_Op2(string T, string OP)
         {
             currentNode = currentNode.Nodes.Add("<" + System.Reflection.MethodBase.GetCurrentMethod().Name + ">", "< " + System.Reflection.MethodBase.GetCurrentMethod().Name + " >");
 
@@ -1002,13 +1002,17 @@ namespace LexicalAnaylzerRexton
                 //<Assign_Op2>  <Exp>;
                 if (Exp(ref ET, ref NET))
                 {
+                    if (T.Contains('[') && T.Contains(']'))
+                    {
+                        T = T.Remove(T.Length - 2, 2);
+                    }
+                    Console.WriteLine("exp " + T);
                     if (semanticAnalyzer.CC(ET, T, OP) == "invalid")
                     {
                         addError("Type Mismatch" + ET + " " + OP + " " + T);
                     }
                     if (tokenList[index].classStr == ";")
                     {
-
                         index++;
                         currentNode = currentNode.Parent; return true;
                     }
@@ -3117,9 +3121,6 @@ namespace LexicalAnaylzerRexton
                     }
                 }else if(tokenList[index].classStr == ".")
                 {
-                    
-                    
-
                     if (Search_GetType(N, "Undeclared Object") != "invalid")
                     {
                         RT = T1;
