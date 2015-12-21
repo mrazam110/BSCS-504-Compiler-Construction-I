@@ -182,6 +182,7 @@ namespace LexicalAnaylzerRexton
 
         private bool M_ST()
         {
+            string RT = "";
             currentNode = currentNode.Nodes.Add("<" + System.Reflection.MethodBase.GetCurrentMethod().Name + ">", "< " + System.Reflection.MethodBase.GetCurrentMethod().Name + " >");
             
             //FIRST(<M_ST>) = { jabtak , DT , Barbar , agar , return ,  inc_dec , ID , break , continue, this , Null}
@@ -197,7 +198,7 @@ namespace LexicalAnaylzerRexton
                 tokenList[index].classStr == Singleton.SingletonEnums._this.ToString())
             {
                 //<M_ST>   <S_ST><M_ST> | Null
-                string RT = "";
+                
                 if (S_ST(ref RT))
                 {
                     if (M_ST())
@@ -209,6 +210,7 @@ namespace LexicalAnaylzerRexton
             ////FOLLOW(<M_ST>) = { } }
             else if (tokenList[index].classStr == "}")
             {
+                //MT = RT;
                 currentNode = currentNode.Parent; return true;
             }
             currentNode = currentNode.Parent; return false;
@@ -1015,7 +1017,6 @@ namespace LexicalAnaylzerRexton
                                     
                                     semanticAnalyzer.createScope();
                                     index++;
-                                    string MT = "";
                                     if (M_ST())
                                     {
                                         if (tokenList[index].classStr == "}")
@@ -1053,7 +1054,6 @@ namespace LexicalAnaylzerRexton
                     {
                         index++;
                         semanticAnalyzer.createScope();
-                        string w = "";
                         if (M_ST())
                         {
                             if (tokenList[index].classStr == "}")
@@ -1680,7 +1680,7 @@ namespace LexicalAnaylzerRexton
                                 
                                 index++;
                                 semanticAnalyzer.createScope();
-                                string w = "";
+                                string MT = "";
                                 if (M_ST())
                                 {
                                     if (tokenList[index].classStr == "}")
@@ -1963,6 +1963,20 @@ namespace LexicalAnaylzerRexton
                                 string MT = "";
                                 if (M_ST())
                                 {
+                                    if (RT == "" || RT == "void")
+                                    {
+                                        if (!(MT == "" || MT == "void"))
+                                        {
+                                            addError("Return type error");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (MT != RT)
+                                        {
+                                            addError("Return Type Error");
+                                        }
+                                    }
                                     Console.WriteLine("MT = " + MT);
                                     Console.WriteLine("RT = " + RT);
                                     if (tokenList[index].classStr == "}")
