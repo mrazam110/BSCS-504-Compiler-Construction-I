@@ -1963,20 +1963,20 @@ namespace LexicalAnaylzerRexton
                                 string MT = "";
                                 if (M_ST())
                                 {
-                                    if (RT == "" || RT == "void")
-                                    {
-                                        if (!(MT == "" || MT == "void"))
-                                        {
-                                            addError("Return type error");
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (MT != RT)
-                                        {
-                                            addError("Return Type Error");
-                                        }
-                                    }
+                                    //if (RT == "" || RT == "void")
+                                    //{
+                                    //    if (!(MT == "" || MT == "void"))
+                                    //    {
+                                    //        addError("Return type error");
+                                    //    }
+                                    //}
+                                    //else
+                                    //{
+                                    //    if (MT != RT)
+                                    //    {
+                                    //        addError("Return Type Error");
+                                    //    }
+                                    //}
                                     Console.WriteLine("MT = " + MT);
                                     Console.WriteLine("RT = " + RT);
                                     if (tokenList[index].classStr == "}")
