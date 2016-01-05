@@ -227,9 +227,34 @@ namespace LexicalAnaylzerRexton
                             }
                         }
                     }
+                    if (obj.param == "")
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
+        }
+
+        public string LookupObject(string CN, string N)
+        {
+            for (int j = 0; j < globalSymbolTable[globalSymbolTable.Count - 1].classes.Count; j++)
+            {
+                if (globalSymbolTable.Last().classes[j].name == CN)
+                {
+                    foreach (CLASSMEMBER i in globalSymbolTable.Last().classes[j].members)
+                    {
+                        if (N == i.name)
+                        {
+                            if (i.accessModifier != "private")
+                            {
+                                return i.type;
+                            }
+                        }
+                    }
+                }
+            }
+            return "invalid";
         }
 
         //
@@ -273,13 +298,12 @@ namespace LexicalAnaylzerRexton
             switch (type)
             {
                 case "aur_int":
-                case "_int":
+                case "INT_CONSTANT":
                 case "aur_float":
-                case "_float":
+                case "FLOAT_CONSTANT":
                 case "aur_char":
-                case "_char":
+                case "CHAR_CONSTANT":
                     return true;
-                    break;
                 default:
                     return false;
             }
@@ -293,11 +317,9 @@ namespace LexicalAnaylzerRexton
                 case "true":
                 case "false":
                     return true;
-                    break;
                 default:
                     return false;
             }
-            return true;
         }
 
         public bool CC_Return(string type)
@@ -313,11 +335,10 @@ namespace LexicalAnaylzerRexton
 
         public string CC_Return_Type()
         {
-
             string returnType = globalSymbolTable.Last().classes.Last().members.Last().type;
             return returnType;
-
         }
+
         public string CC(string t1, string t2, string oper)
         {
             string returnType = "";
@@ -508,19 +529,6 @@ namespace LexicalAnaylzerRexton
             return returnType;
         }
 
-        public bool TypeMatch(string t1, string t2)
-        {
-            return true;
-        }
-
-        public void reset()
-        {
-            Scope.Clear();
-            scopeToAdd = 0;
-            globalSymbolTable.Clear();
-        }
-
-
         public bool Search(string name)
         {
             int[] scopeArray = Scope.ToArray();
@@ -544,52 +552,8 @@ namespace LexicalAnaylzerRexton
 
         }
 
-        public bool SearchMember(string classType, ref CLASSMEMBER obj)
-        {
-            // a.b;   || a.b(int i, float j); || a.b(int j)
-            // classType.obj
-            for (int i = 0; i < globalSymbolTable.Last().classes.Count; i++)
-            {
-
-                if (globalSymbolTable.Last().classes[i].name == classType)
-                {
-                    CLASS currentClass = globalSymbolTable.Last().classes[i];
-                    for (int j = 0; j < currentClass.members.Count; j++)
-                    {
-                        if (currentClass.members[j].name == obj.name)
-                        {
-                            CLASSMEMBER currentMember = currentClass.members[j];
-                            if (!obj.isMethod && !currentMember.isMethod) // check if both obj and currentMember are feilds of a class , NOT METHOD
-                            {
-                                obj.type = currentMember.type;
-                                return true;
-                            }
-
-                            else if (obj.isMethod && currentMember.isMethod) // check if both obj and currentMember are methods of a class , NOT feilds
-                            {
-                                if (obj.param == currentMember.param)
-                                {
-                                    obj.type = currentMember.type;
-                                    return true;
-                                }
-                                //return true;
-                            }
-                            else
-                            {
-                                return false;
-                            }
-                        }
-                    } // For loop end for finding member of a class
-                    return false;
-                }
-            } // For loop end for finding classes 
-            return false;
-        }
-
         public string SearchMember(string classType, CLASSMEMBER obj)
         {
-            // a.b;   || a.b(int i, float j); || a.b(int j)
-            // classType.obj
             for (int i = 0; i < globalSymbolTable.Last().classes.Count; i++)
             {
 
@@ -615,17 +579,16 @@ namespace LexicalAnaylzerRexton
                                     obj.type = currentMember.type;
                                     return obj.type;
                                 }
-                                //return true;
                             }
                             else
                             {
                                 return "invalid";
                             }
                         }
-                    } // For loop end for finding member of a class
+                    } 
                     return "invalid";
                 }
-            } // For loop end for finding classes 
+            }
             return "invalid";
         }
     }
